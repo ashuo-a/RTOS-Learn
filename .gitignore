@@ -1,0 +1,31 @@
+# 编译产物
+build/
+Debug/
+Release/
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.htm
+
+# 大文件 / 安装包 / 工具
+*.exe
+*.msi
+*.zip
+*.7z
+*.rar
+PY32Programmer*/
+
+# IDE
+.vscode/
+.idea/
+*.uvguix.*
+*.uvoptx
+*.uvprojx.bak
+
+# 系统
+.DS_Store
+Thumbs.db
