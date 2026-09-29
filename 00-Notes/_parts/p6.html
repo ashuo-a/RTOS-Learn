@@ -1,0 +1,181 @@
+<section class="ch" id="c9">
+  <div class="h2"><i>09</i><h2>并发、临界区与 ISR 三范式</h2></div>
+
+  <p>多个任务 + 多个中断，会同时碰同一块内存。RTOS 提供的"保护手段"在 CM0+ 上和 M3/M4 有本质区别，这是抄教程最容易抄错的地方。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 268" role="img" aria-label="CM0+ 与 M3/M4 的中断屏蔽方式对比">
+      <rect class="f-bx dg" x="14" y="16" width="410" height="236" rx="10"/>
+      <text class="f-t b" x="30" y="42">Cortex-M0+（你的芯片）</text>
+      <text class="f-t s" x="30" y="64">只有 PRIMASK：一把总闸，开或全关</text>
+      <rect class="f-bx" x="30" y="78" width="378" height="30" rx="6"/>
+      <text class="f-t" x="42" y="98">taskENTER_CRITICAL() → cpsid i</text>
+      <rect class="f-bx" x="30" y="114" width="378" height="30" rx="6"/>
+      <text class="f-t" x="42" y="134">taskEXIT_CRITICAL() → cpsie i</text>
+      <rect class="f-bx dg" x="30" y="154" width="378" height="80" rx="6"/>
+      <text class="f-t r" x="42" y="176">★ 代价：所有中断都被挡住</text>
+      <text class="f-t s" x="42" y="198">优先级 0 的急停中断也一样进不来</text>
+      <text class="f-t s" x="42" y="218">→ 所以 CM0+ 上唯一的纪律：临界区要极短</text>
+
+      <rect class="f-bx" x="436" y="16" width="410" height="236" rx="10"/>
+      <text class="f-t b" x="452" y="42">Cortex-M3/M4（不是你的芯片）</text>
+      <text class="f-t s" x="452" y="64">有 BASEPRI：可以把"低于某优先级"的中断挡住</text>
+      <rect class="f-bx" x="452" y="78" width="378" height="30" rx="6"/>
+      <text class="f-t" x="464" y="98">写 BASEPRI = configMAX_SYSCALL_...</text>
+      <rect class="f-bx" x="452" y="114" width="378" height="30" rx="6"/>
+      <text class="f-t" x="464" y="134">高优先级中断仍可抢占进来</text>
+      <rect class="f-bx" x="452" y="154" width="378" height="80" rx="6"/>
+      <text class="f-t s" x="464" y="176">configMAX_SYSCALL_INTERRUPT_PRIORITY</text>
+      <text class="f-t s" x="464" y="196">这个宏在 CM0+ 上配了也没用（无实现）</text>
+      <text class="f-t a" x="464" y="218">← 网上大量教程的默认假设，注意别照抄</text>
+    </svg>
+    <figcaption><b>CM0+ 的现实：</b>没有任何"部分屏蔽"能力。因此 CM0+ 上高性能代码的设计原则是<b>把中断服务函数写短</b>——能放进 ISR 的只有"记录 + 通知"，其余全部丢给任务。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 9.1</em>临界区是可嵌套的，靠一个计数器</h4>
+    <p>裸机时代"关中断/开中断"只能成对出现，多层调用就乱了。FreeRTOS 用一个计数解决：</p>
+<pre><code>void vPortEnterCritical( void )   <span class="c">/* port.c:262 */</span>
+{
+    portDISABLE_INTERRUPTS();      <span class="c">/* cpsid i */</span>
+    uxCriticalNesting++;           <span class="c">/* 嵌套层数 +1 */</span>
+}
+void vPortExitCritical( void )    <span class="c">/* port.c:271 */</span>
+{
+    configASSERT( uxCriticalNesting );
+    uxCriticalNesting--;
+    if( uxCriticalNesting == 0 )   <span class="c">/* ★只有回到 0 才真正开中断 */</span>
+    {
+        portENABLE_INTERRUPTS();   <span class="c">/* cpsie i */</span>
+    }
+}</code></pre>
+    <p>调试时把 <code>uxCriticalNesting</code> 加到 Watch 窗口：<b>稳态必须是 0</b>。长期不为 0 说明某处漏了配对的 <code>taskEXIT_CRITICAL()</code>，系统时间会变慢（中断开不回来，tick 进不来）。</p>
+  </div>
+
+  <h3>ISR → 任务的三种标准范式</h3>
+  <p>中断里"做决策、做重活"是禁忌。正确姿势只有三种，按开销从大到小：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 250" role="img" aria-label="ISR 到任务的三种范式">
+      <rect class="f-bx" x="14" y="16" width="270" height="218" rx="10"/>
+      <text class="f-t b" x="28" y="40">A · 信号量（事件发生）</text>
+      <text class="f-t s" x="28" y="62">EXTI 按键、到达某状态</text>
+      <rect class="f-bx st" x="28" y="76" width="242" height="40" rx="6"/>
+      <text class="f-t" x="40" y="94">ISR: xSemaphoreGiveFromISR</text>
+      <text class="f-t s" x="40" y="110">任务: xSemaphoreTake</text>
+      <text class="f-t s" x="28" y="140">只传"发生了"，不传数据</text>
+      <text class="f-t s" x="28" y="164">开销中等，可多任务竞争</text>
+      <text class="f-t s" x="28" y="196">适用：你有多个任务想等同一件事</text>
+
+      <rect class="f-bx" x="296" y="16" width="270" height="218" rx="10"/>
+      <text class="f-t b" x="310" y="40">B · 队列（带数据）</text>
+      <text class="f-t s" x="310" y="62">UART 收字节、传感器帧</text>
+      <rect class="f-bx st" x="310" y="76" width="242" height="40" rx="6"/>
+      <text class="f-t" x="322" y="94">ISR: xQueueSendFromISR</text>
+      <text class="f-t s" x="322" y="110">任务: xQueueReceive</text>
+      <text class="f-t s" x="310" y="140">把数据交给任务，ISR 不解析</text>
+      <text class="f-t s" x="310" y="164">开销最大，但最通用</text>
+      <text class="f-t s" x="310" y="196">适用：数据流、协议解析</text>
+
+      <rect class="f-bx hi" x="578" y="16" width="268" height="218" rx="10"/>
+      <text class="f-t b" x="592" y="40">C · 任务通知（最快）</text>
+      <text class="f-t s" x="592" y="62">DMA 完成、单一任务专享</text>
+      <rect class="f-bx hi" x="592" y="76" width="240" height="40" rx="6"/>
+      <text class="f-t a" x="604" y="94">ISR: xTaskNotifyFromISR</text>
+      <text class="f-t a" x="604" y="110">任务: ulTaskNotifyTake</text>
+      <text class="f-t s" x="592" y="140">★不额外占内存（用 TCB 里现成字段）</text>
+      <text class="f-t s" x="592" y="164">比信号量快、比队列省 RAM</text>
+      <text class="f-t s" x="592" y="196">适用：一对一通知（多数场景）</text>
+    </svg>
+    <figcaption><b>选择口诀：</b>要传数据 → 队列；一对多 → 信号量；一对一且只是"通知一下" → 任务通知（优先）。本工程 <code>configUSE_TASK_NOTIFICATIONS=1</code>，32KB RAM 的芯片上这点很值钱。</figcaption>
+  </figure>
+
+  <div class="call warn">
+    <span class="tag">ISR 里的铁律</span>
+    <ul>
+      <li>只能用名字带 <code>...FromISR</code> 的 API：<code>xQueueSendFromISR</code> / <code>xSemaphoreGiveFromISR</code> / <code>xTaskNotifyFromISR</code>。</li>
+      <li>唤醒标志变量必须初始化：<code>BaseType_t xHigherPriorityTaskWoken = pdFALSE;</code></li>
+      <li>退出前一定要 <code>portYIELD_FROM_ISR(xHigherPriorityTaskWoken);</code> —— 否则"被唤醒的高优先级任务"要等到下一次 tick 才轮到。</li>
+      <li>ISR 里<b>禁止</b>：<code>vTaskDelay</code>、<code>HAL_Delay</code>、Flash 写、长 printf。</li>
+      <li>CM0+ 的 <b>ARM_CM0 端口没有优先级校验函数</b>，所以你在 ISR 里误用非 FromISR 版本 API 不会触发断言，而是偶发数据错乱 —— 只能靠纪律。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="ch" id="c10">
+  <div class="h2"><i>10</i><h2>应用：把裸机程序变成多任务</h2></div>
+
+  <p>回到你的工程。原来它是一段裸机程序，现在是 2 个任务。差别不只是"能同时做两件事"，而是<b>时间的管理权从"你排的循环顺序"变成了"内核按优先级调度"</b>。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 250" role="img" aria-label="裸机与 RTOS 的时间轴对比">
+      <text class="f-t b" x="14" y="26">裸机：HAL_Delay(250) 期间 CPU 什么也做不了</text>
+      <rect class="f-bx" x="150" y="38" width="150" height="26" rx="5"/><text class="f-t s" x="164" y="56">翻转 LED + 死等 250ms</text>
+      <rect class="f-bx" x="150" y="68" width="150" height="26" rx="5"/><text class="f-t s" x="164" y="86">翻转 LED + 死等 250ms</text>
+      <rect class="f-bx" x="150" y="98" width="150" height="26" rx="5"/><text class="f-t s" x="164" y="116">翻转 LED + 死等 250ms</text>
+      <rect class="f-bx dg" x="300" y="38" width="240" height="86" rx="5"/>
+      <text class="f-t r" x="314" y="72">这些时间里 CPU 一直在空转</text>
+      <text class="f-t r" x="314" y="94">串口想打印？只能插在循环里排队</text>
+      <text class="f-t m" x="560" y="72">→ 加第 3 件事就要重排所有 delay</text>
+
+      <text class="f-t b" x="14" y="164">RTOS：vTaskDelay 是"我睡 250ms，CPU 你干别的去"</text>
+      <rect class="f-bx hi" x="150" y="176" width="60" height="26" rx="5"/><text class="f-t a" x="160" y="194">led 跑</text>
+      <rect class="f-bx st" x="210" y="176" width="190" height="26" rx="5"/><text class="f-t s" x="222" y="194">led 阻塞（睡），CPU 交给 log</text>
+      <rect class="f-bx hi" x="400" y="176" width="60" height="26" rx="5"/><text class="f-t a" x="410" y="194">log 跑</text>
+      <rect class="f-bx st" x="460" y="176" width="240" height="26" rx="5"/><text class="f-t s" x="472" y="194">log 阻塞，CPU 进入 IDLE（未来可进 STOP）</text>
+      <rect class="f-bx hi" x="150" y="208" width="60" height="26" rx="5"/><text class="f-t a" x="160" y="226">led 跑</text>
+      <text class="f-t m" x="220" y="226">→ 100 个任务也只是"更多条时间片"，互不干扰</text>
+    </svg>
+    <figcaption><b>本质区别：</b><code>HAL_Delay</code> 是"占着 CPU 等"，<code>vTaskDelay</code> 是"登记一个唤醒时刻，然后让出 CPU"。前者时间利用率 = 1 个任务；后者 = 所有任务叠加，且空闲时还能进低功耗。</figcaption>
+  </figure>
+
+  <h3>本工程逐行对照</h3>
+  <table>
+    <tr><th>原裸机版</th><th>现在的 RTOS 版</th><th>为什么改</th></tr>
+    <tr><td><code>while(1){ HAL_Delay(250); HAL_GPIO_TogglePin(...); }</code></td><td><code>App_LedTask()</code>：<code>BSP_LED_Toggle(LED3)</code> + <code>vTaskDelayUntil(...)</code></td><td>周期由内核保证，且不占 CPU</td></tr>
+    <tr><td>LED 翻转 250ms（2Hz）</td><td>仍 250ms（2Hz）</td><td><b>行为对外完全不变</b>——移植的第一原则是不改变可观测量</td></tr>
+    <tr><td><code>SysTick_Handler(){ HAL_IncTick(); }</code></td><td>调度器启动前 <code>HAL_IncTick()</code>，启动后交给 FreeRTOS</td><td>SysTick 只有一个，必须分阶段归属（第 8 章）</td></tr>
+    <tr><td>没有观测手段，靠点灯猜</td><td><code>App_LogTask</code>：每秒打状态、每 5 秒打任务表</td><td>RTOS 必须"可观测"，否则出问题无从下手</td></tr>
+    <tr><td><code>Heap_Size 0x200</code></td><td>不变（FreeRTOS 用 <code>ucHeap[8192]</code>）</td><td>两者完全无关，别被名字骗了</td></tr>
+  </table>
+
+  <h3>四个可复用的做法</h3>
+
+  <div class="pt">
+    <h4><em>做法 1</em>按"职责"切任务，不按"外设"切</h4>
+    <p>❌ 错误：<code>UartTask</code> / <code>TimTask</code> / <code>GpioTask</code>（这是把中断搬到任务里）。<br>
+    ✅ 正确：<code>SensorTask</code>（采集+滤波）、<code>JudgeTask</code>（安全判定，优先级最高）、<code>CommTask</code>（协议收发）、<code>LogTask</code>（打印/存储）、<code>MgrTask</code>（喂狗+低功耗）。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>做法 2</em>优先级只有 3 ~ 4 档，安全最高</h4>
+    <p>本工程实测可用的分法：安全判定 <b>3</b> &gt; 业务/通信 <b>2</b> &gt; 日志/显示 <b>1</b> &gt; 空闲 0。别用优先级去解决"谁先谁后"的同步问题，那应该用队列/信号量。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>做法 3</em>栈大小用"水位"倒推，不用猜</h4>
+    <ul>
+      <li>单位是<b>字</b>：<code>128</code> = 512 字节；</li>
+      <li>含 <code>printf</code> / <code>vTaskList</code>（内部用 sprintf）的任务给 <b>256 字</b>；</li>
+      <li>用 <code>uxTaskGetStackHighWaterMark()</code> 看剩余，<b>留 30% 余量</b>再定稿；</li>
+      <li>本工程实测：led 任务剩余 118 字、log 任务剩余 185 字（都在安全区）。</li>
+    </ul>
+  </div>
+
+  <div class="pt">
+    <h4><em>做法 4</em>周期任务用 vTaskDelayUntil，别用 vTaskDelay</h4>
+    <table>
+      <tr><th>写法</th><th>含义</th><th>累积漂移</th></tr>
+      <tr><td><code>vTaskDelay(250)</code></td><td>从"现在"开始睡 250ms</td><td><b>会漂移</b>（执行时间被累加进去）</td></tr>
+      <tr><td><code>vTaskDelayUntil(&amp;last, 250)</code></td><td>睡到"上次唤醒时刻 + 250ms"</td><td><b>不漂移</b>（以起点为基准）</td></tr>
+    </table>
+    <p>你的 50ms 采样、1 秒打印、定时喂狗都属于这类，一律用 <code>vTaskDelayUntil</code>。</p>
+  </div>
+
+  <div class="call story">
+    <span class="tag">本工程实测资源占用</span>
+    <p><code>Program Size: Code=9576  RO-data=652  RW-data=128  ZI-data=11176</code><br>
+    → Flash = 9576 + 652 ≈ <b>10.2 KB</b>（256 KB 的 4%）；RAM = 128 + 11176 ≈ <b>11.0 KB</b>（32 KB 的 34%，其中 8 KB 是 FreeRTOS 堆）。<br>
+    上板现象：LED3 保持 2Hz 翻转，串口每秒一行状态、每 5 秒一张任务表（含 <code>IDLE</code> 行 —— 它在，说明调度器确实在工作）。</p>
+  </div>
+</section>

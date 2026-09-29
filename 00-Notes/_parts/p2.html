@@ -1,0 +1,141 @@
+<section class="ch" id="c1">
+  <div class="h2"><i>01</i><h2>上电那一刻发生了什么</h2></div>
+
+  <p>按下复位键，CPU 内部没有"操作系统"，也没有"main 函数"。它只做一件事：<strong>从地址 <code>0x00000000</code> 处取两个字</strong>。而 PY32C882 的 Flash 被映射到 <code>0x08000000</code>，所以实际读的是 <code>0x08000000</code>。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 316" role="img" aria-label="上电启动流程与内存布局">
+      <!-- Flash 列 -->
+      <rect class="f-bx" x="14" y="16" width="300" height="284" rx="10"/>
+      <text class="f-t b" x="30" y="42">FLASH 0x0800_0000（256 KB）</text>
+      <rect class="f-bx hi" x="30" y="56" width="268" height="46" rx="7"/>
+      <text class="f-t" x="42" y="76">[+0x00] __initial_sp</text>
+      <text class="f-t s" x="42" y="92">= 0x2000_2800（栈顶，最高地址）</text>
+      <rect class="f-bx hi" x="30" y="108" width="268" height="46" rx="7"/>
+      <text class="f-t" x="42" y="128">[+0x04] Reset_Handler</text>
+      <text class="f-t s" x="42" y="144">第一条要执行的指令地址</text>
+      <rect class="f-bx" x="30" y="160" width="268" height="88" rx="7"/>
+      <text class="f-t" x="42" y="180">[+0x08…] 其余向量表</text>
+      <text class="f-t s" x="42" y="197">NMI / HardFault / SVC / PendSV / SysTick</text>
+      <text class="f-t s" x="42" y="213">以及 32 个外设中断入口（IRQ0…IRQ31）</text>
+      <text class="f-t s" x="42" y="232">★ 每个向量 4 字节，共 48 个字</text>
+      <rect class="f-bx" x="30" y="254" width="268" height="34" rx="7"/>
+      <text class="f-t" x="42" y="275">代码 .text / 常量 .constdata</text>
+
+      <!-- SRAM 列 -->
+      <rect class="f-bx" x="470" y="16" width="376" height="284" rx="10"/>
+      <text class="f-t b" x="486" y="42">SRAM 0x2000_0000（32 KB）</text>
+      <rect class="f-bx st" x="486" y="56" width="344" height="26" rx="6"/>
+      <text class="f-t s" x="498" y="74">.data 已初始化变量（上电时从 Flash 拷来）</text>
+      <rect class="f-bx st" x="486" y="88" width="344" height="26" rx="6"/>
+      <text class="f-t s" x="498" y="106">.bss 未初始化变量，含 heap_4 的 ucHeap[8192]</text>
+      <rect class="f-bx st2" x="486" y="120" width="344" height="26" rx="6"/>
+      <text class="f-t s" x="498" y="138">任务栈 ×3（从 FreeRTOS 堆里分出来的）</text>
+      <rect class="f-bx dg" x="486" y="152" width="344" height="112" rx="6"/>
+      <text class="f-t r" x="498" y="172">Stack_Mem（MSP 主栈，本工程已改大）</text>
+      <text class="f-t s" x="498" y="190">Stack_Size = 0x800 = 2 KB</text>
+      <text class="f-t s" x="498" y="208">★ 只给"中断 + 启动代码"用</text>
+      <text class="f-t s" x="498" y="226">★ 任务是另一个栈（PSP），不从这里出</text>
+      <text class="f-t s" x="498" y="248">初始 MSP 指向它的末地址</text>
+      <rect class="f-bx" x="486" y="272" width="344" height="16" rx="5"/>
+      <text class="f-t m" x="498" y="285">其余（HAL 句柄、全局缓冲…）</text>
+
+      <!-- 箭头与标注 -->
+      <path class="f-ln a" d="M313 79 L466 79"/>
+      <path class="f-ln a" d="M313 131 L466 131"/>
+      <text class="f-t a" x="322" y="72">① 硬件自动装载 → MSP</text>
+      <text class="f-t a" x="322" y="124">② 硬件自动跳转 → PC</text>
+      <text class="f-t m" x="322" y="176">③ SystemInit()</text>
+      <text class="f-t m" x="322" y="194">④ __main → 搬 .data、清 .bss</text>
+      <text class="f-t m" x="322" y="212">⑤ 跳到你的 main()</text>
+    </svg>
+    <figcaption><b>图的读法：</b>左列是 Flash，右列是 SRAM。复位瞬间 CPU 只做了①②两件事，剩下③④⑤都是"软件序言"（Keil 启动文件 + 分散加载代码）干的。<code>__initial_sp</code> 之所以放在向量表第 0 个字，是因为 Cortex-M 硬件约定从这里取初始栈指针——这也是后面任务切换能"伪造中断返回"的同一个机制来源。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 1.1</em>复位不是"从 0 开始"，而是"从向量表开始"</h4>
+    <p>向量表 = 一个 48 字的数组（Cortex-M0+），每个字是一个地址。CPU 硬编码使用前两个：<span class="kv">[0] → MSP</span>、<span class="kv">[1] → PC</span>。字段顺序不能改，改了上电就跑飞。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>知识点 1.2</em>两个"堆/栈"完全是两回事</h4>
+    <table>
+      <tr><th>名字</th><th>在哪定义</th><th>谁用</th><th>本工程实测</th></tr>
+      <tr><td>Stack_Size（MSP 主栈）</td><td>启动文件 <code>startup_py32c882xx.s</code></td><td>中断、异常、启动代码</td><td><b>0x800 = 2 KB</b>（移植时从 0x400 提上来的）</td></tr>
+      <tr><td>Heap_Size</td><td>同上</td><td><code>malloc()</code>（MicroLIB）</td><td>0x200 = 512 B，<b>FreeRTOS 根本不用它</b></td></tr>
+      <tr><td>configTOTAL_HEAP_SIZE</td><td><code>FreeRTOSConfig.h</code></td><td>FreeRTOS 的 <code>pvPortMalloc</code></td><td>8192 B，是 <code>heap_4.c</code> 里一个 <b>静态数组</b>（进 .bss）</td></tr>
+      <tr><td>任务栈 ×N</td><td><code>xTaskCreate()</code> 第 3 个参数</td><td>各任务自己（走 PSP）</td><td>128 字 = 512 B（单位是"字"！）</td></tr>
+    </table>
+    <p>最容易搞错的一点：<strong>FreeRTOS 的内存不是从启动文件的 <code>Heap_Size</code> 里来的。</strong><code>heap_4.c</code> 里有一个 <code>static uint8_t ucHeap[configTOTAL_HEAP_SIZE]</code>，它作为普通全局变量进 <code>.bss</code>，跟着 SRAM 一起被清零。两者互不相干。</p>
+  </div>
+</section>
+
+<section class="ch" id="c2">
+  <div class="h2"><i>02</i><h2>CPU 的 16 个寄存器和两个栈</h2></div>
+
+  <p>理解任务切换，只需要搞清"现场"是什么。<strong>现场 = 16 个寄存器的值</strong>。把它们原样存下来、再把另一个任务上次存的值装回去，就是一次上下文切换。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 330" role="img" aria-label="寄存器组与双栈机制">
+      <rect class="f-bx" x="14" y="14" width="330" height="302" rx="10"/>
+      <text class="f-t b" x="30" y="40">Cortex-M0+ 程序员可见寄存器</text>
+      <rect class="f-bx st" x="30" y="54" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="72">R0 – R12　通用寄存器（13 个）</text>
+      <rect class="f-bx st" x="30" y="86" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="104">R13 = SP　栈指针（★两个物理寄存器）</text>
+      <rect class="f-bx st" x="30" y="118" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="136">R14 = LR　链接/返回地址</text>
+      <rect class="f-bx st" x="30" y="150" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="168">R15 = PC　程序计数器</text>
+      <rect class="f-bx st" x="30" y="182" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="200">xPSR　程序状态字（含 Thumb 位）</text>
+      <rect class="f-bx hi" x="30" y="216" width="298" height="60" rx="6"/>
+      <text class="f-t a" x="42" y="236">PRIMASK　全局中断屏蔽位</text>
+      <text class="f-t s" x="42" y="254">= 0 允许 / = 1 屏蔽全部可屏蔽中断</text>
+      <text class="f-t s" x="42" y="270">★ CM0+ 没有 BASEPRI，只有这一把"总闸"</text>
+      <rect class="f-bx hi" x="30" y="284" width="298" height="24" rx="6"/>
+      <text class="f-t a" x="42" y="301">CONTROL　bit1 = SPSEL</text>
+
+      <text class="f-t b" x="378" y="40">两个栈，一条"选择线"</text>
+      <rect class="f-bx" x="378" y="54" width="230" height="150" rx="10"/>
+      <text class="f-t a" x="392" y="76">MSP 主栈</text>
+      <text class="f-t s" x="392" y="96">中断 / 异常 / 启动代码</text>
+      <text class="f-t s" x="392" y="114">本工程 2 KB，在 SRAM 顶部</text>
+      <rect class="f-bx st2" x="392" y="126" width="200" height="62" rx="6"/>
+      <text class="f-t s" x="402" y="145">SP_sys（线程模式用 MSP 时）</text>
+      <text class="f-t s" x="402" y="163">Handler 模式强制用 MSP</text>
+      <text class="f-t s" x="402" y="180">→ 中断永远不碰任务栈</text>
+
+      <rect class="f-bx" x="378" y="212" width="230" height="104" rx="10"/>
+      <text class="f-t a" x="392" y="234">PSP 进程栈</text>
+      <text class="f-t s" x="392" y="254">任务专用，每个任务一份</text>
+      <text class="f-t s" x="392" y="272">xTaskCreate 的 128 字就是它</text>
+      <text class="f-t s" x="392" y="292">→ 任务栈溢出 / 不会毁掉中断栈</text>
+
+      <path class="f-ln a" d="M346 296 L374 296"/>
+      <path class="f-ln a" d="M346 129 L374 129"/>
+      <rect class="f-bx" x="648" y="54" width="198" height="262" rx="10"/>
+      <text class="f-t b" x="662" y="78">切换靠一条指令</text>
+      <rect class="f-bx hi" x="662" y="92" width="170" height="58" rx="7"/>
+      <text class="f-t" x="674" y="114">movs r0, #2</text>
+      <text class="f-t" x="674" y="134">msr CONTROL, r0</text>
+      <text class="f-t s" x="674" y="150">SPSEL = 1 → 改用 PSP</text>
+      <text class="f-t m" x="662" y="176">之前：线程模式 + MSP</text>
+      <text class="f-t m" x="662" y="196">之后：线程模式 + PSP</text>
+      <text class="f-t s" x="662" y="220">而 Handler 模式</text>
+      <text class="f-t s" x="662" y="238">永远用 MSP（硬件强制）</text>
+      <text class="f-t a" x="662" y="268">这就是"中断用一套栈、</text>
+      <text class="f-t a" x="662" y="286">任务用另一套栈"的物理实现</text>
+    </svg>
+    <figcaption><b>为什么必须两个栈：</b>如果任务和中断共用一套栈，一个任务把栈写爆，中断进来就没地方存现场，直接 HardFault。<b>MSP 给中断、PSP 给任务</b>，把风险隔离在两个区域里——这也是"任务栈 128 字够不够"能被单独评估的原因。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 2.1</em>SP 只有一个名字，却有两个实体</h4>
+    <p>汇编里写 <code>SP</code>，CPU 内部其实有两个寄存器 <code>MSP</code> / <code>PSP</code>，由 <code>CONTROL[1]</code>（SPSEL）决定当前用哪个。所以：</p>
+    <ul>
+      <li><code>mrs r0, psp</code> —— 读出"另一个"栈指针，是 FreeRTOS 里最关键的一条指令之一；</li>
+      <li>Handler 模式下硬件强制走 MSP，写 SPSEL 也无效 —— 这条保证了中断安全。</li>
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FreeRTOS 原理图解教学 — 从 PY32C882 裸机到多任务</title>
+<style>
+:root{
+  --paper:#f6f4ef; --card:#fffefb; --ink:#1b1a17; --ink2:#4a453c; --muted:#8a8175;
+  --line:#e3ddd1; --line2:#cdc5b4; --accent:#b45309; --accent-soft:#fdf3e6;
+  --danger:#b91c1c; --danger-soft:#fdeceb; --ok:#15803d; --ok-soft:#eef7f0;
+  --code-bg:#f1eee7; --code-ink:#2a3b4d; --stack:#e8f0f7; --stack2:#fdf0e2;
+  --mono:"JetBrains Mono","Cascadia Mono",Consolas,"Courier New",monospace;
+  --sans:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",system-ui,sans-serif;
+  --r:10px;
+}
+html[data-theme="dark"]{
+  --paper:#121110; --card:#1b1a17; --ink:#eae5da; --ink2:#b6ad9d; --muted:#8b8375;
+  --line:#2c2924; --line2:#413c33; --accent:#f0a35e; --accent-soft:#2a2018;
+  --danger:#f87171; --danger-soft:#2b1a1a; --ok:#4ade80; --ok-soft:#16241b;
+  --code-bg:#221f1a; --code-ink:#d6cdbe; --stack:#1b2733; --stack2:#2b2016;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.8 var(--sans);
+  -webkit-font-smoothing:antialiased}
+.wrap{display:grid;grid-template-columns:252px minmax(0,1fr);gap:44px;
+  max-width:1260px;margin:0 auto;padding:0 28px 96px}
+nav.toc{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:30px 18px 30px 0;border-right:1px solid var(--line)}
+nav.toc .tb{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:t}
+nav.toc li{counter-increment:t;margin:2px 0}
+nav.toc a{display:flex;gap:8px;padding:5px 8px;border-radius:6px;color:var(--ink2);
+  text-decoration:none;font-size:13.5px;line-height:1.5}
+nav.toc a::before{content:counter(t,decimal-leading-zero);font:11px/1.6 var(--mono);color:var(--muted)}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav.toc a.on::before{color:var(--accent)}
+nav.toc .sep{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line2)}
+main{min-width:0;padding-top:30px}
+.tgl{position:fixed;right:20px;bottom:20px;z-index:9;display:flex;gap:0;
+  border:1px solid var(--line2);border-radius:999px;background:var(--card);
+  overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.10)}
+.tgl button{border:0;background:transparent;color:var(--ink2);cursor:pointer;
+  font:12px/1 var(--sans);padding:9px 14px}
+.tgl button.on{background:var(--accent);color:#fff}
+
+/* ---------- hero ---------- */
+header.hero{border-bottom:2px solid var(--ink);padding-bottom:26px;margin-bottom:38px}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.2em;color:var(--accent);
+  text-transform:uppercase}
+h1{font-size:39px;line-height:1.22;margin:14px 0 12px;letter-spacing:-.01em}
+h1 small{display:block;font-size:16px;font-weight:400;color:var(--ink2);margin-top:12px;
+  letter-spacing:0;line-height:1.7}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  background:var(--card);margin-top:26px}
+.spec div{padding:12px 14px;border-right:1px solid var(--line)}
+.spec div:last-child{border-right:0}
+.spec b{display:block;font:600 19px/1.3 var(--mono);color:var(--accent)}
+.spec span{font-size:11.5px;color:var(--muted)}
+
+/* ---------- 章节 ---------- */
+section.ch{margin:0 0 66px;scroll-margin-top:24px}
+.h2{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line2);
+  padding-bottom:10px;margin-bottom:26px}
+.h2 i{font:600 12px/1 var(--mono);color:var(--accent);letter-spacing:.1em;
+  border:1px solid var(--accent);border-radius:5px;padding:4px 7px;font-style:normal;
+  white-space:nowrap}
+h2{font-size:25px;margin:0;line-height:1.35;letter-spacing:-.005em}
+h3{font-size:17.5px;margin:34px 0 12px;padding-left:11px;border-left:3px solid var(--line2)}
+h4{font-size:15.5px;margin:24px 0 8px;color:var(--ink2)}
+p{margin:0 0 15px}
+a{color:var(--accent)}
+strong{font-weight:700}
+ul,ol{padding-left:22px;margin:0 0 15px}
+li{margin:5px 0}
+code{font:13px/1.5 var(--mono);background:var(--code-bg);color:var(--code-ink);
+  padding:2px 5px;border-radius:4px;white-space:nowrap}
+pre{margin:0 0 18px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 16px;overflow-x:auto}
+pre code{background:0;padding:0;white-space:pre;font-size:12.6px;line-height:1.72;color:var(--code-ink)}
+pre .c{color:var(--muted)}
+pre .k{color:var(--accent);font-weight:600}
+pre .hl{background:var(--accent-soft);border-radius:3px;box-shadow:0 0 0 2px var(--accent-soft)}
+.kv{font:600 13px/1 var(--mono);color:var(--accent);white-space:nowrap}
+
+/* ---------- 知识点 / 提示块 ---------- */
+.pt{border-top:2px solid var(--ink);padding-top:14px;margin:26px 0}
+.pt h4{margin:0 0 8px;font-size:15px;color:var(--ink)}
+.pt h4 em{font:11px/1 var(--mono);color:var(--accent);font-style:normal;margin-right:8px}
+.call{border:1px solid var(--line2);border-radius:var(--r);padding:14px 16px;margin:20px 0;
+  background:var(--card)}
+.call.warn{border-color:var(--danger);background:var(--danger-soft)}
+.call.key{border-color:var(--accent);background:var(--accent-soft)}
+.call.story{border-color:var(--line2);background:var(--card)}
+.call .tag{font:600 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:8px}
+.call.warn .tag{color:var(--danger)}
+.call.key .tag{color:var(--accent)}
+.call p:last-child,.call ul:last-child{margin-bottom:0}
+figure{margin:22px 0;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--card);padding:16px 14px 8px}
+figure svg{display:block;width:100%;height:auto}
+figcaption{font-size:12.5px;color:var(--muted);padding:10px 4px 6px;line-height:1.6}
+figcaption b{color:var(--ink2)}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--code-bg);font-weight:600;font-size:13px}
+tr:last-child td{border-bottom:0}
+td code,th code{white-space:nowrap}
+details{border:1px solid var(--line);border-radius:var(--r);margin:10px 0;background:var(--card)}
+details summary{cursor:pointer;padding:11px 15px;font-weight:600;font-size:14.5px}
+details summary::marker{color:var(--accent)}
+details>div{padding:2px 15px 14px;border-top:1px solid var(--line);font-size:14.5px}
+details>div p:last-child{margin-bottom:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1000px){
+  .wrap{grid-template-columns:1fr;gap:0;padding:0 18px 72px}
+  nav.toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);
+    padding:22px 0}
+  nav.toc ol{columns:2;column-gap:22px}
+  h1{font-size:29px}
+  .grid2{grid-template-columns:1fr}
+}
+/* SVG 视觉语言 */
+.f-bx{fill:var(--card);stroke:var(--line2);stroke-width:1.4}
+.f-bx.hi{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.8}
+.f-bx.dg{fill:var(--danger-soft);stroke:var(--danger)}
+.f-bx.st{fill:var(--stack)}
+.f-bx.st2{fill:var(--stack2)}
+.f-t{fill:var(--ink);font:12px var(--mono)}
+.f-t.s{font-size:11px;fill:var(--ink2)}
+.f-t.b{font-weight:700}
+.f-t.a{fill:var(--accent);font-weight:700}
+.f-t.r{fill:var(--danger);font-weight:700}
+.f-t.m{fill:var(--muted)}
+.f-ln{stroke:var(--ink2);stroke-width:1.3;fill:none}
+.f-ln.a{stroke:var(--accent);stroke-width:2}
+.f-ln.r{stroke:var(--danger);stroke-width:2;stroke-dasharray:5 4}
+.f-dash{stroke:var(--line2);stroke-width:1;stroke-dasharray:4 4;fill:none}
+.mono{font-family:var(--mono)}
+@media print{nav.toc,.tgl{display:none}.wrap{display:block}section.ch{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="tgl" role="group" aria-label="主题切换">
+  <button id="t-light" class="on" type="button">浅色</button>
+  <button id="t-dark" type="button">深色</button>
+</div>
+
+<div class="wrap">
+<nav class="toc" aria-label="目录">
+  <p class="tb">目录 · Contents</p>
+  <ol>
+    <li><a href="#c1">上电那一刻发生了什么</a></li>
+    <li><a href="#c2">CPU 的 16 个寄存器和两个栈</a></li>
+    <li><a href="#c3">异常、向量表与优先级</a></li>
+    <li><a href="#c4">SysTick：时间从哪来</a></li>
+    <li><a href="#c5">一次异常的完整进出</a></li>
+    <li><a href="#c6">任务到底是什么</a></li>
+    <li><a href="#c7">上下文切换全过程</a></li>
+    <li><a href="#c8">调度器启动的那一瞬间</a></li>
+    <li><a href="#c9">并发、临界区与 ISR 三范式</a></li>
+    <li><a href="#c10">应用：把裸机程序变成多任务</a></li>
+    <li><a href="#c11">调试与验证手段</a></li>
+    <li><a href="#c12">自测题（10 题）</a></li>
+    <li><a href="#c13">速查表 CM0+ vs M3/M4</a></li>
+  </ol>
+  <div class="sep"><a href="#appendix">附录 · 本工程实测数据</a></div>
+</nav>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">PY32C882 · Cortex-M0+ · FreeRTOS V10.5.1</p>
+  <h1>FreeRTOS 原理图解教学
+    <small>从"上电第一条指令"讲到"两个任务为什么能同时跑"。全部结论来自本机源码实测与真实工程验证，不是教程转述。</small>
+  </h1>
+  <div class="spec">
+    <div><b>8 MHz</b><span>HSI 直出主频</span></div>
+    <div><b>125 ns</b><span>单周期 @8MHz</span></div>
+    <div><b>7999</b><span>SysTick 重载值 = 1ms</span></div>
+    <div><b>0xC0C00000</b><span>SHPR3 实测值</span></div>
+    <div><b>16 字</b><span>任务切换帧 64B</span></div>
+    <div><b>9576 B</b><span>本工程 Flash 占用</span></div>
+  </div>
+</header>
+<section class="ch" id="c1">
+  <div class="h2"><i>01</i><h2>上电那一刻发生了什么</h2></div>
+
+  <p>按下复位键，CPU 内部没有"操作系统"，也没有"main 函数"。它只做一件事：<strong>从地址 <code>0x00000000</code> 处取两个字</strong>。而 PY32C882 的 Flash 被映射到 <code>0x08000000</code>，所以实际读的是 <code>0x08000000</code>。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 316" role="img" aria-label="上电启动流程与内存布局">
+      <!-- Flash 列 -->
+      <rect class="f-bx" x="14" y="16" width="300" height="284" rx="10"/>
+      <text class="f-t b" x="30" y="42">FLASH 0x0800_0000（256 KB）</text>
+      <rect class="f-bx hi" x="30" y="56" width="268" height="46" rx="7"/>
+      <text class="f-t" x="42" y="76">[+0x00] __initial_sp</text>
+      <text class="f-t s" x="42" y="92">= 0x2000_2800（栈顶，最高地址）</text>
+      <rect class="f-bx hi" x="30" y="108" width="268" height="46" rx="7"/>
+      <text class="f-t" x="42" y="128">[+0x04] Reset_Handler</text>
+      <text class="f-t s" x="42" y="144">第一条要执行的指令地址</text>
+      <rect class="f-bx" x="30" y="160" width="268" height="88" rx="7"/>
+      <text class="f-t" x="42" y="180">[+0x08…] 其余向量表</text>
+      <text class="f-t s" x="42" y="197">NMI / HardFault / SVC / PendSV / SysTick</text>
+      <text class="f-t s" x="42" y="213">以及 32 个外设中断入口（IRQ0…IRQ31）</text>
+      <text class="f-t s" x="42" y="232">★ 每个向量 4 字节，共 48 个字</text>
+      <rect class="f-bx" x="30" y="254" width="268" height="34" rx="7"/>
+      <text class="f-t" x="42" y="275">代码 .text / 常量 .constdata</text>
+
+      <!-- SRAM 列 -->
+      <rect class="f-bx" x="470" y="16" width="376" height="284" rx="10"/>
+      <text class="f-t b" x="486" y="42">SRAM 0x2000_0000（32 KB）</text>
+      <rect class="f-bx st" x="486" y="56" width="344" height="26" rx="6"/>
+      <text class="f-t s" x="498" y="74">.data 已初始化变量（上电时从 Flash 拷来）</text>
+      <rect class="f-bx st" x="486" y="88" width="344" height="26" rx="6"/>
+      <text class="f-t s" x="498" y="106">.bss 未初始化变量，含 heap_4 的 ucHeap[8192]</text>
+      <rect class="f-bx st2" x="486" y="120" width="344" height="26" rx="6"/>
+      <text class="f-t s" x="498" y="138">任务栈 ×3（从 FreeRTOS 堆里分出来的）</text>
+      <rect class="f-bx dg" x="486" y="152" width="344" height="112" rx="6"/>
+      <text class="f-t r" x="498" y="172">Stack_Mem（MSP 主栈，本工程已改大）</text>
+      <text class="f-t s" x="498" y="190">Stack_Size = 0x800 = 2 KB</text>
+      <text class="f-t s" x="498" y="208">★ 只给"中断 + 启动代码"用</text>
+      <text class="f-t s" x="498" y="226">★ 任务是另一个栈（PSP），不从这里出</text>
+      <text class="f-t s" x="498" y="248">初始 MSP 指向它的末地址</text>
+      <rect class="f-bx" x="486" y="272" width="344" height="16" rx="5"/>
+      <text class="f-t m" x="498" y="285">其余（HAL 句柄、全局缓冲…）</text>
+
+      <!-- 箭头与标注 -->
+      <path class="f-ln a" d="M313 79 L466 79"/>
+      <path class="f-ln a" d="M313 131 L466 131"/>
+      <text class="f-t a" x="322" y="72">① 硬件自动装载 → MSP</text>
+      <text class="f-t a" x="322" y="124">② 硬件自动跳转 → PC</text>
+      <text class="f-t m" x="322" y="176">③ SystemInit()</text>
+      <text class="f-t m" x="322" y="194">④ __main → 搬 .data、清 .bss</text>
+      <text class="f-t m" x="322" y="212">⑤ 跳到你的 main()</text>
+    </svg>
+    <figcaption><b>图的读法：</b>左列是 Flash，右列是 SRAM。复位瞬间 CPU 只做了①②两件事，剩下③④⑤都是"软件序言"（Keil 启动文件 + 分散加载代码）干的。<code>__initial_sp</code> 之所以放在向量表第 0 个字，是因为 Cortex-M 硬件约定从这里取初始栈指针——这也是后面任务切换能"伪造中断返回"的同一个机制来源。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 1.1</em>复位不是"从 0 开始"，而是"从向量表开始"</h4>
+    <p>向量表 = 一个 48 字的数组（Cortex-M0+），每个字是一个地址。CPU 硬编码使用前两个：<span class="kv">[0] → MSP</span>、<span class="kv">[1] → PC</span>。字段顺序不能改，改了上电就跑飞。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>知识点 1.2</em>两个"堆/栈"完全是两回事</h4>
+    <table>
+      <tr><th>名字</th><th>在哪定义</th><th>谁用</th><th>本工程实测</th></tr>
+      <tr><td>Stack_Size（MSP 主栈）</td><td>启动文件 <code>startup_py32c882xx.s</code></td><td>中断、异常、启动代码</td><td><b>0x800 = 2 KB</b>（移植时从 0x400 提上来的）</td></tr>
+      <tr><td>Heap_Size</td><td>同上</td><td><code>malloc()</code>（MicroLIB）</td><td>0x200 = 512 B，<b>FreeRTOS 根本不用它</b></td></tr>
+      <tr><td>configTOTAL_HEAP_SIZE</td><td><code>FreeRTOSConfig.h</code></td><td>FreeRTOS 的 <code>pvPortMalloc</code></td><td>8192 B，是 <code>heap_4.c</code> 里一个 <b>静态数组</b>（进 .bss）</td></tr>
+      <tr><td>任务栈 ×N</td><td><code>xTaskCreate()</code> 第 3 个参数</td><td>各任务自己（走 PSP）</td><td>128 字 = 512 B（单位是"字"！）</td></tr>
+    </table>
+    <p>最容易搞错的一点：<strong>FreeRTOS 的内存不是从启动文件的 <code>Heap_Size</code> 里来的。</strong><code>heap_4.c</code> 里有一个 <code>static uint8_t ucHeap[configTOTAL_HEAP_SIZE]</code>，它作为普通全局变量进 <code>.bss</code>，跟着 SRAM 一起被清零。两者互不相干。</p>
+  </div>
+</section>
+
+<section class="ch" id="c2">
+  <div class="h2"><i>02</i><h2>CPU 的 16 个寄存器和两个栈</h2></div>
+
+  <p>理解任务切换，只需要搞清"现场"是什么。<strong>现场 = 16 个寄存器的值</strong>。把它们原样存下来、再把另一个任务上次存的值装回去，就是一次上下文切换。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 330" role="img" aria-label="寄存器组与双栈机制">
+      <rect class="f-bx" x="14" y="14" width="330" height="302" rx="10"/>
+      <text class="f-t b" x="30" y="40">Cortex-M0+ 程序员可见寄存器</text>
+      <rect class="f-bx st" x="30" y="54" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="72">R0 – R12　通用寄存器（13 个）</text>
+      <rect class="f-bx st" x="30" y="86" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="104">R13 = SP　栈指针（★两个物理寄存器）</text>
+      <rect class="f-bx st" x="30" y="118" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="136">R14 = LR　链接/返回地址</text>
+      <rect class="f-bx st" x="30" y="150" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="168">R15 = PC　程序计数器</text>
+      <rect class="f-bx st" x="30" y="182" width="298" height="26" rx="6"/>
+      <text class="f-t" x="42" y="200">xPSR　程序状态字（含 Thumb 位）</text>
+      <rect class="f-bx hi" x="30" y="216" width="298" height="60" rx="6"/>
+      <text class="f-t a" x="42" y="236">PRIMASK　全局中断屏蔽位</text>
+      <text class="f-t s" x="42" y="254">= 0 允许 / = 1 屏蔽全部可屏蔽中断</text>
+      <text class="f-t s" x="42" y="270">★ CM0+ 没有 BASEPRI，只有这一把"总闸"</text>
+      <rect class="f-bx hi" x="30" y="284" width="298" height="24" rx="6"/>
+      <text class="f-t a" x="42" y="301">CONTROL　bit1 = SPSEL</text>
+
+      <text class="f-t b" x="378" y="40">两个栈，一条"选择线"</text>
+      <rect class="f-bx" x="378" y="54" width="230" height="150" rx="10"/>
+      <text class="f-t a" x="392" y="76">MSP 主栈</text>
+      <text class="f-t s" x="392" y="96">中断 / 异常 / 启动代码</text>
+      <text class="f-t s" x="392" y="114">本工程 2 KB，在 SRAM 顶部</text>
+      <rect class="f-bx st2" x="392" y="126" width="200" height="62" rx="6"/>
+      <text class="f-t s" x="402" y="145">SP_sys（线程模式用 MSP 时）</text>
+      <text class="f-t s" x="402" y="163">Handler 模式强制用 MSP</text>
+      <text class="f-t s" x="402" y="180">→ 中断永远不碰任务栈</text>
+
+      <rect class="f-bx" x="378" y="212" width="230" height="104" rx="10"/>
+      <text class="f-t a" x="392" y="234">PSP 进程栈</text>
+      <text class="f-t s" x="392" y="254">任务专用，每个任务一份</text>
+      <text class="f-t s" x="392" y="272">xTaskCreate 的 128 字就是它</text>
+      <text class="f-t s" x="392" y="292">→ 任务栈溢出 / 不会毁掉中断栈</text>
+
+      <path class="f-ln a" d="M346 296 L374 296"/>
+      <path class="f-ln a" d="M346 129 L374 129"/>
+      <rect class="f-bx" x="648" y="54" width="198" height="262" rx="10"/>
+      <text class="f-t b" x="662" y="78">切换靠一条指令</text>
+      <rect class="f-bx hi" x="662" y="92" width="170" height="58" rx="7"/>
+      <text class="f-t" x="674" y="114">movs r0, #2</text>
+      <text class="f-t" x="674" y="134">msr CONTROL, r0</text>
+      <text class="f-t s" x="674" y="150">SPSEL = 1 → 改用 PSP</text>
+      <text class="f-t m" x="662" y="176">之前：线程模式 + MSP</text>
+      <text class="f-t m" x="662" y="196">之后：线程模式 + PSP</text>
+      <text class="f-t s" x="662" y="220">而 Handler 模式</text>
+      <text class="f-t s" x="662" y="238">永远用 MSP（硬件强制）</text>
+      <text class="f-t a" x="662" y="268">这就是"中断用一套栈、</text>
+      <text class="f-t a" x="662" y="286">任务用另一套栈"的物理实现</text>
+    </svg>
+    <figcaption><b>为什么必须两个栈：</b>如果任务和中断共用一套栈，一个任务把栈写爆，中断进来就没地方存现场，直接 HardFault。<b>MSP 给中断、PSP 给任务</b>，把风险隔离在两个区域里——这也是"任务栈 128 字够不够"能被单独评估的原因。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 2.1</em>SP 只有一个名字，却有两个实体</h4>
+    <p>汇编里写 <code>SP</code>，CPU 内部其实有两个寄存器 <code>MSP</code> / <code>PSP</code>，由 <code>CONTROL[1]</code>（SPSEL）决定当前用哪个。所以：</p>
+    <ul>
+      <li><code>mrs r0, psp</code> —— 读出"另一个"栈指针，是 FreeRTOS 里最关键的一条指令之一；</li>
+      <li>Handler 模式下硬件强制走 MSP，写 SPSEL 也无效 —— 这条保证了中断安全。</li>
+    </ul>
+  </div>
+</section>
+<section class="ch" id="c3">
+  <div class="h2"><i>03</i><h2>异常、向量表与优先级</h2></div>
+
+  <p>在 Cortex-M 的世界里，"中断"和"出错"是同一类东西，统称<strong>异常</strong>。它们共用一张向量表、共用一套优先级规则、共用一套进出流程。搞清楚这一套，任务切换就只是它的一个特例。</p>
+
+  <table>
+    <tr><th>异常号</th><th>名字</th><th>谁产生</th><th>在 FreeRTOS 里的角色</th></tr>
+    <tr><td>1</td><td>Reset</td><td>复位引脚/上电</td><td>上电入口</td></tr>
+    <tr><td>2</td><td>NMI</td><td>不可屏蔽中断</td><td>一般不用</td></tr>
+    <tr><td>3</td><td><b>HardFault</b></td><td>所有错误的最终归集处</td><td><b>你上次踩的那个</b>：取指/访问错误、除零(CM0+ 无)、非法指令</td></tr>
+    <tr><td>11</td><td>SVCall</td><td><code>SVC</code> 指令</td><td>★M3/M4 用它启动第一个任务；<b>CM0+ 端口不用它</b></td></tr>
+    <tr><td>14</td><td><b>PendSV</b></td><td>软件写 ICSR 置位</td><td>★<b>真正的任务切换在这里执行</b></td></tr>
+    <tr><td>15</td><td>SysTick</td><td>SysTick 计数器到 0</td><td>★RTOS 的心跳（1ms）</td></tr>
+    <tr><td>16 – 47</td><td>IRQ0 – IRQ31</td><td>外设（UART/TIM/EXTI…）</td><td>你的业务中断</td></tr>
+  </table>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="SHPR3 位域与优先级阶梯">
+      <text class="f-t b" x="14" y="28">SHPR3 @ 0xE000_ED20 —— 内核异常的优先级住在这里</text>
+      <!-- 32 位格子 -->
+      <g>
+        <rect class="f-bx" x="14" y="42" width="80" height="44" rx="6"/><rect class="f-bx" x="94" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx" x="174" y="42" width="80" height="44" rx="6"/><rect class="f-bx" x="254" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx hi" x="334" y="42" width="80" height="44" rx="6"/><rect class="f-bx hi" x="414" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx hi" x="494" y="42" width="80" height="44" rx="6"/><rect class="f-bx hi" x="574" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx" x="654" y="42" width="192" height="44" rx="6"/>
+      </g>
+      <text class="f-t m" x="42" y="70">保留</text>
+      <text class="f-t m" x="436" y="70">PendSV</text>
+      <text class="f-t m" x="700" y="70">SysTick</text>
+      <text class="f-t s" x="374" y="34">[23:16]</text>
+      <text class="f-t s" x="694" y="34">[31:24]</text>
+      <path class="f-ln" d="M334 90 L414 90"/><path class="f-ln" d="M494 90 L574 90"/><path class="f-ln" d="M654 90 L846 90"/>
+      <text class="f-t s" x="316" y="106">↑ 这 8 位是一个整体（一个优先级字段）</text>
+
+      <!-- 写入 vs 读回 -->
+      <rect class="f-bx" x="14" y="126" width="392" height="150" rx="10"/>
+      <text class="f-t b" x="30" y="150">port.c 里写的是</text>
+      <text class="f-t" x="30" y="172">portNVIC_PENDSV_PRI  = 255 &lt;&lt; 16</text>
+      <text class="f-t" x="30" y="190">portNVIC_SYSTICK_PRI = 255 &lt;&lt; 24</text>
+      <text class="f-t s" x="30" y="214">255 = 0b1111_1111（8 位全 1）</text>
+      <rect class="f-bx hi" x="30" y="226" width="356" height="36" rx="6"/>
+      <text class="f-t a" x="42" y="249">但 CM0+ 只实现了高 2 位 → 实际落下 0b1100_0000</text>
+
+      <rect class="f-bx" x="430" y="126" width="416" height="150" rx="10"/>
+      <text class="f-t b" x="446" y="150">所以在调试器里读回</text>
+      <text class="f-t a" x="446" y="176">SHPR3 = 0xC0C00000</text>
+      <text class="f-t s" x="446" y="200">PendSV  = 0xC0 → 优先级 3（最低）</text>
+      <text class="f-t s" x="446" y="222">SysTick = 0xC0 → 优先级 3（最低）</text>
+      <text class="f-t s" x="446" y="250">★ 两个字节能同时看到，就是它俩都设成了最低</text>
+      <!-- 优先级阶梯 -->
+      <text class="f-t b" x="446" y="272">优先级只有 4 级：0(高) 1 2 3(低)</text>
+      <rect class="f-bx" x="654" y="258" width="46" height="18" rx="4"/><text class="f-t s" x="708" y="272">← 内核异常固定待在这</text>
+    </svg>
+    <figcaption><b>0xC0 是编造不出来的数字：</b>它是"写 8 位、只落地 2 位"的必然结果。看到 <code>SHPR3 = 0xC0C00000</code>，就能断定 PendSV 和 SysTick 都被设成了硬件最低优先级 3 —— 这是验证调度器已接管的两行证据之一。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 3.1</em>为什么内核异常必须是"最低优先级"</h4>
+    <p>PendSV 和 SysTick 是 RTOS 的<strong>后台工作</strong>：一个负责切换任务、一个负责数时间。它们必须<strong>让所有外设中断先跑完</strong>，否则会出现灾难性后果：</p>
+    <ul>
+      <li>如果切换能打断一个正在处理数据的 UART 中断，切回来时外设状态已经变了；</li>
+      <li>如果 SysTick 能打断高优先级外设中断，节拍处理会与业务的临界区互相踩。</li>
+    </ul>
+    <p>所以内核把这两个异常设成 <span class="kv">优先级 3</span>（最低），业务中断用 <span class="kv">0 ~ 2</span>。这条规则在 CM0+ 上就是全部——它没有 BASEPRI 可以做"部分屏蔽"。</p>
+  </div>
+
+  <div class="call warn">
+    <span class="tag">实战对照</span>
+    <p>本工程实测：<code>SysTick-&gt;LOAD = 7999</code>（节拍对）、<code>SHPR3 = 0xC0C00000</code>（优先级对）。如果你哪天改完时钟发现 <code>LOAD = 7999</code> 却 <code>SHPR3 = 0</code>，说明<a href="#c8">内核还没接管</a>。</p>
+  </div>
+</section>
+
+<section class="ch" id="c4">
+  <div class="h2"><i>04</i><h2>SysTick：时间从哪来</h2></div>
+
+  <p>任务能"延时 250ms 后自己醒来"，是因为有一个硬件在替它数时间。这个硬件就是内核自带的 <strong>SysTick 定时器</strong>——它不是 PY32 芯片加的外设，而是 <strong>Cortex-M 内核的一部分</strong>（所有 M 核都有）。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 286" role="img" aria-label="SysTick 结构与 1ms 节拍">
+      <rect class="f-bx" x="14" y="14" width="300" height="126" rx="10"/>
+      <text class="f-t b" x="30" y="38">SysTick 三个寄存器</text>
+      <rect class="f-bx st" x="30" y="50" width="268" height="24" rx="5"/><text class="f-t s" x="42" y="67">CTRL  @0xE000_E010</text>
+      <rect class="f-bx st" x="30" y="78" width="268" height="24" rx="5"/><text class="f-t s" x="42" y="95">LOAD  @0xE000_E014 ← 重载值</text>
+      <rect class="f-bx st" x="30" y="106" width="268" height="24" rx="5"/><text class="f-t s" x="42" y="123">VAL   @0xE000_E018 ← 当前计数值</text>
+
+      <rect class="f-bx hi" x="334" y="14" width="248" height="126" rx="10"/>
+      <text class="f-t b" x="348" y="38">CTRL 的 4 个关键位</text>
+      <text class="f-t s" x="348" y="60">bit0 ENABLE　　= 1 开计数器</text>
+      <text class="f-t s" x="348" y="80">bit1 TICKINT　 = 1 到 0 时产生异常</text>
+      <text class="f-t s" x="348" y="100">bit2 CLKSOURCE= 1 用内核时钟</text>
+      <text class="f-t s" x="348" y="120">bit16 COUNTFLAG（读一下自动清）</text>
+
+      <rect class="f-bx hi" x="602" y="14" width="244" height="126" rx="10"/>
+      <text class="f-t b" x="616" y="38">本工程的算术</text>
+      <text class="f-t a" x="616" y="64">LOAD = 8 000 000 / 1000 − 1</text>
+      <text class="f-t a" x="616" y="86">= 7999</text>
+      <text class="f-t s" x="616" y="108">8000 个内核周期 = 1 ms</text>
+      <text class="f-t s" x="616" y="128">这就是 RTOS 的"心跳"</text>
+
+      <!-- 时间轴 -->
+      <text class="f-t b" x="14" y="172">计数器怎么跑（VAL 从 7999 递减到 0）</text>
+      <path class="f-ln" d="M20 250 L846 250"/>
+      <path class="f-ln a" d="M20 226 L60 226 L100 234 L140 242 L180 250"/>
+      <path class="f-ln a" d="M180 226 L220 226 L260 234 L300 242 L340 250"/>
+      <path class="f-ln a" d="M340 226 L380 226 L420 234 L460 242 L500 250"/>
+      <path class="f-ln a" d="M500 226 L540 226 L580 234 L620 242 L660 250"/>
+      <path class="f-ln a" d="M660 226 L700 226 L740 234 L780 242 L820 250"/>
+      <text class="f-t s" x="24" y="216">7999</text>
+      <circle class="f-ln a" cx="180" cy="250" r="4" fill="currentColor"/>
+      <circle class="f-ln a" cx="340" cy="250" r="4" fill="currentColor"/>
+      <circle class="f-ln a" cx="500" cy="250" r="4" fill="currentColor"/>
+      <circle class="f-ln a" cx="660" cy="250" r="4" fill="currentColor"/>
+      <text class="f-t a" x="150" y="274">到 0 → 异常 + 自动重载</text>
+      <text class="f-t m" x="470" y="274">每 1 ms 一次，永不停歇</text>
+      <text class="f-t s" x="20" y="200" style="font-size:10px">VAL 每 125 ns 减 1</text>
+    </svg>
+    <figcaption><b>一句话：</b>SysTick 就是一个"24 位递减计数器 + 到 0 时敲一下门"。<code>LOAD = 7999</code> 意味着敲门的间隔正好是 1ms。<b>谁拥有 SysTick，谁就掌握了整个系统的时间基准</b>——这正是 HAL 库和 FreeRTOS 会争抢它的原因。</figcaption>
+  </figure>
+
+  <div class="call warn">
+    <span class="tag">这就是你上次 HardFault 的战场</span>
+    <p><code>HAL_Init()</code> 会把 SysTick 打开并允许中断（为了给 <code>HAL_Delay</code> / <code>HAL_GetTick</code> 供时基）。但此时 FreeRTOS 的调度器还没启动，它的内部数据结构是空的。这期间任何一个 tick 进来，就会走进一张还没初始化好的表里。<b>第 8 章会把整个事故完整复盘。</b></p>
+  </div>
+</section>
+<section class="ch" id="c5">
+  <div class="h2"><i>05</i><h2>一次异常的完整进出</h2></div>
+
+  <p>这是整篇最重要的一节。理解了"异常进出时硬件替你做了什么"，你就会明白：<strong>任务切换根本不是什么魔法，而是把这个机制借来用了一次。</strong></p>
+
+  <h3>进入异常：硬件自动压 8 个字</h3>
+  <p>当异常被响应，CPU <strong>不执行任何指令</strong>就先做这几件事：把当前要保护的 8 个寄存器压到<strong>当前使用的栈</strong>上 → 从向量表取异常处理函数的地址 → 把 PC 跳过去。压栈顺序是固定的：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 330" role="img" aria-label="异常压栈帧布局">
+      <text class="f-t b" x="14" y="26">发生异常时，硬件自动压入的 8 个字（低地址在下）</text>
+      <!-- 栈帧 -->
+      <rect class="f-bx st" x="150" y="44" width="250" height="30" rx="4"/><text class="f-t" x="164" y="64">R0　　← SP 指向这里（异常处理里读到的栈顶）</text>
+      <rect class="f-bx st" x="150" y="74" width="250" height="30" rx="4"/><text class="f-t" x="164" y="94">R1</text>
+      <rect class="f-bx st" x="150" y="104" width="250" height="30" rx="4"/><text class="f-t" x="164" y="124">R2</text>
+      <rect class="f-bx st" x="150" y="134" width="250" height="30" rx="4"/><text class="f-t" x="164" y="154">R3</text>
+      <rect class="f-bx st2" x="150" y="164" width="250" height="30" rx="4"/><text class="f-t" x="164" y="184">R12</text>
+      <rect class="f-bx st2" x="150" y="194" width="250" height="30" rx="4"/><text class="f-t" x="164" y="214">LR（被打断处的返回地址）</text>
+      <rect class="f-bx hi" x="150" y="224" width="250" height="30" rx="4"/><text class="f-t a" x="164" y="244">PC（被打断的那条指令）</text>
+      <rect class="f-bx hi" x="150" y="254" width="250" height="30" rx="4"/><text class="f-t a" x="164" y="274">xPSR（含 Thumb 位）</text>
+      <text class="f-t s" x="150" y="304">8 个字 = 32 字节，硬件完成，不需要任何指令</text>
+
+      <!-- 右侧解读 -->
+      <rect class="f-bx" x="430" y="44" width="416" height="92" rx="10"/>
+      <text class="f-t b" x="446" y="68">8 字节对齐规则</text>
+      <text class="f-t s" x="446" y="90">异常进栈前 SP 必须 8 字节对齐。若原本不对齐，</text>
+      <text class="f-t s" x="446" y="110">硬件会插入一个"填充字"，并用 xPSR.bit9 记住</text>
+      <text class="f-t s" x="446" y="130">→ 返回时自动丢掉，程序无感知</text>
+      <rect class="f-bx" x="430" y="152" width="416" height="132" rx="10"/>
+      <text class="f-t b" x="446" y="176">为什么是"这 8 个"</text>
+      <text class="f-t s" x="446" y="198">R0–R3　　函数调用的参数/返回值（最可能被用到）</text>
+      <text class="f-t s" x="446" y="218">R12　　　 调用时的临时寄存器</text>
+      <text class="f-t s" x="446" y="238">LR / PC / xPSR　恢复执行必需</text>
+      <text class="f-t a" x="446" y="264">R4–R11 硬件不管！想保存只能自己压栈</text>
+      <text class="f-t s" x="446" y="280" style="font-size:10px">← 这正是 PendSV 里手写 stmia 的原因</text>
+    </svg>
+    <figcaption><b>记住这张图，后面全部靠它：</b>硬件只保护 8 个寄存器（约占 32 字节），剩下 R4–R11 由软件负责。任务切换要"完整保存现场"，所以必须自己把那 8 个也压进去 —— 一共 16 个字 = 64 字节。</figcaption>
+  </figure>
+
+  <h3>退出异常：靠 LR 里的"暗号"</h3>
+  <p>异常发生瞬间，LR 被硬件改写成特殊值 <strong>EXC_RETURN</strong>（不是普通返回地址）。异常处理函数返回时，只要 <code>bx</code> 跳回这个值，硬件就知道"这是要退出异常"，于是自动弹栈、恢复现场。</p>
+
+  <table>
+    <tr><th>EXC_RETURN 值</th><th>含义</th><th>弹栈时用哪个栈</th><th>常见于</th></tr>
+    <tr><td><code>0xFFFFFFF1</code></td><td>返回 <b>Handler 模式</b>（异常嵌套）</td><td>MSP</td><td>中断嵌套</td></tr>
+    <tr><td><code>0xFFFFFFF9</code></td><td>返回 <b>线程模式</b></td><td><b>MSP</b></td><td>普通裸机代码、启动阶段</td></tr>
+    <tr><td><code>0xFFFFFFFD</code></td><td>返回 <b>线程模式</b></td><td><b>PSP</b></td><td>★<b>返回任务（RTOS 里最常见）</b></td></tr>
+  </table>
+
+  <div class="call key">
+    <span class="tag">核心结论</span>
+    <p><strong>"切换任务"就是"让硬件从另一个栈上弹帧"。</strong>因为弹哪个栈由 EXC_RETURN 的 bit2 决定（1 → PSP），所以只要在 PendSV 里把 PSP 换成新任务的栈，再 <code>bx</code> 回去，硬件就会老老实实把新任务的现场装进 CPU —— 一个字节的指令都不用改，全靠硬件。</p>
+    <p>这就解释了 FreeRTOS 里那两处看起来奇怪的写法：<code>pxPortInitialiseStack()</code> 在任务栈上"手工伪造一个帧"，<code>prvPortStartFirstTask()</code> 最后用 <code>bx</code> 跳进任务函数。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>知识点 5.1</em>tail-chaining 与 late-arrival</h4>
+    <ul>
+      <li><b>tail-chaining（背靠背）</b>：一个异常刚处理完，另一个已挂起 → 硬件不弹栈再压栈，直接跳到下一个处理函数。省掉的正是那 8 个字的时间。</li>
+      <li><b>late-arrival（晚到抢占）</b>：异常刚进入压栈阶段，一个更高优先级的异常来了 → 硬件改去执行高优先级的，压栈动作复用。</li>
+      <li><b>对 RTOS 的意义</b>：频繁发生的中断（比如 1ms 的 SysTick）大部分时间都走了 tail-chaining，代价远小于"完整进出一次"。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="ch" id="c6">
+  <div class="h2"><i>06</i><h2>任务到底是什么</h2></div>
+
+  <p>裸机里"任务"就是 <code>while(1)</code> 里的一段流程。RTOS 里的任务是一个<strong>数据结构 + 一份私有栈</strong>：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 322" role="img" aria-label="TCB 与三类链表">
+      <!-- TCB -->
+      <rect class="f-bx hi" x="14" y="20" width="286" height="188" rx="10"/>
+      <text class="f-t b" x="28" y="44">TCB（任务控制块）</text>
+      <rect class="f-bx" x="28" y="56" width="258" height="30" rx="5"/>
+      <text class="f-t a" x="40" y="76">pxTopOfStack ← ★第 1 个字段</text>
+      <rect class="f-bx" x="28" y="90" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="107">xStateListItem（就绪/阻塞链节）</text>
+      <rect class="f-bx" x="28" y="118" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="135">xEventListItem（等超时用）</text>
+      <rect class="f-bx" x="28" y="146" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="163">uxPriority　uxBasePriority</text>
+      <rect class="f-bx" x="28" y="174" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="191">pcTaskName　pxStack（栈底，查溢出用）</text>
+
+      <!-- 链表 -->
+      <rect class="f-bx" x="330" y="20" width="516" height="76" rx="10"/>
+      <text class="f-t b" x="344" y="44">就绪链表 pxReadyTasksLists[0..7]</text>
+      <text class="f-t s" x="344" y="66">每个优先级一条。任务处于"可以跑"状态时坐在这条链表上，</text>
+      <text class="f-t s" x="344" y="84">调度器要做的永远是：<tspan class="f-t a">从最高优先级的非空链表里挑一个</tspan></text>
+      <rect class="f-bx" x="330" y="106" width="516" height="70" rx="10"/>
+      <text class="f-t b" x="344" y="130">延迟链表 pxDelayedTaskList</text>
+      <text class="f-t s" x="344" y="152">调用了 vTaskDelay 的任务搬到这里，按"唤醒时刻"排序；</text>
+      <text class="f-t s" x="344" y="170">xNextTaskUnblockTime 记住最早那个的到期时间</text>
+      <rect class="f-bx dg" x="330" y="186" width="516" height="76" rx="10"/>
+      <text class="f-t r" x="344" y="210">★ pxDelayedTaskList 在第一个任务创建前 = NULL</text>
+      <text class="f-t r" x="344" y="230">★ xNextTaskUnblockTime 在调度器启动前 = 0</text>
+      <text class="f-t s" x="344" y="250">这两个"还没准备好"的状态，就是你上次 HardFault 的直接原因（第 8 章）</text>
+
+      <!-- pxCurrentTCB -->
+      <rect class="f-bx" x="330" y="276" width="250" height="34" rx="8"/>
+      <text class="f-t a" x="344" y="298">pxCurrentTCB → 当前正在跑的任务</text>
+      <path class="f-ln a" d="M330 293 L302 293 L302 120 L300 120"/>
+      <text class="f-t s" x="330" y="322" style="font-size:10px">切换的本质就是改这个指针，然后从新 TCB 的栈里恢复现场</text>
+    </svg>
+    <figcaption><b>三个数据就够了：</b>当前任务指针（pxCurrentTCB）、就绪链表（谁可以跑）、延迟链表（谁在睡觉）。<code>xTaskCreate()</code> 干的事就是：从堆里挖一块当栈 → 初始化栈上的"伪造帧" → 建一个 TCB → 挂到就绪链表上。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 6.1</em>任务的"优先级"是软件概念，和硬件的 4 级无关</h4>
+    <p>CM0+ 的硬件优先级只有 4 级，但 <code>configMAX_PRIORITIES</code> 可以设 8、16、32。原因：</p>
+    <ul>
+      <li>硬件优先级决定的是 <b>中断能不能互相抢占</b>；</li>
+      <li>任务优先级只是"就绪链表的下标"。任务是靠 <b>PendSV 这个唯一的切换点</b>轮流跑的，根本不经过硬件优先级比较。</li>
+    </ul>
+    <p>所以本工程 <code>configMAX_PRIORITIES = 8</code>，而外设中断只能用 0 ~ 2。</p>
+  </div>
+</section>
+<section class="ch" id="c7">
+  <div class="h2"><i>07</i><h2>上下文切换全过程</h2></div>
+
+  <p>下面这 3 段代码全部来自本工程的实际文件：<code>FreeRTOS\Source\portable\RVDS\ARM_CM0\port.c</code>。看懂它们，你就彻底懂了 RTOS 最核心的 200 行。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="任务栈上的 16 字完整帧">
+      <text class="f-t b" x="14" y="26">一个任务被切走时，它的栈上完整的样子（16 个字 = 64 字节）</text>
+      <rect class="f-bx st" x="60" y="42" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="59">R4</text>
+      <rect class="f-bx st" x="60" y="66" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="83">R5　R6　R7（软件压，stmia r0!,{r4-r7}）</text>
+      <rect class="f-bx st" x="60" y="90" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="107">R8　R9　R10　R11（软件压，先 mov 到 r4-r7 再 stmia）</text>
+      <rect class="f-bx st2" x="60" y="114" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="131">R0　← 新栈顶保存在 TCB-&gt;pxTopOfStack</text>
+      <rect class="f-bx st2" x="60" y="138" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="155">R1　R2　R3</text>
+      <rect class="f-bx st2" x="60" y="162" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="179">R12</text>
+      <rect class="f-bx st2" x="60" y="186" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="203">LR　（被打断处的返回地址）</text>
+      <rect class="f-bx hi" x="60" y="210" width="330" height="24" rx="4"/><text class="f-t a" x="72" y="227">PC　← bx EXC_RETURN 后从这里继续执行</text>
+      <rect class="f-bx hi" x="60" y="234" width="330" height="24" rx="4"/><text class="f-t a" x="72" y="251">xPSR</text>
+      <text class="f-t m" x="60" y="278">低地址 ↑　　　　　　　　　　　　　　　　　　↓ 高地址（PSP 从下往上弹）</text>
+
+      <rect class="f-bx" x="416" y="42" width="430" height="106" rx="10"/>
+      <text class="f-t b" x="430" y="66">谁压的？</text>
+      <text class="f-t s" x="430" y="88">下面 8 个（R0–R3,R12,LR,PC,xPSR）：</text>
+      <text class="f-t a" x="430" y="108">硬件自动压 —— 一条指令都不用写</text>
+      <text class="f-t s" x="430" y="130">上面 8 个（R4–R11）：软件手写汇编压</text>
+      <rect class="f-bx" x="416" y="162" width="430" height="120" rx="10"/>
+      <text class="f-t b" x="430" y="186">为什么要 16 个字而不是 8 个</text>
+      <text class="f-t s" x="430" y="208">硬件只保护它认为"跨异常必须活着"的 8 个。</text>
+      <text class="f-t s" x="430" y="228">但任务被切走后，回来后要像什么都没发生一样</text>
+      <text class="f-t s" x="430" y="248">继续跑 —— 编译器可能把变量存在 R4–R11 里，</text>
+      <text class="f-t a" x="430" y="270">所以这 8 个必须由 RTOS 自己保存。</text>
+    </svg>
+    <figcaption><b>两个"栈顶"要分清：</b>TCB 里存的 <code>pxTopOfStack</code> 指向 <b>R0 槽</b>（软件压完 R4–R11 之后的位置）；而 PSP 在异常返回那一刻必须指向 <b>R0 槽</b>，硬件才知道从哪开始弹。<code>adds r0,#16</code> / <code>subs r0,#32</code> 这些魔数就是在两个位置之间来回挪。</figcaption>
+  </figure>
+
+  <h3>片段 ① <code>pxPortInitialiseStack()</code>：创建任务时"伪造"一个现场</h3>
+  <p><code>xTaskCreate()</code> 内部会调用它，作用是在新任务栈的顶部<strong>手工摆出一个"刚被中断打断"的帧</strong>：</p>
+
+<pre><code>StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
+                                     TaskFunction_t pxCode, void * pvParameters )
+{
+    pxTopOfStack--;
+    *pxTopOfStack = portINITIAL_XPSR;                 <span class="c">/* ① xPSR = 0x01000000（bit24 = Thumb 位，必须为 1）*/</span>
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) pxCode;           <span class="c">/* ② PC = 任务函数的入口地址 */</span>
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) prvTaskExitError; <span class="c">/* ③ LR = 万一任务函数 return 了去哪 */</span>
+    pxTopOfStack -= 5;                                <span class="c">/* ④ 跳过 R12, R3, R2, R1 四格 */</span>
+    *pxTopOfStack = ( StackType_t ) pvParameters;     <span class="c">/* ⑤ R0 = 任务参数（就是 xTaskCreate 的 pvParameters）*/</span>
+    pxTopOfStack -= 8;                                <span class="c">/* ⑥ 空出 R11…R4 八格（首次运行没有旧值）*/</span>
+    return pxTopOfStack;
+}</code></pre>
+
+  <div class="pt">
+    <h4><em>要点</em>这段代码是"面向硬件契约"写的</h4>
+    <p>它压栈的顺序和位置，必须<strong>一个字节都不差</strong>地对上 8 字硬件帧的布局（R0 在低地址、xPSR 在高地址），因为将来硬件会按这个格式去弹。<code>xTaskCreate</code> 第 3 个参数为什么是"字数"？因为这里减的是一个个 <code>StackType_t</code>（= uint32_t）。</p>
+  </div>
+
+  <h3>片段 ② <code>prvPortStartFirstTask()</code>：启动第一个任务</h3>
+  <p>调度器准备好之后，由它把 CPU"交给"第一个任务。<strong>注意：这里没有 <code>SVC</code> 指令。</strong>M3/M4 教程里讲的"SVC 启动第一个任务"在 CM0+ 上不成立——源码注释写明了原因：M0 没有 VTOR，无法重新定位初始栈值，所以改用"直接设置 PSP + bx"。</p>
+
+<pre><code>ldr r3, = pxCurrentTCB     <span class="c">; r3 = &amp;pxCurrentTCB</span>
+ldr r1, [ r3 ]
+ldr r0, [ r1 ]             <span class="c">; r0 = TCB-&gt;pxTopOfStack（指向 R4 槽）</span>
+adds r0, # 32              <span class="c">; ★跳过 R4–R11：8 个字 × 4 字节 = 32</span>
+msr psp, r0                <span class="c">; ★PSP 指向 R0 槽 = 硬件帧的起点</span>
+movs r0, # 2
+msr CONTROL, r0            <span class="c">; ★SPSEL = 1：线程模式从此改用 PSP</span>
+isb
+pop { r0 - r5 }            <span class="c">; 弹出 R0,R1,R2,R3,R12,LR</span>
+mov lr, r5                 <span class="c">; LR 里装的是 EXC_RETURN（异常返回暗号）</span>
+pop { r3 }                 <span class="c">; r3 = PC = 任务函数入口</span>
+pop { r2 }                 <span class="c">; 丢弃 xPSR</span>
+cpsie i                    <span class="c">; 开中断</span>
+bx r3                      <span class="c">; ★跳进任务函数，任务从此开始跑</span></code></pre>
+
+  <h3>片段 ③ <code>xPortPendSVHandler()</code>：运行时切换（全篇核心）</h3>
+  <p>每次要换任务时，内核只做一件事：往 ICSR 寄存器写一位，把 PendSV 挂起。等所有更高优先级的中断都干完了，PendSV 才被响应 —— 于是"切换"永远发生在最安全的时刻。</p>
+
+<pre><code>mrs r0, psp                <span class="c">; r0 = 当前任务的 PSP（指向硬件帧 R0 槽）</span>
+ldr r3, = pxCurrentTCB
+ldr r2, [ r3 ]             <span class="c">; r2 = pxCurrentTCB（即将被换下的任务）</span>
+
+subs r0, # 32              <span class="c">; ↓ 向下让出 32 字节给 R4–R11</span>
+str r0, [ r2 ]             <span class="c">; ★把新的栈顶存回 旧TCB-&gt;pxTopOfStack</span>
+stmia r0 !, { r4 - r7 }    <span class="c">; 压 R4–R7</span>
+mov r4, r8                 <span class="c">; CM0 的指令限制：高寄存器要先搬到低寄存器</span>
+mov r5, r9
+mov r6, r10
+mov r7, r11
+stmia r0 !, { r4 - r7 }    <span class="c">; 压 R8–R11 → 旧任务现场保存完毕（16 字）</span>
+
+push { r3, r14 }           <span class="c">; 保存 r3 和 LR(EXC_RETURN)，因为下面要调 C 函数</span>
+cpsid i                    <span class="c">; 关中断（CM0 上这是"全局关"，没有 BASEPRI）</span>
+bl vTaskSwitchContext      <span class="c">; ★★唯一的"决策"：挑下一个任务、更新 pxCurrentTCB</span>
+cpsie i
+pop { r2, r3 }             <span class="c">; r2 = 新TCB地址, r3 = EXC_RETURN</span>
+
+ldr r1, [ r2 ]
+ldr r0, [ r1 ]             <span class="c">; r0 = 新任务的栈顶（指向它的 R4 槽）</span>
+adds r0, # 16              <span class="c">; 跳过 R4–R7，定位到 R8 槽</span>
+ldmia r0 !, { r4 - r7 }    <span class="c">; 恢复 R8–R11</span>
+mov r8, r4
+mov r9, r5
+mov r10, r6
+mov r11, r7
+
+msr psp, r0                <span class="c">; ★★PSP = 新任务的硬件帧起点</span>
+subs r0, # 32              <span class="c">; 回退到 R4 槽</span>
+ldmia r0 !, { r4 - r7 }    <span class="c">; 恢复 R4–R7 → 新任务现场装载完毕</span>
+
+bx r3                      <span class="c">; ★★★用 EXC_RETURN 返回！</span>
+                           <span class="c">;     硬件从新 PSP 弹 8 字帧 → PC 变成新任务的下一条指令</span></code></pre>
+
+  <div class="call key">
+    <span class="tag">一句话总结整个机制</span>
+    <p>任务切换 = <b>保存旧任务的 16 个寄存器到它的栈 → 调用 C 函数决定下一个跑谁 → 从新任务的栈把 16 个寄存器装回来 → 用 <code>bx EXC_RETURN</code> 让硬件"以为"只是从一次中断里返回</b>。</p>
+    <p>硬件完全被骗过去了：它以为自己在退出一个普通异常，于是乖乖地从 <code>PSP</code> 弹出那 8 个字并继续执行 —— 而那个 <code>PC</code> 属于另一个任务。<strong>没有任何"特殊跳转"指令，一切建立在异常返回机制之上。</strong></p>
+  </div>
+</section>
+
+<section class="ch" id="c8">
+  <div class="h2"><i>08</i><h2>调度器启动的那一瞬间</h2></div>
+
+  <p>把前面所有知识串起来：<code>vTaskStartScheduler()</code> 被调用后的几百个时钟周期里，系统发生了什么。下面每一行都有源码出处，可以在本工程的 <code>tasks.c</code> / <code>port.c</code> 里核对。</p>
+
+  <table>
+    <tr><th>#</th><th>动作</th><th>代码位置</th><th>为什么必须这个顺序</th></tr>
+    <tr><td>1</td><td>创建空闲任务（若堆不够会直接返回）</td><td><code>tasks.c</code></td><td>必须保证系统任何时候都有任务可跑</td></tr>
+    <tr><td>2</td><td><code>portDISABLE_INTERRUPTS()</code> 关中断</td><td><code>tasks.c:2026</code></td><td>★下面三行必须"原子"完成，不能被打断</td></tr>
+    <tr><td>3</td><td><code>xNextTaskUnblockTime = portMAX_DELAY</code></td><td><code>tasks.c:2036</code></td><td>在此之前它的值是 <b>0</b>（初值），是危险状态</td></tr>
+    <tr><td>4</td><td><code>xSchedulerRunning = pdTRUE</code></td><td><code>tasks.c:2037</code></td><td>标记"已进入 RTOS 世界"</td></tr>
+    <tr><td>5</td><td><code>xPortStartScheduler()</code></td><td><code>port.c:220</code></td><td>真正把 CPU 交出去</td></tr>
+    <tr><td>6</td><td><code>SHPR3 |= PENDSV_PRI / SYSTICK_PRI</code></td><td><code>port.c:223 / 225</code></td><td>内核异常设为最低优先级 → 实测读回 <code>0xC0C00000</code></td></tr>
+    <tr><td>7</td><td><code>vPortSetupTimerInterrupt()</code></td><td><code>port.c:229 / 389</code></td><td>接管 SysTick：<code>LOAD = 8000000/1000-1 = 7999</code></td></tr>
+    <tr><td>8</td><td><code>uxCriticalNesting = 0</code></td><td><code>port.c:232</code></td><td>临界区嵌套计数归零，给第一个任务一个干净起点</td></tr>
+    <tr><td>9</td><td><code>prvPortStartFirstTask()</code></td><td><code>port.c:235</code></td><td>设置 PSP/CONTROL，<code>bx</code> 进第一个任务 —— <b>永不返回</b></td></tr>
+  </table>
+
+  <h3>事故复盘：为什么"停在初始化函数里"却进了 HardFault</h3>
+  <p>这是你在本工程真实踩到的坑，也是 HAL 库工程接 RTOS 最容易中的一枪。两条时序线放一起对比就清楚了：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 356" role="img" aria-label="HardFault 时序对比">
+      <text class="f-t b" x="14" y="24">❌ 出错的时序：HAL 先打开了 SysTick，RTOS 却还没准备好</text>
+      <path class="f-ln" d="M20 78 L846 78"/>
+      <circle cx="60" cy="78" r="5" class="f-bx hi"/>
+      <text class="f-t s" x="42" y="62">① HAL_Init()</text>
+      <text class="f-t r" x="42" y="100">SysTick 使能 + TICKINT = 1</text>
+      <circle cx="300" cy="78" r="5" class="f-bx"/>
+      <text class="f-t s" x="252" y="62">② BSP_UART_Config() / printf</text>
+      <text class="f-t s" x="252" y="100">一行 printf @115200 ≈ 5~7 ms</text>
+      <circle cx="360" cy="78" r="7" class="f-bx dg"/>
+      <text class="f-t r" x="330" y="46">③ 1ms tick 到达！</text>
+      <path class="f-ln r" d="M360 78 L360 132"/>
+      <rect class="f-bx dg" x="196" y="132" width="330" height="76" rx="8"/>
+      <text class="f-t r" x="210" y="154">SysTick 中断 → xPortSysTickHandler</text>
+      <text class="f-t r" x="210" y="174">→ xTaskIncrementTick()</text>
+      <text class="f-t" x="210" y="194">xTickCount 0→1，1 ≥ xNextTaskUnblockTime(0) 成立</text>
+      <path class="f-ln r" d="M530 170 L590 170"/>
+      <rect class="f-bx dg" x="590" y="132" width="256" height="76" rx="8"/>
+      <text class="f-t r" x="604" y="156">listLIST_IS_EMPTY(pxDelayedTaskList)</text>
+      <text class="f-t r" x="604" y="178">pxDelayedTaskList == NULL</text>
+      <text class="f-t r" x="604" y="198">→ HardFault</text>
+      <circle cx="700" cy="78" r="5" class="f-bx"/>
+      <text class="f-t s" x="596" y="100">④ vTaskStartScheduler() 永远到不了</text>
+
+      <text class="f-t b" x="14" y="248">✅ 修复后：在启动前，SysTick 由 HAL 自己服务</text>
+      <path class="f-ln a" d="M20 288 L846 288"/>
+      <circle cx="60" cy="288" r="5" class="f-bx hi"/>
+      <text class="f-t s" x="42" y="272">HAL_Init()</text>
+      <circle cx="300" cy="288" r="5" class="f-bx"/>
+      <text class="f-t s" x="240" y="272">外设初始化 / printf</text>
+      <circle cx="360" cy="288" r="7" class="f-bx hi"/>
+      <text class="f-t a" x="330" y="256">tick 照样会来</text>
+      <path class="f-ln a" d="M360 288 L360 316"/>
+      <rect class="f-bx hi" x="196" y="312" width="330" height="40" rx="8"/>
+      <text class="f-t a" x="210" y="337">SysTick_Handler → 调度器没启动 → 只调 HAL_IncTick()</text>
+      <text class="f-t s" x="540" y="337">✓ 不碰任何 RTOS 结构</text>
+    </svg>
+    <figcaption><b>关键点：</b>故障发生时，调试器显示的"停在 <code>BSP_UART_Config()</code> 第 237 行"是被中断打断的位置，<b>不是出错的位置</b>。真正的错误在 SysTick 中断里。<b>单步调试一定会触发</b>，因为一步就超过 1ms。</figcaption>
+  </figure>
+
+  <h3>修复：让 SysTick 的归属"分阶段"</h3>
+  <p>思路不是"压缩初始化时间"（那是靠运气），而是<strong>让两种状态都有明确的处理者</strong>：</p>
+
+<pre><code><span class="c">/* Inc\FreeRTOSConfig.h —— 不做名字映射，让 port.c 保留原名 xPortSysTickHandler */</span>
+/* #define xPortSysTickHandler              SysTick_Handler */
+
+<span class="c">/* Src\py32c882_it.c */</span>
+extern void xPortSysTickHandler(void);
+
+void SysTick_Handler(void)
+{
+  if (xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED)
+  {
+    HAL_IncTick();            <span class="c">/* 裸机阶段：维持 HAL_GetTick / HAL_Delay / HAL 超时 */</span>
+  }
+  else
+  {
+    xPortSysTickHandler();    <span class="c">/* 已启动：交给 FreeRTOS 节拍 */</span>
+  }
+}</code></pre>
+
+  <div class="pt">
+    <h4><em>为什么这样绝对安全</em>不存在"中间态"</h4>
+    <p><code>vTaskStartScheduler()</code> 是<b>先关中断</b>（<code>tasks.c:2026</code>），再依次设 <code>xNextTaskUnblockTime</code>、<code>xSchedulerRunning</code>（2036/2037），最后才进 <code>xPortStartScheduler()</code>。<b>没有中断能观察到"已判定为运行中、但内部还没初始化好"的状态。</b></p>
+    <p>顺带的好处：调度器启动之前 <code>HAL_GetTick()</code> / <code>HAL_Delay()</code> 照常可用（真实产品的初始化代码常这么用），启动之后由 tick 钩子接着喂 —— 两边都是 1ms，无缝衔接。</p>
+  </div>
+</section>
+<section class="ch" id="c9">
+  <div class="h2"><i>09</i><h2>并发、临界区与 ISR 三范式</h2></div>
+
+  <p>多个任务 + 多个中断，会同时碰同一块内存。RTOS 提供的"保护手段"在 CM0+ 上和 M3/M4 有本质区别，这是抄教程最容易抄错的地方。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 268" role="img" aria-label="CM0+ 与 M3/M4 的中断屏蔽方式对比">
+      <rect class="f-bx dg" x="14" y="16" width="410" height="236" rx="10"/>
+      <text class="f-t b" x="30" y="42">Cortex-M0+（你的芯片）</text>
+      <text class="f-t s" x="30" y="64">只有 PRIMASK：一把总闸，开或全关</text>
+      <rect class="f-bx" x="30" y="78" width="378" height="30" rx="6"/>
+      <text class="f-t" x="42" y="98">taskENTER_CRITICAL() → cpsid i</text>
+      <rect class="f-bx" x="30" y="114" width="378" height="30" rx="6"/>
+      <text class="f-t" x="42" y="134">taskEXIT_CRITICAL() → cpsie i</text>
+      <rect class="f-bx dg" x="30" y="154" width="378" height="80" rx="6"/>
+      <text class="f-t r" x="42" y="176">★ 代价：所有中断都被挡住</text>
+      <text class="f-t s" x="42" y="198">优先级 0 的急停中断也一样进不来</text>
+      <text class="f-t s" x="42" y="218">→ 所以 CM0+ 上唯一的纪律：临界区要极短</text>
+
+      <rect class="f-bx" x="436" y="16" width="410" height="236" rx="10"/>
+      <text class="f-t b" x="452" y="42">Cortex-M3/M4（不是你的芯片）</text>
+      <text class="f-t s" x="452" y="64">有 BASEPRI：可以把"低于某优先级"的中断挡住</text>
+      <rect class="f-bx" x="452" y="78" width="378" height="30" rx="6"/>
+      <text class="f-t" x="464" y="98">写 BASEPRI = configMAX_SYSCALL_...</text>
+      <rect class="f-bx" x="452" y="114" width="378" height="30" rx="6"/>
+      <text class="f-t" x="464" y="134">高优先级中断仍可抢占进来</text>
+      <rect class="f-bx" x="452" y="154" width="378" height="80" rx="6"/>
+      <text class="f-t s" x="464" y="176">configMAX_SYSCALL_INTERRUPT_PRIORITY</text>
+      <text class="f-t s" x="464" y="196">这个宏在 CM0+ 上配了也没用（无实现）</text>
+      <text class="f-t a" x="464" y="218">← 网上大量教程的默认假设，注意别照抄</text>
+    </svg>
+    <figcaption><b>CM0+ 的现实：</b>没有任何"部分屏蔽"能力。因此 CM0+ 上高性能代码的设计原则是<b>把中断服务函数写短</b>——能放进 ISR 的只有"记录 + 通知"，其余全部丢给任务。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 9.1</em>临界区是可嵌套的，靠一个计数器</h4>
+    <p>裸机时代"关中断/开中断"只能成对出现，多层调用就乱了。FreeRTOS 用一个计数解决：</p>
+<pre><code>void vPortEnterCritical( void )   <span class="c">/* port.c:262 */</span>
+{
+    portDISABLE_INTERRUPTS();      <span class="c">/* cpsid i */</span>
+    uxCriticalNesting++;           <span class="c">/* 嵌套层数 +1 */</span>
+}
+void vPortExitCritical( void )    <span class="c">/* port.c:271 */</span>
+{
+    configASSERT( uxCriticalNesting );
+    uxCriticalNesting--;
+    if( uxCriticalNesting == 0 )   <span class="c">/* ★只有回到 0 才真正开中断 */</span>
+    {
+        portENABLE_INTERRUPTS();   <span class="c">/* cpsie i */</span>
+    }
+}</code></pre>
+    <p>调试时把 <code>uxCriticalNesting</code> 加到 Watch 窗口：<b>稳态必须是 0</b>。长期不为 0 说明某处漏了配对的 <code>taskEXIT_CRITICAL()</code>，系统时间会变慢（中断开不回来，tick 进不来）。</p>
+  </div>
+
+  <h3>ISR → 任务的三种标准范式</h3>
+  <p>中断里"做决策、做重活"是禁忌。正确姿势只有三种，按开销从大到小：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 250" role="img" aria-label="ISR 到任务的三种范式">
+      <rect class="f-bx" x="14" y="16" width="270" height="218" rx="10"/>
+      <text class="f-t b" x="28" y="40">A · 信号量（事件发生）</text>
+      <text class="f-t s" x="28" y="62">EXTI 按键、到达某状态</text>
+      <rect class="f-bx st" x="28" y="76" width="242" height="40" rx="6"/>
+      <text class="f-t" x="40" y="94">ISR: xSemaphoreGiveFromISR</text>
+      <text class="f-t s" x="40" y="110">任务: xSemaphoreTake</text>
+      <text class="f-t s" x="28" y="140">只传"发生了"，不传数据</text>
+      <text class="f-t s" x="28" y="164">开销中等，可多任务竞争</text>
+      <text class="f-t s" x="28" y="196">适用：你有多个任务想等同一件事</text>
+
+      <rect class="f-bx" x="296" y="16" width="270" height="218" rx="10"/>
+      <text class="f-t b" x="310" y="40">B · 队列（带数据）</text>
+      <text class="f-t s" x="310" y="62">UART 收字节、传感器帧</text>
+      <rect class="f-bx st" x="310" y="76" width="242" height="40" rx="6"/>
+      <text class="f-t" x="322" y="94">ISR: xQueueSendFromISR</text>
+      <text class="f-t s" x="322" y="110">任务: xQueueReceive</text>
+      <text class="f-t s" x="310" y="140">把数据交给任务，ISR 不解析</text>
+      <text class="f-t s" x="310" y="164">开销最大，但最通用</text>
+      <text class="f-t s" x="310" y="196">适用：数据流、协议解析</text>
+
+      <rect class="f-bx hi" x="578" y="16" width="268" height="218" rx="10"/>
+      <text class="f-t b" x="592" y="40">C · 任务通知（最快）</text>
+      <text class="f-t s" x="592" y="62">DMA 完成、单一任务专享</text>
+      <rect class="f-bx hi" x="592" y="76" width="240" height="40" rx="6"/>
+      <text class="f-t a" x="604" y="94">ISR: xTaskNotifyFromISR</text>
+      <text class="f-t a" x="604" y="110">任务: ulTaskNotifyTake</text>
+      <text class="f-t s" x="592" y="140">★不额外占内存（用 TCB 里现成字段）</text>
+      <text class="f-t s" x="592" y="164">比信号量快、比队列省 RAM</text>
+      <text class="f-t s" x="592" y="196">适用：一对一通知（多数场景）</text>
+    </svg>
+    <figcaption><b>选择口诀：</b>要传数据 → 队列；一对多 → 信号量；一对一且只是"通知一下" → 任务通知（优先）。本工程 <code>configUSE_TASK_NOTIFICATIONS=1</code>，32KB RAM 的芯片上这点很值钱。</figcaption>
+  </figure>
+
+  <div class="call warn">
+    <span class="tag">ISR 里的铁律</span>
+    <ul>
+      <li>只能用名字带 <code>...FromISR</code> 的 API：<code>xQueueSendFromISR</code> / <code>xSemaphoreGiveFromISR</code> / <code>xTaskNotifyFromISR</code>。</li>
+      <li>唤醒标志变量必须初始化：<code>BaseType_t xHigherPriorityTaskWoken = pdFALSE;</code></li>
+      <li>退出前一定要 <code>portYIELD_FROM_ISR(xHigherPriorityTaskWoken);</code> —— 否则"被唤醒的高优先级任务"要等到下一次 tick 才轮到。</li>
+      <li>ISR 里<b>禁止</b>：<code>vTaskDelay</code>、<code>HAL_Delay</code>、Flash 写、长 printf。</li>
+      <li>CM0+ 的 <b>ARM_CM0 端口没有优先级校验函数</b>，所以你在 ISR 里误用非 FromISR 版本 API 不会触发断言，而是偶发数据错乱 —— 只能靠纪律。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="ch" id="c10">
+  <div class="h2"><i>10</i><h2>应用：把裸机程序变成多任务</h2></div>
+
+  <p>回到你的工程。原来它是一段裸机程序，现在是 2 个任务。差别不只是"能同时做两件事"，而是<b>时间的管理权从"你排的循环顺序"变成了"内核按优先级调度"</b>。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 250" role="img" aria-label="裸机与 RTOS 的时间轴对比">
+      <text class="f-t b" x="14" y="26">裸机：HAL_Delay(250) 期间 CPU 什么也做不了</text>
+      <rect class="f-bx" x="150" y="38" width="150" height="26" rx="5"/><text class="f-t s" x="164" y="56">翻转 LED + 死等 250ms</text>
+      <rect class="f-bx" x="150" y="68" width="150" height="26" rx="5"/><text class="f-t s" x="164" y="86">翻转 LED + 死等 250ms</text>
+      <rect class="f-bx" x="150" y="98" width="150" height="26" rx="5"/><text class="f-t s" x="164" y="116">翻转 LED + 死等 250ms</text>
+      <rect class="f-bx dg" x="300" y="38" width="240" height="86" rx="5"/>
+      <text class="f-t r" x="314" y="72">这些时间里 CPU 一直在空转</text>
+      <text class="f-t r" x="314" y="94">串口想打印？只能插在循环里排队</text>
+      <text class="f-t m" x="560" y="72">→ 加第 3 件事就要重排所有 delay</text>
+
+      <text class="f-t b" x="14" y="164">RTOS：vTaskDelay 是"我睡 250ms，CPU 你干别的去"</text>
+      <rect class="f-bx hi" x="150" y="176" width="60" height="26" rx="5"/><text class="f-t a" x="160" y="194">led 跑</text>
+      <rect class="f-bx st" x="210" y="176" width="190" height="26" rx="5"/><text class="f-t s" x="222" y="194">led 阻塞（睡），CPU 交给 log</text>
+      <rect class="f-bx hi" x="400" y="176" width="60" height="26" rx="5"/><text class="f-t a" x="410" y="194">log 跑</text>
+      <rect class="f-bx st" x="460" y="176" width="240" height="26" rx="5"/><text class="f-t s" x="472" y="194">log 阻塞，CPU 进入 IDLE（未来可进 STOP）</text>
+      <rect class="f-bx hi" x="150" y="208" width="60" height="26" rx="5"/><text class="f-t a" x="160" y="226">led 跑</text>
+      <text class="f-t m" x="220" y="226">→ 100 个任务也只是"更多条时间片"，互不干扰</text>
+    </svg>
+    <figcaption><b>本质区别：</b><code>HAL_Delay</code> 是"占着 CPU 等"，<code>vTaskDelay</code> 是"登记一个唤醒时刻，然后让出 CPU"。前者时间利用率 = 1 个任务；后者 = 所有任务叠加，且空闲时还能进低功耗。</figcaption>
+  </figure>
+
+  <h3>本工程逐行对照</h3>
+  <table>
+    <tr><th>原裸机版</th><th>现在的 RTOS 版</th><th>为什么改</th></tr>
+    <tr><td><code>while(1){ HAL_Delay(250); HAL_GPIO_TogglePin(...); }</code></td><td><code>App_LedTask()</code>：<code>BSP_LED_Toggle(LED3)</code> + <code>vTaskDelayUntil(...)</code></td><td>周期由内核保证，且不占 CPU</td></tr>
+    <tr><td>LED 翻转 250ms（2Hz）</td><td>仍 250ms（2Hz）</td><td><b>行为对外完全不变</b>——移植的第一原则是不改变可观测量</td></tr>
+    <tr><td><code>SysTick_Handler(){ HAL_IncTick(); }</code></td><td>调度器启动前 <code>HAL_IncTick()</code>，启动后交给 FreeRTOS</td><td>SysTick 只有一个，必须分阶段归属（第 8 章）</td></tr>
+    <tr><td>没有观测手段，靠点灯猜</td><td><code>App_LogTask</code>：每秒打状态、每 5 秒打任务表</td><td>RTOS 必须"可观测"，否则出问题无从下手</td></tr>
+    <tr><td><code>Heap_Size 0x200</code></td><td>不变（FreeRTOS 用 <code>ucHeap[8192]</code>）</td><td>两者完全无关，别被名字骗了</td></tr>
+  </table>
+
+  <h3>四个可复用的做法</h3>
+
+  <div class="pt">
+    <h4><em>做法 1</em>按"职责"切任务，不按"外设"切</h4>
+    <p>❌ 错误：<code>UartTask</code> / <code>TimTask</code> / <code>GpioTask</code>（这是把中断搬到任务里）。<br>
+    ✅ 正确：<code>SensorTask</code>（采集+滤波）、<code>JudgeTask</code>（安全判定，优先级最高）、<code>CommTask</code>（协议收发）、<code>LogTask</code>（打印/存储）、<code>MgrTask</code>（喂狗+低功耗）。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>做法 2</em>优先级只有 3 ~ 4 档，安全最高</h4>
+    <p>本工程实测可用的分法：安全判定 <b>3</b> &gt; 业务/通信 <b>2</b> &gt; 日志/显示 <b>1</b> &gt; 空闲 0。别用优先级去解决"谁先谁后"的同步问题，那应该用队列/信号量。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>做法 3</em>栈大小用"水位"倒推，不用猜</h4>
+    <ul>
+      <li>单位是<b>字</b>：<code>128</code> = 512 字节；</li>
+      <li>含 <code>printf</code> / <code>vTaskList</code>（内部用 sprintf）的任务给 <b>256 字</b>；</li>
+      <li>用 <code>uxTaskGetStackHighWaterMark()</code> 看剩余，<b>留 30% 余量</b>再定稿；</li>
+      <li>本工程实测：led 任务剩余 118 字、log 任务剩余 185 字（都在安全区）。</li>
+    </ul>
+  </div>
+
+  <div class="pt">
+    <h4><em>做法 4</em>周期任务用 vTaskDelayUntil，别用 vTaskDelay</h4>
+    <table>
+      <tr><th>写法</th><th>含义</th><th>累积漂移</th></tr>
+      <tr><td><code>vTaskDelay(250)</code></td><td>从"现在"开始睡 250ms</td><td><b>会漂移</b>（执行时间被累加进去）</td></tr>
+      <tr><td><code>vTaskDelayUntil(&amp;last, 250)</code></td><td>睡到"上次唤醒时刻 + 250ms"</td><td><b>不漂移</b>（以起点为基准）</td></tr>
+    </table>
+    <p>你的 50ms 采样、1 秒打印、定时喂狗都属于这类，一律用 <code>vTaskDelayUntil</code>。</p>
+  </div>
+
+  <div class="call story">
+    <span class="tag">本工程实测资源占用</span>
+    <p><code>Program Size: Code=9576  RO-data=652  RW-data=128  ZI-data=11176</code><br>
+    → Flash = 9576 + 652 ≈ <b>10.2 KB</b>（256 KB 的 4%）；RAM = 128 + 11176 ≈ <b>11.0 KB</b>（32 KB 的 34%，其中 8 KB 是 FreeRTOS 堆）。<br>
+    上板现象：LED3 保持 2Hz 翻转，串口每秒一行状态、每 5 秒一张任务表（含 <code>IDLE</code> 行 —— 它在，说明调度器确实在工作）。</p>
+  </div>
+</section>
+<section class="ch" id="c11">
+  <div class="h2"><i>11</i><h2>调试与验证手段</h2></div>
+
+  <p>RTOS 出问题时的现象往往"和代码位置完全对不上"（第 8 章就是典型）。所以必须有一套不依赖眼睛的验证方法。</p>
+
+  <h3>手段 1：看 <code>.map</code> 文件，用符号链证明接线正确</h3>
+  <p>编译产生的 <code>Project.map</code> 里有一段 "Section Cross References"，它记录了"谁调用了谁"。对于 SysTick 归属这种问题，这是<b>不用上板就能拿到的证据</b>：</p>
+<pre><code><span class="c">; 期望看到的四行（本工程实测）</span>
+startup_py32c882xx.o(RESET) refers to py32c882_it.o(i.SysTick_Handler) for SysTick_Handler
+py32c882_it.o(i.SysTick_Handler) refers to port.o(i.xPortSysTickHandler)  for xPortSysTickHandler
+py32c882_it.o(i.SysTick_Handler) refers to py32c882_hal.o(i.HAL_IncTick)  for HAL_IncTick
+py32c882_it.o(i.SysTick_Handler) refers to tasks.o(i.xTaskGetSchedulerState) for xTaskGetSchedulerState</code></pre>
+  <p>第一行说明<b>向量表已指向我们的分派函数</b>（不是 port.c 直接接管）；后面三行说明它只调用这三个东西 —— 逻辑与设计完全一致。</p>
+
+  <h3>手段 2：命令行编译（不开 Keil GUI，10 秒出结论）</h3>
+<pre><code>$uv   = 'D:\Keil_v5\UV4\UV4.exe'
+$proj = 'D:\RTOS-Learn\01-FreeRTOS-Port\GPIO_Toggle\MDK-ARM\Project.uvprojx'
+$log  = 'D:\RTOS-Learn\01-FreeRTOS-Port\GPIO_Toggle\MDK-ARM\build_log.txt'
+
+<span class="c"># ★PowerShell 里不要写 &amp; $uv ...（&amp; 会被当成后台符号），用 Start-Process</span>
+$p = Start-Process -FilePath $uv -ArgumentList @('-r', "`"$proj`"", '-j0', '-o', "`"$log`"") `
+                   -Wait -NoNewWindow -PassThru
+"ExitCode = $($p.ExitCode)"</code></pre>
+  <table>
+    <tr><th>参数 / 退出码</th><th>含义</th></tr>
+    <tr><td><code>-r</code> / <code>-b</code></td><td>全量重编 / 增量编译（验证一定要用 <code>-r</code>，否则旧 <code>.o</code> 会骗你）</td></tr>
+    <tr><td>退出码 <code>0 / 1 / 2</code></td><td>无错无警告 / 仅警告 / 有错误</td></tr>
+    <tr><td>日志编码</td><td>★UTF-16BE 无 BOM，用 UTF-8 读会全是乱码</td></tr>
+  </table>
+
+  <h3>手段 3：CM0+ 的 HardFault 怎么定位（它没有 CFSR！）</h3>
+  <div class="call warn">
+    <span class="tag">和 M3/M4 教程最大的不同</span>
+    <p>网上讲 "HardFault 看 <code>SCB-&gt;CFSR</code> 就知道原因" 的教程，<b>在 CM0+ 上全部无效</b> —— CM0+ 只有 HardFault，没有 CFSR / HFSR / BFAR / MMFAR。你唯一能拿到的是<b>压栈帧</b>（第 5 章那张图）。</p>
+  </div>
+  <p>把下面这段临时放进 <code>HardFault_Handler</code>，然后看那几个全局变量：</p>
+<pre><code>volatile uint32_t hf_r0,hf_r1,hf_r2,hf_r3,hf_r12,hf_lr,hf_pc,hf_psr,hf_exc_return;
+
+void HardFault_Handler(void)
+{
+    __asm volatile (
+        " tst lr, #4        \n"   <span class="c">/* LR(EXC_RETURN) bit2：0=用 MSP，1=用 PSP */</span>
+        " ite eq            \n"
+        " mrseq r0, msp     \n"
+        " mrsne r0, psp     \n"
+        " ldr r1, =hf_r0    \n"
+        " ldmia r0!, {r2-r6}\n"   <span class="c">/* 取 R0,R1,R2,R3,R12 */</span>
+        " stmia r1!, {r2-r6}\n"
+        " ldmia r0!, {r2-r6}\n"   <span class="c">/* 取 LR,PC,xPSR */</span>
+        " stmia r1!, {r2-r6}\n"
+        " mov r6, lr        \n"
+        " str r6, [r1]      \n"   <span class="c">/* 保存 EXC_RETURN */</span>
+        " b .               \n"
+    );
+}</code></pre>
+  <table>
+    <tr><th>看到的</th><th>说明</th></tr>
+    <tr><td><code>hf_pc</code></td><td><b>出错的那条指令地址</b> → 拿 <code>.map</code> 或反汇编查它属于哪个函数</td></tr>
+    <tr><td><code>hf_exc_return = 0xFFFFFFF9</code></td><td>故障发生在<b>线程模式 + MSP</b> → 初始化代码 / 裸机部分出错</td></tr>
+    <tr><td><code>hf_exc_return = 0xFFFFFFFD</code></td><td>故障发生在<b>任务里（PSP）</b> → 多半是任务栈溢出或野指针</td></tr>
+    <tr><td>在 <code>HardFault_Handler</code> 看 Call Stack</td><td>若是 <code>xPortSysTickHandler</code> 调下来的 → 调度器/节拍问题；若是 <code>vTaskSwitchContext</code> → 链表/栈被写坏</td></tr>
+  </table>
+  <p>用这套方法看第 8 章那次事故，会看到 <code>hf_pc</code> 落在 <code>xTaskIncrementTick()</code> 里、<code>hf_exc_return = 0xFFFFFFF9</code> —— 与"启动前 SysTick 抢跑"的结论完全吻合。</p>
+
+  <h3>手段 4：三个必须会看的运行时指标</h3>
+  <table>
+    <tr><th>表达式</th><th>稳态期望</th><th>异常时的含义</th></tr>
+    <tr><td><code>uxCriticalNesting</code></td><td><code>0</code></td><td>&gt;0 且不回落 → 某处漏了 <code>taskEXIT_CRITICAL()</code>，tick 进不来、时间变慢</td></tr>
+    <tr><td><code>uxTaskGetStackHighWaterMark(h)</code></td><td>&gt; 30 字</td><td>接近 0 → 任务栈不够，加 <code>xTaskCreate</code> 的第 3 个参数</td></tr>
+    <tr><td><code>xPortGetFreeHeapSize()</code></td><td>明显 &gt; 0</td><td>贴 0 → <code>configTOTAL_HEAP_SIZE</code> 不够，迟早 <code>MALLOC FAILED</code></td></tr>
+    <tr><td><code>pxDelayedTaskList</code> / <code>xNextTaskUnblockTime</code></td><td>非 NULL / 非 0</td><td>为 NULL / 为 0 → <b>RTOS 还没启动</b>，此时不该有任何 tick 在处理（第 8 章）</td></tr>
+  </table>
+</section>
+
+<section class="ch" id="c12">
+  <div class="h2"><i>12</i><h2>自测题（10 题）</h2></div>
+  <p>能不看答案答出 8 题，这套原理就算真正过了一遍。点击题号展开答案。</p>
+
+  <details><summary>1. 上电后 CPU 执行的第一条指令地址是怎么来的？</summary>
+    <div><p>硬件从向量表第 1 个字（<code>0x08000004</code>）读出 <code>Reset_Handler</code> 的地址并跳过去；第 0 个字被用来装载 MSP。<b>这两个字是硬件约定，任何软件都还没运行。</b></p></div></details>
+
+  <details><summary>2. 为什么 CM0+ 上 <code>taskENTER_CRITICAL()</code> 会关掉全部中断？</summary>
+    <div><p>因为 CM0+ 只有 <code>PRIMASK</code>（总闸），没有 <code>BASEPRI</code>。FreeRTOS 的 CM0 端口用 <code>cpsid i</code> 实现临界区，没有"只屏蔽低于某优先级"的能力。推论：<b>CM0+ 上 ISR 必须极短</b>，<code>configMAX_SYSCALL_INTERRUPT_PRIORITY</code> 这个宏在 CM0+ 上不生效。</p></div></details>
+
+  <details><summary>3. <code>SHPR3</code> 里写的是 255，为什么调试器读回 <code>0xC0</code>？</summary>
+    <div><p>CM0+ 只用 2 位表示优先级（4 级），即每个 8 位优先级字段里只有高 2 位（bit7:6）被实现。写 <code>0b1111_1111</code>，实际落地 <code>0b1100_0000</code> = <code>0xC0</code>，即优先级 3（最低）。 <code>SHPR3 = 0xC0C00000</code> 说明 PendSV 和 SysTick 都是最低优先级。</p></div></details>
+
+  <details><summary>4. HAL 工程接 RTOS 时，<code>HAL_IncTick()</code> 为什么要搬家？搬到哪？</summary>
+    <div><p>因为原来的 <code>SysTick_Handler</code> 要让位给 RTOS。如果只是注释掉，HAL 侧不会报错，但 <code>HAL_GetTick()</code> 永远是 0 → <code>HAL_Delay()</code> 死等不返回、所有 HAL 超时立即失效。搬到 <code>vApplicationTickHook()</code>（<code>configUSE_TICK_HOOK</code> 必须为 1），让 HAL 时基与 RTOS 节拍同源。</p></div></details>
+
+  <details><summary>5. 任务栈参数写 <code>128</code>，是多少字节？含 <code>printf</code> 的任务该给多少？</summary>
+    <div><p><code>128</code> 的单位是<b>字</b>（<code>StackType_t</code> = uint32_t）= 512 字节。含 <code>printf</code> 或 <code>vTaskList</code>（内部 <code>sprintf</code>）的任务建议 <b>256 字 = 1KB</b>，并留 30% 余量。本工程 log 任务给的就是 256 字。</p></div></details>
+
+  <details><summary>6. 任务切换时，硬件帮你保存了几个寄存器？剩下谁保存？</summary>
+    <div><p>硬件自动压 <b>8 个</b>：R0–R3、R12、LR、PC、xPSR（共 32 字节）。<b>R4–R11 硬件不管</b>，由 PendSV 里的 <code>stmia</code> 手工压入 —— 所以完整帧是 <b>16 个字 = 64 字节</b>。</p></div></details>
+
+  <details><summary>7. <code>bx r3</code> 里的 <code>r3</code> 装的是什么？为什么跳完就"换了任务"？</summary>
+    <div><p>装的是 <b>EXC_RETURN</b>（异常返回暗号，如 <code>0xFFFFFFFD</code>）。<code>bx</code> 到它就等于"告诉硬件：我要退出异常"。硬件于是按 bit2 决定从 <b>PSP</b> 弹 8 字帧 —— 而 PSP 在上一句刚被设成<b>新任务</b>的栈，于是 PC 被换成新任务的下一条指令。<b>切换 = 伪造一次异常返回。</b></p></div></details>
+
+  <details><summary>8. CM0+ 的 FreeRTOS 端口用 <code>SVC</code> 启动第一个任务吗？</summary>
+    <div><p><b>不用。</b><code>port.c</code> 里 <code>vPortSVCHandler()</code> 是空函数（注释写着 *"no longer used, but retained for backward compatibility"*），启动第一个任务走 <code>prvPortStartFirstTask()</code>：手工设置 PSP → 写 <code>CONTROL</code> 切栈 → <code>pop</code> 出寄存器 → <code>bx</code> 进任务函数。原因见源码注释：M0 没有 VTOR，无法定位初始栈值。</p></div></details>
+
+  <details><summary>9. 为什么 <code>vTaskDelay(1000)</code> 在那次事故里只等了约 111ms？</summary>
+    <div><p>那不是事故现象，而是<b>主频配置错误的典型症状</b>：板子实际 72MHz，却把 <code>configCPU_CLOCK_HZ</code> 写成 8000000 → SysTick 重载 = 7999，实际节拍 = 72MHz/8000 = 9kHz → 1000 个 tick 只花约 111ms。验证方法：调试器看 <code>SystemCoreClock</code> 必须等于 <code>configCPU_CLOCK_HZ</code>。</p></div></details>
+
+  <details><summary>10. 为什么周期任务要用 <code>vTaskDelayUntil</code> 而不是 <code>vTaskDelay</code>？</summary>
+    <div><p><code>vTaskDelay(n)</code> 从"现在"起睡 n 个 tick，<b>任务本身执行的时间会被累加进去</b>，周期越来越长；<code>vTaskDelayUntil(&amp;last, n)</code> 睡到"上次唤醒时刻 + n"，<b>以上次唤醒为基准，不累积漂移</b>。你的 50ms 采样、1s 打印、定时喂狗都必须用后者。</p></div></details>
+</section>
+
+<section class="ch" id="c13">
+  <div class="h2"><i>13</i><h2>速查表：CM0+ vs M3/M4</h2></div>
+  <p>这张表是"为什么抄 F103 教程会翻车"的完整清单 —— 每一条都在本工程里验证过。</p>
+  <table>
+    <tr><th>能力</th><th>PY32C882（CM0+）</th><th>STM32F103 等（M3/M4）</th><th>对 RTOS 的影响</th></tr>
+    <tr><td>临界区实现</td><td><code>cpsid i</code> 全屏蔽</td><td><code>BASEPRI</code> 部分屏蔽</td><td>CM0+ 的 ISR 必须更短</td></tr>
+    <tr><td><code>configMAX_SYSCALL_INTERRUPT_PRIORITY</code></td><td><b>无效</b>（无 BASEPRI）</td><td>有效，且必须配</td><td>CM0+ 别抄这条配置</td></tr>
+    <tr><td>硬件优先级级数</td><td>2 位 = 4 级</td><td>4 位 = 16 级</td><td>外设只能用 0~2，3 留给内核</td></tr>
+    <tr><td>启动首个任务</td><td>纯软件 <code>bx</code>，不用 SVC</td><td>常用 <code>SVC</code></td><td>别找 M4 教程里的 SVC 流程</td></tr>
+    <tr><td><code>CLZ</code> 指令</td><td><b>没有</b></td><td>有</td><td><code>configUSE_PORT_OPTIMISED_TASK_SELECTION</code> 必须 <b>0</b></td></tr>
+    <tr><td>原子指令 LDREX/STREX</td><td><b>没有</b></td><td>有</td><td>共享标志必须走 RTOS 原语</td></tr>
+    <tr><td>VTOR（向量表重定位）</td><td><b>没有</b></td><td>有</td><td>IAP 只能靠启动模式 / <code>SYSCFG.MEM_MODE</code></td></tr>
+    <tr><td><code>CFSR/HFSR/BFAR</code></td><td><b>没有</b>（只有 HardFault）</td><td>有</td><td>HardFault 只能解析压栈帧</td></tr>
+    <tr><td>DWT CYCCNT</td><td><b>没有</b></td><td>有</td><td><code>configGENERATE_RUN_TIME_STATS</code> 不能用 DWT</td></tr>
+    <tr><td>FPU</td><td>无</td><td>M4F 有</td><td>无 FPU 上下文，切换帧更小</td></tr>
+    <tr><td>SysTick 校准值</td><td>手册: 6000/1ms @6MHz</td><td>类似</td><td>以 <code>configSYSTICK_CLOCK_HZ</code> 计算为准</td></tr>
+  </table>
+</section>
+
+<section class="ch" id="appendix">
+  <div class="h2"><i>A</i><h2>附录 · 本工程实测数据（可核对）</h2></div>
+  <div class="grid2">
+    <div>
+      <h4>编译结果（UV4 命令行全量重编）</h4>
+<pre><code>UV4 ExitCode = 0
+Program Size: Code=9576 RO-data=652
+              RW-data=128 ZI-data=11176
+".\Output\Project.axf" - 0 Error(s), 0 Warning(s).</code></pre>
+      <h4>关键寄存器（调试器实测）</h4>
+<pre><code>SysTick-&gt;LOAD (0xE000E014) = 7999
+SHPR3        (0xE000ED20) = 0xC0C00000
+uxCriticalNesting         = 0
+SystemCoreClock           = 8000000</code></pre>
+    </div>
+    <div>
+      <h4>工程文件（改动过的地方）</h4>
+<pre><code>GPIO_Toggle\
+├ Inc\FreeRTOSConfig.h      新增
+├ Src\app_rtos_hooks.c      新增
+├ Src\main.c                重写
+├ Src\py32c882_it.c         改
+├ MDK-ARM\startup_*.s       栈 0x400→0x800
+└ MDK-ARM\Project.uvprojx   分组+路径+编译选项</code></pre>
+      <h4>FreeRTOS 关键宏（本工程值）</h4>
+<pre><code>configCPU_CLOCK_HZ      8000000
+configTICK_RATE_HZ      1000
+configMAX_PRIORITIES    8
+configMINIMAL_STACK_SIZE 128
+configTOTAL_HEAP_SIZE   8192
+configUSE_TICK_HOOK     1</code></pre>
+    </div>
+  </div>
+  <div class="call key">
+    <span class="tag">延伸阅读（同目录）</span>
+    <p><code>阶段0-CM0+异常模型与任务切换.md</code> —— 更细的源码级笔记（含逐行行号）；<br>
+    <code>..\01-FreeRTOS-Port\阶段1-FreeRTOS移植手册.md</code> —— 移植实操手册（HAL 版，含全部踩坑与报错对照表）。</p>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+  // 主题切换（记忆在 localStorage）
+  var root = document.documentElement;
+  var bL = document.getElementById('t-light'), bD = document.getElementById('t-dark');
+  function apply(t){
+    root.setAttribute('data-theme', t);
+    bL.className = (t === 'light') ? 'on' : '';
+    bD.className = (t === 'dark')  ? 'on' : '';
+    try { localStorage.setItem('rtos-theme', t); } catch(e){}
+  }
+  try { var sv = localStorage.getItem('rtos-theme'); if (sv) apply(sv); } catch(e){}
+  bL.addEventListener('click', function(){ apply('light'); });
+  bD.addEventListener('click', function(){ apply('dark'); });
+
+  // 目录高亮
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a[href^="#"]'));
+  var map = {};
+  links.forEach(function(a){ var el = document.querySelector(a.getAttribute('href')); if (el) map[el.id] = a; });
+  var targets = Object.keys(map).map(function(id){ return document.getElementById(id); });
+  function setOn(id){
+    links.forEach(function(a){ a.classList.remove('on'); });
+    if (map[id]) map[id].classList.add('on');
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      var best = null, bestTop = 1e9;
+      entries.forEach(function(en){
+        if (en.isIntersecting) {
+          var t = Math.abs(en.boundingClientRect.top);
+          if (t < bestTop) { bestTop = t; best = en.target.id; }
+        }
+      });
+      if (best) setOn(best);
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: [0, 1] });
+    targets.forEach(function(t){ io.observe(t); });
+  }
+  setOn('c1');
+})();
+</script>
+</body>
+</html>

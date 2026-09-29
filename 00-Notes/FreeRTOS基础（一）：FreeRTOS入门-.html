@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://blog.csdn.net/weixin_47040031/article/details/139299797" rel="canonical"/>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+  <meta content="webkit" name="renderer">
+   <meta content="webkit" name="force-rendering">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta content="always" name="referrer"/>
+    <meta content="no-siteapp" http-equiv="Cache-Control">
+     <link href="#" media="handheld" rel="alternate"/>
+     <meta content="pc" name="applicable-device"/>
+     <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"/>
+     <title>
+      FreeRTOS基础（一）：FreeRTOS入门-CSDN博客
+     </title>
+     <meta content="freertos" name="keywords"/>
+     <meta content='{"autorun":true,"install":true,"keyword":"freertos"}' name="csdn-baidu-search"/>
+     <meta content="文章浏览阅读1.9w次，点赞241次，收藏957次。裸机：直接对硬件资源的编程，所有功能函数放在主循环中，同⼀时间只能单⼀任务运行。裸机又称为前后台系统，前台系统指的中断服务函数，后台系统指的大循环，即应用程序。RTOS是指一类系统，如 FreeRTOS，uC/OS，RTX，RT-Thread 等，都是 RTOS 类操作系统。FreeRTOS 是一个免费的嵌入式实时操作系统，其开源、轻量级、可移植的特点使其成为许多嵌入式开发者的首选。在近几年的使用排名上位居前列。_freertos" name="description"/>
+     <link href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-4293fe592f.min.css" rel="stylesheet" type="text/css"/>
+     <link href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-sea/skin-sea-d3a08c2048.min.css" rel="stylesheet" type="text/css"/>
+     <meta content='{"type":"0","fixModel":"1"}' name="toolbar"/>
+     <link href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css" rel="stylesheet" type="text/css"/>
+     <style>
+      .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+     </style>
+    </meta>
+   </meta>
+  </meta>
+  <style type="text/css">
+   * { user-select: text; } pre{max-height: none!important; overflow-y: hidden;}
+  </style>
+ </head>
+ <body class="nodata" style="">
+  <link href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css" rel="stylesheet"/>
+  <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css" rel="stylesheet">
+   <link href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css" rel="stylesheet">
+    <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;">
+     <div class="container clearfix container-concision" id="mainBox">
+      <main>
+       <div class="blog-content-box">
+        <div class="article-header-box">
+         <div class="article-header">
+          <div class="article-title-box">
+           <h1 class="title-article" id="articleContentId">
+            FreeRTOS基础（一）：FreeRTOS入门
+           </h1>
+          </div>
+          <div class="article-info-box">
+           <div class="article-bar-top-box">
+            <div class="article-bar-top">
+             <img alt="" class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png"/>
+             <div class="bar-content">
+              <a class="article-vip-box" data-report-click='{"spm":"3001.10404"}' data-report-query="spm=3001.10404" data-report-view='{"spm":"3001.10404"}' href="https://mall.csdn.net/vip" target="_blank">
+               <img alt="" class="article-vip-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/identityVipNew.png"/>
+              </a>
+              <a class="follow-nickName" href="https://blog.csdn.net/weixin_47040031" rel="noopener" target="_blank" title="未来可期，静待花开~">
+               未来可期，静待花开~
+              </a>
+              <img alt="" class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCurrentTime2.png"/>
+              <span class="time">
+               于 2024-05-29 23:49:12 发布
+              </span>
+              <div class="read-count-box">
+               <img alt="" class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png"/>
+               <span class="read-count">
+                阅读量1.9w
+               </span>
+               <a class="un-collection" data-report-click='{"mod":"popu_823","spm":"1001.2101.3001.4232","ab":"new"}' id="blog_detail_zk_collection">
+                <img alt="" class="article-collect-img article-heard-img un-collect-status isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" style="display:inline-block"/>
+                <img alt="" class="article-collect-img article-heard-img collect-status isactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" style="display:none"/>
+                <span class="name">
+                 收藏
+                </span>
+                <span class="get-collection">
+                 957
+                </span>
+               </a>
+               <div class="read-count-box is-like" data-type="top">
+                <img alt="" class="article-read-img article-heard-img" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" style="display:none"/>
+                <img alt="" class="article-read-img article-heard-img" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" style="display:block"/>
+                <span class="read-count" id="blog-digg-num">
+                 点赞数
+                              241
+                </span>
+               </div>
+              </div>
+             </div>
+            </div>
+            <div class="operating">
+             <a class="href-article-edit slide-toggle">
+              CC 4.0 BY-SA版权
+             </a>
+            </div>
+           </div>
+           <div class="blog-tags-box">
+            <div class="tags-box artic-tag-box">
+             <span class="label">
+              分类专栏：
+             </span>
+             <a class="tag-link" href="https://blog.csdn.net/weixin_47040031/category_12685856.html" rel="noopener" target="_blank">
+              FreeRTOS
+             </a>
+             <span class="label">
+              文章标签：
+             </span>
+             <a class="tag-link" data-report-click='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"FreeRTOS","ab":"new","extra":"{\"searchword\":\"FreeRTOS\"}"}' data-report-query="spm=1001.2101.3001.4223" data-report-view='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"FreeRTOS","ab":"new","extra":"{\"searchword\":\"FreeRTOS\"}"}' href="https://so.csdn.net/so/search/s.do?q=FreeRTOS&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" rel="noopener" target="_blank">
+              FreeRTOS
+             </a>
+            </div>
+           </div>
+           <div class="slide-content-box">
+            <div class="article-copyright">
+             <div class="creativecommons">
+              版权声明：本文为博主原创文章，遵循
+              <a href="http://creativecommons.org/licenses/by-sa/4.0/" rel="noopener" target="_blank">
+               CC 4.0 BY-SA
+              </a>
+              版权协议，转载请附上原文出处链接和本声明。
+             </div>
+             <div class="article-source-link">
+              本文链接：
+              <a href="https://blog.csdn.net/weixin_47040031/article/details/139299797" target="_blank">
+               https://blog.csdn.net/weixin_47040031/article/details/139299797
+              </a>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="" id="blogHuaweiyunAdvert">
+        </div>
+        <article class="baidu_pl">
+         <div class="article_content clearfix" id="article_content">
+          <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css" rel="stylesheet"/>
+          <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-01addd087f.css" rel="stylesheet"/>
+          <div class="htmledit_views atom-one-dark" id="content_views">
+           <p>
+            各位看官好，欢迎大家进入新的专栏学习，从今天开始，正式进入FreeRTOS的学习，这是专门应用于嵌入式领域的一款实时操作系统，相比裸机，它有很大的优势，实际开发中应用广泛，为此，我们应该首先掌握最基本的内容，理解实时操作系统的实时性是通过哪些机制实现的？相比裸机开发，它的优势在哪里？这样更加有利于我们运用好FreeRTOS来解决生活中问题。
+           </p>
+           <p id="main-toc">
+            <strong>
+             目录
+            </strong>
+           </p>
+           <p id="%E4%B8%80%E3%80%81RTOS%E5%85%A5%E9%97%A8-toc" style="margin-left:0px;">
+            <a href="#%E4%B8%80%E3%80%81RTOS%E5%85%A5%E9%97%A8" rel="nofollow">
+             一、RTOS入门
+            </a>
+           </p>
+           <p id="1.0%20%E8%A3%B8%E6%9C%BA%E4%B8%8ERTOS%E7%9A%84%E4%B8%BE%E4%BE%8B%E5%AF%B9%E6%AF%94-toc" style="margin-left:40px;">
+            <a href="#1.0%20%E8%A3%B8%E6%9C%BA%E4%B8%8ERTOS%E7%9A%84%E4%B8%BE%E4%BE%8B%E5%AF%B9%E6%AF%94" rel="nofollow">
+             1.0 裸机与RTOS的举例对比
+            </a>
+           </p>
+           <p id="1.1%20%E8%A3%B8%E6%9C%BA%E4%B8%8ERTOS%E4%BB%8B%E7%BB%8D-toc" style="margin-left:40px;">
+            <a href="#1.1%20%E8%A3%B8%E6%9C%BA%E4%B8%8ERTOS%E4%BB%8B%E7%BB%8D" rel="nofollow">
+             1.1 裸机与RTOS介绍
+            </a>
+           </p>
+           <p id="1.1.1%20%E8%A3%B8%E6%9C%BA-toc" style="margin-left:80px;">
+            <a href="#1.1.1%20%E8%A3%B8%E6%9C%BA" rel="nofollow">
+             1.1.1 裸机
+            </a>
+           </p>
+           <p id="1.1.1.1%E6%A6%82%E5%BF%B5-toc" style="margin-left:120px;">
+            <a href="#1.1.1.1%E6%A6%82%E5%BF%B5" rel="nofollow">
+             1.1.1.1概念
+            </a>
+           </p>
+           <p id="1.1.1.2%E7%89%B9%E7%82%B9-toc" style="margin-left:120px;">
+            <a href="#1.1.1.2%E7%89%B9%E7%82%B9" rel="nofollow">
+             1.1.1.2特点
+            </a>
+           </p>
+           <p id="1.1.1.3%20%E5%9B%BE%E7%A4%BA-toc" style="margin-left:120px;">
+            <a href="#1.1.1.3%20%E5%9B%BE%E7%A4%BA" rel="nofollow">
+             1.1.1.3 图示
+            </a>
+           </p>
+           <p id="1.1.2%20RTOS-toc" style="margin-left:80px;">
+            <a href="#1.1.2%20RTOS" rel="nofollow">
+             1.1.2 RTOS
+            </a>
+           </p>
+           <p id="1.1.2.1%20RTOS%E7%9A%84%E6%A6%82%E5%BF%B5-toc" style="margin-left:120px;">
+            <a href="#1.1.2.1%20RTOS%E7%9A%84%E6%A6%82%E5%BF%B5" rel="nofollow">
+             1.1.2.1 RTOS的概念
+            </a>
+           </p>
+           <p id="1.1.2.2%20RTOS%E7%9A%84%E7%89%B9%E7%82%B9-toc" style="margin-left:120px;">
+            <a href="#1.1.2.2%20RTOS%E7%9A%84%E7%89%B9%E7%82%B9" rel="nofollow">
+             1.1.2.2 RTOS的特点
+            </a>
+           </p>
+           <p id="1.1.2.3%20%E5%9B%BE%E7%A4%BA-toc" style="margin-left:120px;">
+            <a href="#1.1.2.3%20%E5%9B%BE%E7%A4%BA" rel="nofollow">
+             1.1.2.3 图示
+            </a>
+           </p>
+           <p id="1.2%20FreeRTOS%E7%AE%80%E4%BB%8B-toc" style="margin-left:40px;">
+            <a href="#1.2%20FreeRTOS%E7%AE%80%E4%BB%8B" rel="nofollow">
+             1.2 FreeRTOS简介
+            </a>
+           </p>
+           <p id="%E4%BA%8C%E3%80%81FreeRTOS%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%89-toc" style="margin-left:0px;">
+            <a href="#%E4%BA%8C%E3%80%81FreeRTOS%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%89" rel="nofollow">
+             二、FreeRTOS基础知识（非常重要）
+            </a>
+           </p>
+           <p id="2.1%20%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E7%AE%80%E4%BB%8B-toc" style="margin-left:40px;">
+            <a href="#2.1%20%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E7%AE%80%E4%BB%8B" rel="nofollow">
+             2.1 任务调度简介
+            </a>
+           </p>
+           <p id="2.1.1%20%E6%A6%82%E5%BF%B5-toc" style="margin-left:80px;">
+            <a href="#2.1.1%20%E6%A6%82%E5%BF%B5" rel="nofollow">
+             2.1.1 概念
+            </a>
+           </p>
+           <p id="2.1.2%20%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F-toc" style="margin-left:80px;">
+            <a href="#2.1.2%20%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F" rel="nofollow">
+             2.1.2 实现方式
+            </a>
+           </p>
+           <p id="2.1.3%20%E6%8A%A2%E5%8D%A0%E5%BC%8F%E8%B0%83%E5%BA%A6-toc" style="margin-left:80px;">
+            <a href="#2.1.3%20%E6%8A%A2%E5%8D%A0%E5%BC%8F%E8%B0%83%E5%BA%A6" rel="nofollow">
+             2.1.3 抢占式调度
+            </a>
+           </p>
+           <p id="2.1.4%20%E6%97%B6%E9%97%B4%E7%89%87%E8%B0%83%E5%BA%A6-toc" style="margin-left:80px;">
+            <a href="#2.1.4%20%E6%97%B6%E9%97%B4%E7%89%87%E8%B0%83%E5%BA%A6" rel="nofollow">
+             2.1.4 时间片调度
+            </a>
+           </p>
+           <p id="2.2%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81-toc" style="margin-left:40px;">
+            <a href="#2.2%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81" rel="nofollow">
+             2.2 任务状态
+            </a>
+           </p>
+           <p id="2.2.1%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86-toc" style="margin-left:80px;">
+            <a href="#2.2.1%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86" rel="nofollow">
+             2.2.1 任务状态基本知识
+            </a>
+           </p>
+           <p id="2.2.2%20%E5%9B%9B%E7%A7%8D%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%9B%BE-toc" style="margin-left:80px;">
+            <a href="#2.2.2%20%E5%9B%9B%E7%A7%8D%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%9B%BE" rel="nofollow">
+             2.2.2 四种任务状态的转换图
+            </a>
+           </p>
+           <p id="2.2.3%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E5%88%97%E8%A1%A8-toc" style="margin-left:80px;">
+            <a href="#2.2.3%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E5%88%97%E8%A1%A8" rel="nofollow">
+             2.2.3 任务状态列表
+            </a>
+           </p>
+           <p id="2.2.4%20%E4%B8%BE%E4%BE%8B%E7%90%86%E8%A7%A3%E5%88%97%E8%A1%A8%E9%9A%8F%E7%9D%80%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E7%9A%84%E5%8F%98%E5%8C%96-toc" style="margin-left:80px;">
+            <a href="#2.2.4%20%E4%B8%BE%E4%BE%8B%E7%90%86%E8%A7%A3%E5%88%97%E8%A1%A8%E9%9A%8F%E7%9D%80%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E7%9A%84%E5%8F%98%E5%8C%96" rel="nofollow">
+             2.2.4 举例理解列表随着任务状态的变化
+            </a>
+           </p>
+           <p id="%E4%B8%89%E3%80%81FreeRTOS%E7%A7%BB%E6%A4%8D-toc" style="margin-left:0px;">
+            <a href="#%E4%B8%89%E3%80%81FreeRTOS%E7%A7%BB%E6%A4%8D" rel="nofollow">
+             三、FreeRTOS移植
+            </a>
+           </p>
+           <p id="3.1%C2%A0%E8%8E%B7%E5%8F%96FreeRTOS%E6%BA%90%E7%A0%81-toc" style="margin-left:40px;">
+            <a href="#3.1%C2%A0%E8%8E%B7%E5%8F%96FreeRTOS%E6%BA%90%E7%A0%81" rel="nofollow">
+             3.1 获取FreeRTOS源码
+            </a>
+           </p>
+           <p id="3.2%20%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84%E4%BB%8B%E7%BB%8D-toc" style="margin-left:40px;">
+            <a href="#3.2%20%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84%E4%BB%8B%E7%BB%8D" rel="nofollow">
+             3.2 源码结构介绍
+            </a>
+           </p>
+           <p id="%C2%A03.2.1%20%E6%BA%90%E7%A0%81%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84-toc" style="margin-left:80px;">
+            <a href="#%C2%A03.2.1%20%E6%BA%90%E7%A0%81%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84" rel="nofollow">
+             3.2.1 源码整体结构
+            </a>
+           </p>
+           <p id="%C2%A03.2.2%C2%A0FreeRTOS%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84-toc" style="margin-left:80px;">
+            <a href="#%C2%A03.2.2%C2%A0FreeRTOS%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84" rel="nofollow">
+             3.2.2 FreeRTOS文件夹结构
+            </a>
+           </p>
+           <p id="%C2%A03.2.3%C2%A0%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8BSource%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84%E5%A6%82%E4%B8%8B-toc" style="margin-left:80px;">
+            <a href="#%C2%A03.2.3%C2%A0%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8BSource%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84%E5%A6%82%E4%B8%8B" rel="nofollow">
+             3.2.3 Source文件夹结构如下
+            </a>
+           </p>
+           <p id="3.2.4%C2%A0%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8Bportable%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84-toc" style="margin-left:80px;">
+            <a href="#3.2.4%C2%A0%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8Bportable%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84" rel="nofollow">
+             3.2.4 ​​​​​​​portable文件夹结构
+            </a>
+           </p>
+           <p id="3.2.4.1%C2%A0RVDS%20%E6%96%87%E4%BB%B6%E5%A4%B9-toc" style="margin-left:120px;">
+            <a href="#3.2.4.1%C2%A0RVDS%20%E6%96%87%E4%BB%B6%E5%A4%B9" rel="nofollow">
+             3.2.4.1 RVDS 文件夹
+            </a>
+           </p>
+           <p id="3.2.4.2%20MemMang%20%E6%96%87%E4%BB%B6%E5%A4%B9-toc" style="margin-left:120px;">
+            <a href="#3.2.4.2%20MemMang%20%E6%96%87%E4%BB%B6%E5%A4%B9" rel="nofollow">
+             3.2.4.2 MemMang 文件夹
+            </a>
+           </p>
+           <p id="3.3%C2%A0FreeRTOS%E6%89%8B%E6%8A%8A%E6%89%8B%E7%A7%BB%E6%A4%8D%EF%BC%88%E6%8E%8C%E6%8F%A1%EF%BC%89-toc" style="margin-left:40px;">
+            <a href="#3.3%C2%A0FreeRTOS%E6%89%8B%E6%8A%8A%E6%89%8B%E7%A7%BB%E6%A4%8D%EF%BC%88%E6%8E%8C%E6%8F%A1%EF%BC%89" rel="nofollow">
+             3.3 FreeRTOS手把手移植（掌握）
+            </a>
+           </p>
+           <p id="3.3%C2%A0%E6%9C%80%E7%BB%88%E4%BF%AE%E6%94%B9%E6%88%90%E5%8A%9F%E7%9A%84config%E2%BD%82%E4%BB%B6-toc" style="margin-left:40px;">
+            <a href="#3.3%C2%A0%E6%9C%80%E7%BB%88%E4%BF%AE%E6%94%B9%E6%88%90%E5%8A%9F%E7%9A%84config%E2%BD%82%E4%BB%B6" rel="nofollow">
+             3.3 最终修改成功的config⽂件
+            </a>
+           </p>
+           <p id="3.4%C2%A0%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E-toc" style="margin-left:40px;">
+            <a href="#3.4%C2%A0%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E" rel="nofollow">
+             3.4 系统配置文件说明
+            </a>
+           </p>
+           <p id="%E5%9B%9B%E3%80%81%E7%A7%BB%E6%A4%8D%E6%B5%8B%E8%AF%95-toc" style="margin-left:0px;">
+            <a href="#%E5%9B%9B%E3%80%81%E7%A7%BB%E6%A4%8D%E6%B5%8B%E8%AF%95" rel="nofollow">
+             四、移植测试
+            </a>
+           </p>
+           <hr id="hr-toc"/>
+           <p>
+           </p>
+           <h2 id="%E4%B8%80%E3%80%81RTOS%E5%85%A5%E9%97%A8">
+            一、
+            <strong>
+             RTOS入门
+            </strong>
+           </h2>
+           <h3 id="1.0%20%E8%A3%B8%E6%9C%BA%E4%B8%8ERTOS%E7%9A%84%E4%B8%BE%E4%BE%8B%E5%AF%B9%E6%AF%94">
+            <strong>
+             1.0 裸机与RTOS的举例对比
+            </strong>
+           </h3>
+           <p>
+            为了初步感知裸机与实时操作系统的区别与优势，我们这里简单的举个例子，通过例子来理解二者。
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/08268e2cfd8c61c3b2e12974b4f7cca3.png"/>
+           </p>
+           <p>
+            正如上面图片所示，有一个人正在打游戏，这时候有人给他发消息，两件事的优先级相同，对于裸机系统而言，它必须等打完游戏才能去回复消息，每个任务是按照程序编写的顺序执行的。
+           </p>
+           <blockquote>
+            <p>
+             <strong>
+              裸机处理方式：
+             </strong>
+             打游戏和回复信息，需要打完游戏才可回复信息，或者回复完信息才可打游戏
+            </p>
+           </blockquote>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/4d5edb230e4ced496a491402ddcd410e.png"/>
+           </p>
+           <p>
+            而对于RTOS它又是怎么处理的呢？它会将每件事独立构成一个任务（这个任务函数是无返回值并且是死循环），然后以系统滴答定时器的时钟作为一个时间片即1ms, 每隔1ms去做另一个任务，在这两个任务之间切换，微观上看，我们的两个任务是按照顺序依次执行的，但是，由于1ms时间非常短，宏观上看，我们人眼根本分辨不出来，因此这两个任务其实就是并发运行的（一个时间片只有一个任务在执行），这样就不存在等待。
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/812bfee62c4dc8ab1e2bfcb1c8c28d6a.png"/>
+           </p>
+           <blockquote>
+            <p>
+             <strong>
+              RTOS处理方式：
+             </strong>
+             打游戏和回复信息，不需要等某一件事做完，可每间隔1ms(一个时间片时钟节拍)，然后交替做这两件事，因为速度很快，从宏观的意义上来看，类似同步执行！
+            </p>
+           </blockquote>
+           <p>
+            同样的场景，假设此时小明肚子疼了，要去医院，即这时出现了更高优先级的任务，此时裸机与RTOS又会怎么做呢？
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/a5da74deb36694cbdfd6bb98a34f2cc2.png"/>
+           </p>
+           <p>
+            回忆Stm32裸机开发，我们其实是利用中断处理的，设立一个标志位，中断条件触发，标志位改变，判断标志位，然后去执行中断处理服务函数，在这里也是这样，肚子疼就相当于一个中断，一旦发生，就要立马去医院，但是它存在一个问题：首先，中断只能处理简单的短时间的任务，不能在中断里停留较长的时间，其次，如上图所示，去医院必须要等打游戏和回复信息，两件事完成，才会去判断，而这两件事又是需要一定的时间的，缺乏一种实时性的处理能力！
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ab9f018d8764704fc747bb523bcc175f.png"/>
+           </p>
+           <p>
+            如上图RTOS的处理方式，它将去医院看病这件事设置成更高的优先级，前面两件事优先级相同，当去医院这件事发生后，首先就去执行它，前面两件事不进行处理，并且，实现试想生活中，去医院途中要打车，坐车，...各种事消耗时间，在程序里面就是延时，在裸机开发中，延时的时候CPU什么也不做，处于一种空转的状态，而在RTOS中，它并不是这样，延时的时候，CPU会去做低优先级的任务，即前面两件事，等这段时间过去后，到了医院门口，回来接着去看病，这样的优势在于它充分的利用了CPU的资源，不让CPU停下来，一直在不同的任务之间进行切换。
+           </p>
+           <h3 id="1.1%20%E8%A3%B8%E6%9C%BA%E4%B8%8ERTOS%E4%BB%8B%E7%BB%8D">
+            1.1 裸机与RTOS介绍
+           </h3>
+           <h4 id="1.1.1%20%E8%A3%B8%E6%9C%BA">
+            1.1.1 裸机
+           </h4>
+           <h5 id="1.1.1.1%E6%A6%82%E5%BF%B5">
+            1.1.1.1概念
+           </h5>
+           <p style="text-align:left;">
+            裸机：直接对硬件资源的编程，所有功能函数放在主循环中，同⼀时间只能单⼀任务运行。
+            <span style="color:#be191c;">
+             <strong>
+              裸机又称为前后台系统，前台系统指的中断服务函数，后台系统指的大循环，即应用程序。
+             </strong>
+            </span>
+           </p>
+           <h5 id="1.1.1.2%E7%89%B9%E7%82%B9" style="background-color:transparent;">
+            1.1.1.2特点
+           </h5>
+           <p style="text-align:center;">
+            <img alt="" height="289" src="https://i-blog.csdnimg.cn/blog_migrate/49ef6e3844dee42bc3b8a3f6849eca21.png" width="513"/>
+           </p>
+           <blockquote>
+            <p>
+             可以看出来：裸机系统是轮流执行的，因此必须等一个任务完成才能完成下一件任务，这带来的后果就是：实时性差，当处于延时的时候，CPU处于一种空转的状态，这样会浪费CPU的资源 ，此外，所有实现的功能都放在死循环里面，如果任务非常多，将导致结构非常臃肿！
+            </p>
+           </blockquote>
+           <h5 id="1.1.1.3%20%E5%9B%BE%E7%A4%BA">
+            1.1.1.3 图示
+           </h5>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ef9fda1c7a11dd05511c1c1cb4e56323.png"/>
+           </p>
+           <h4 id="1.1.2%20RTOS">
+            1.1.2 RTOS
+           </h4>
+           <h5 id="1.1.2.1%20RTOS%E7%9A%84%E6%A6%82%E5%BF%B5">
+            1.1.2.1 RTOS的概念
+           </h5>
+           <p>
+            RTOS 全称是 Real Time Operating System，中文名就是实时操作系统，
+            <span style="color:#fe2c24;">
+             <strong>
+              强调的是：实时性。
+             </strong>
+            </span>
+           </p>
+           <h5 id="1.1.2.2%20RTOS%E7%9A%84%E7%89%B9%E7%82%B9">
+            1.1.2.2 RTOS的特点
+           </h5>
+           <p class="img-center">
+            <img alt="" height="311" src="https://i-blog.csdnimg.cn/blog_migrate/392e890da1615b256a33f4db54e12c03.png" width="580"/>
+           </p>
+           <blockquote>
+            <p>
+             RTOS实现功能划分为多个任务，并且在延时的时候，不会空等待，会让出CPU的使用权给其他任务，即任务调度，这是操作系统内部自己实现的调度算法，高优先级任务抢占低优先级任务，同一优先级任务按照时间片轮转的方式执行，为了保证高优先级任务执行完后，低优先级不用再重新开始执行，每个任务都有自己的栈空间，用于保存局部变量以及任务的上下文信息。
+            </p>
+           </blockquote>
+           <h5 id="1.1.2.3%20%E5%9B%BE%E7%A4%BA">
+            1.1.2.3 图示
+           </h5>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/24336fc3aa2a4d2d2ee2c1c83e37011e.png"/>
+           </p>
+           <blockquote>
+            <p>
+             可以看出：每个任务都是一个死循环，这是为了保证能够高优先级执行完后，能够继续执行低的优先级任务，如果低优先级任务执行到一半，被高优先级任务打断，低优先级任务不是死循环，那就执行不了低优先级的任务了。
+            </p>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               注意两点：
+              </strong>
+             </span>
+            </p>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               1、任务可以是同等优先级的；
+              </strong>
+             </span>
+            </p>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               2、中断可以打断任意任务；
+              </strong>
+             </span>
+            </p>
+           </blockquote>
+           <p>
+            思考：
+            <span style="color:#FF0000;">
+             如果高优先级的任务一直在运行，会怎么样？
+            </span>
+           </p>
+           <blockquote>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               如果高任务的优先级里面没有延时函数，那么，它就不会让出CPU的使用权，并且高优先级任务是死循环的，它将会一直执行下去，使得低优先级任务无法运行！！！
+              </strong>
+             </span>
+            </p>
+           </blockquote>
+           <h3 id="1.2%20FreeRTOS%E7%AE%80%E4%BB%8B">
+            1.2 FreeRTOS简介
+           </h3>
+           <p style="text-align:left;">
+            RTOS是指一类系统，如 FreeRTOS，uC/OS，RTX，RT-Thread 等，都是 RTOS 类操作系统。FreeRTOS 是一个免费的嵌入式实时操作系统，其开源、轻量级、可移植的特点使其成为许多嵌入式开发者的首选。在近几年的使用排名上位居前列。
+           </p>
+           <p style="text-align:center;">
+            <img alt="" height="478" src="https://i-blog.csdnimg.cn/blog_migrate/b082a9564789c31c29e8f6f1a401eb0b.png" width="527"/>
+           </p>
+           <blockquote>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               FreeRTOS的特点：
+              </strong>
+             </span>
+            </p>
+           </blockquote>
+           <p class="img-center">
+            <img alt="" height="332" src="https://i-blog.csdnimg.cn/blog_migrate/698c4c6d12213e7c8e29b63d802d39d0.png" width="514"/>
+           </p>
+           <blockquote>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               学习资料：
+              </strong>
+             </span>
+            </p>
+            <p>
+             <span style="color:#002060;">
+              FreeRTOS
+             </span>
+             <span style="color:#002060;">
+              官网：
+             </span>
+             <span style="color:#002060;">
+              https://www.freertos.org/和FreeRTOS教程指南以及课程源码。
+             </span>
+            </p>
+           </blockquote>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ab3052e07ff66f54824f78eaccbb845a.png"/>
+           </p>
+           <h2 id="%E4%BA%8C%E3%80%81FreeRTOS%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%89">
+            二、FreeRTOS基础知识（非常重要）
+           </h2>
+           <h3 id="2.1%20%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E7%AE%80%E4%BB%8B">
+            2.1 任务调度简介
+           </h3>
+           <h4 id="2.1.1%20%E6%A6%82%E5%BF%B5">
+            2.1.1 概念
+           </h4>
+           <p style="margin-left:0;text-align:justify;">
+            一个处理器核心在某一时刻只能运行一个任务，如果在各个任务之间迅速切换，这样看起来就像多个任务在同时运行。操作系统中任务调度器的责任就是使用相关的调度算法来决定当前时刻要执行哪个任务。
+           </p>
+           <h4 id="2.1.2%20%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F">
+            2.1.2 实现方式
+           </h4>
+           <p style="text-align:left;">
+            FreeRTOS 一共支持三种任务调度方式：
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/8f4cbb926082627c5438ce600f07a253.png"/>
+           </p>
+           <h4 id="2.1.3%20%E6%8A%A2%E5%8D%A0%E5%BC%8F%E8%B0%83%E5%BA%A6">
+            2.1.3 抢占式调度
+           </h4>
+           <p class="img-center">
+            <img alt="" height="249" src="https://i-blog.csdnimg.cn/blog_migrate/1633b5f1fcf557265b18a051ad572378.png" width="558"/>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/8195e99f0f85bfc244a6669bc2cb6504.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/d24e5c1e509acc3c1f12b395960c5d14.png"/>
+           </p>
+           <blockquote>
+            <p>
+             <span style="color:#fe2c24;">
+              <strong>
+               总结：
+              </strong>
+             </span>
+            </p>
+            <ol>
+             <li>
+              <strong>
+               <span style="color:#FF0000;">
+                高优先级任务，优先执行；
+               </span>
+              </strong>
+             </li>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                高优先级任务不停止，低优先级任务无法执行，除非高优先级的任务进入阻塞态或者被挂起，这时便会让出CPU的使用权给就绪态中最高的优先级任务使用，运行它；
+               </span>
+              </strong>
+             </li>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                被抢占的任务将会进入就绪态；
+               </span>
+              </strong>
+             </li>
+            </ol>
+           </blockquote>
+           <h4 id="2.1.4%20%E6%97%B6%E9%97%B4%E7%89%87%E8%B0%83%E5%BA%A6">
+            2.1.4 时间片调度
+           </h4>
+           <p style="text-align:left;">
+            <span style="color:#FF0000;">
+             同等优先级任务
+            </span>
+            <span style="color:#002060;">
+             轮流地享有相同的
+            </span>
+            <span style="color:#002060;">
+             CPU
+            </span>
+            <span style="color:#002060;">
+             时间
+            </span>
+            <span style="color:#FF0000;">
+             (
+            </span>
+            <span style="color:#FF0000;">
+             可设置，指的是SysTick中断周期
+            </span>
+            <span style="color:#FF0000;">
+             )
+            </span>
+            <span style="color:#002060;">
+             ， 叫时间片，在
+            </span>
+            <span style="color:#002060;">
+             FreeRTOS
+            </span>
+            <span style="color:#002060;">
+             中，
+            </span>
+            <span style="color:#FF0000;">
+             一个时间片就等于
+            </span>
+            <span style="color:#FF0000;">
+             SysTick
+            </span>
+            <span style="color:#FF0000;">
+             中断周期，
+            </span>
+            <span style="color:#be191c;">
+             <strong>
+              即相同优先级任务轮转运行的时间为一个时间片，时间片的持续时间可以由中断周期进行设置改变。我们代码通常用的的是1ms.
+             </strong>
+            </span>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" height="249" src="https://i-blog.csdnimg.cn/blog_migrate/a29af505d0adf653c1af10b0ba40b0ad.png" width="597"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/2cdbbc8382e5099418602051890785da.png"/>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/e34857ee35a514302ecdb41f9e17a142.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/22f4bb325ea065d59da56273d1aae71e.png"/>
+           </p>
+           <blockquote>
+            <p>
+             <span style="color:#fe2c24;">
+              <strong>
+               总结：
+              </strong>
+             </span>
+            </p>
+            <ol>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                同等优先级任务，轮流执行；时间片流转；
+               </span>
+              </strong>
+             </li>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                一个时间片大小，取决于滴答定时器中断周期；
+               </span>
+              </strong>
+             </li>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                注意没有用完的时间片不会再使用，下次任务
+               </span>
+               <span style="color:#FF0000;">
+                Task3
+               </span>
+               <span style="color:#FF0000;">
+                得到执行
+               </span>
+              </strong>
+              ，
+              <strong>
+               <span style="color:#FF0000;">
+                还是按照一个时间片的时钟节拍运行；
+               </span>
+              </strong>
+             </li>
+            </ol>
+           </blockquote>
+           <h3 id="2.2%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81">
+            2.2 任务状态
+           </h3>
+           <h4 id="2.2.1%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86">
+            2.2.1 任务状态基本知识
+           </h4>
+           <p style="text-align:left;">
+            FreeRTOS中任务共存在4种状态：
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/4aa9b8792cff3a2b76a83df68c00d70f.png"/>
+           </p>
+           <h4 id="2.2.2%20%E5%9B%9B%E7%A7%8D%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%9B%BE">
+            2.2.2 四种任务状态的转换图
+           </h4>
+           <p style="text-align:left;">
+            四种任务状态之间的转换图如下：
+           </p>
+           <p class="img-center">
+            <img alt="" height="418" src="https://i-blog.csdnimg.cn/blog_migrate/86a44457b2716e5985cb415c8bdade13.png" width="486"/>
+           </p>
+           <blockquote>
+            <p>
+             <span style="color:#fe2c24;">
+              <strong>
+               总结：
+              </strong>
+             </span>
+            </p>
+            <ol>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                仅就绪态可转变成运行态；
+               </span>
+              </strong>
+             </li>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                其他状态的任务想运行，必须先转变成就绪态；
+               </span>
+              </strong>
+             </li>
+             <li style="text-align:left;">
+              <strong>
+               <span style="color:#FF0000;">
+                当运行态的任务被挂起或者阻塞时，就会找就绪态中优先级最高的任务去执行；同理，就绪态中的任务出现比运行态任务优先级还高，那么，这个就绪态任务就会抢占运行态任务；
+               </span>
+              </strong>
+             </li>
+            </ol>
+           </blockquote>
+           <h4 id="2.2.3%20%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E5%88%97%E8%A1%A8">
+            2.2.3 任务状态列表
+           </h4>
+           <p style="text-align:left;">
+            FreeRTOS中无非就四种状态，运行态，就绪态、阻塞态、挂起态，这四种状态中，除了运行态，其他三种任务状态的任务都有其对应的任务状态列表 ，
+            <span style="color:#fe2c24;">
+             <strong>
+              列表类似于链表，非常重要！
+             </strong>
+            </span>
+            后面章节会专门介绍。
+            <span style="color:#be191c;">
+             <strong>
+              处于不同状态的任务就会被挂载到不同的列表下面。前面学习，我们知道，只有就绪态可以直接成为运行态，其他的状态都不可以，因此，只有将任务挂载到就绪列表中，才能变为运行态！阻塞态和挂起态只有先挂载到就绪列表才能成为运行态。我们任务调度器总是在所有处于就绪列表的任务中，选择具有最高优先级的任务来执行。并且，
+             </strong>
+            </span>
+            <span style="color:#fe2c24;">
+             <strong>
+              新创建的任务会直接挂载到就绪列表中的！
+             </strong>
+            </span>
+           </p>
+           <p style="text-align:center;">
+            <span style="color:#fe2c24;">
+             <strong>
+              <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/a40ae0a5afe358375783189366135f6c.png"/>
+             </strong>
+            </span>
+           </p>
+           <p style="margin-left:0;text-align:justify;">
+            以就绪列表为例。如果在32位的硬件中，会保存一个32位的变量，代表0-31的优先级。当某个位，置一时，代表所对应的优先级就绪列表有任务存在。如果有多个任务优先级相同，会连接在同一个就绪列表上：
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/b4d17dd149a68afc2f56543979717fe6.png"/>
+           </p>
+           <h4 id="2.2.4%20%E4%B8%BE%E4%BE%8B%E7%90%86%E8%A7%A3%E5%88%97%E8%A1%A8%E9%9A%8F%E7%9D%80%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E7%9A%84%E5%8F%98%E5%8C%96">
+            2.2.4 举例理解列表随着任务状态的变化
+           </h4>
+           <p style="text-align:left;">
+            假设，创建三个任务分别是：task1、task2、task3，优先级分别是：1、2、3
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/a9c9f547196a5cb938bccf9ddfd97900.png"/>
+           </p>
+           <p>
+            一开始，任务调度器会去就绪列表中找优先级最高的任务执行，也就是任务3，此时任务3会成为运行态，标志位为0，如果任务3由于延时，它会发生阻塞，这时它会被挂载到阻塞列表下，任务调度器会再次去就绪列表中最高的优先级去执行，也就是任务2，此时任务2会成为运行态，它的标志位也为0，如果任务2被挂起，那么此时，任务2就会被挂载到挂起列表下面，任务调度器会再次去就绪列表中最高的优先级去执行，也就是任务1，此时任务1会成为运行态，它的标志位也为0，运行一段时间，发现任务3，阻塞解除（延时时间到了或者信号量接收到了），任务3会重新回到就绪列表，任务调度器会再次去就绪列表中找优先级最高的任务执行，也就是任务3，此时任务3会成为运行态。
+           </p>
+           <blockquote>
+            <p style="text-align:left;">
+             <span style="color:#FF0000;">
+              <strong>
+               任务调度器总是在所有处于就绪列表的任务中，选择具有最高优先级的任务来执行
+              </strong>
+             </span>
+             ，如果task1、task2、task3，优先级相同均为1，则会进行时间片的流转调度方式。
+            </p>
+           </blockquote>
+           <h2 id="%E4%B8%89%E3%80%81FreeRTOS%E7%A7%BB%E6%A4%8D">
+            三、FreeRTOS移植
+           </h2>
+           <h3 id="3.1%C2%A0%E8%8E%B7%E5%8F%96FreeRTOS%E6%BA%90%E7%A0%81">
+            3.1 获取FreeRTOS源码
+           </h3>
+           <blockquote>
+            <p style="margin-left:0;text-align:justify;">
+             官网地址：
+             <a href="https://www.freertos.org/" rel="nofollow" title="https://www.freertos.org/">
+              https://www.freertos.org/
+             </a>
+             可选择当前最新的202212.01版本下载
+            </p>
+           </blockquote>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/f5d9b2af228404072259af2100aea9d5.png"/>
+           </p>
+           <h3 id="3.2%20%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84%E4%BB%8B%E7%BB%8D">
+            3.2 源码结构介绍
+           </h3>
+           <h4 id="%C2%A03.2.1%20%E6%BA%90%E7%A0%81%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84">
+            3.2.1 源码整体结构
+           </h4>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/7f6cf915b8f17b3c6b4c1cce9a0f7e6e.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/aec6795142f562a7b87dca43cf6bac5f.png"/>
+           </p>
+           <h4 id="%C2%A03.2.2%C2%A0FreeRTOS%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84">
+            3.2.2
+            <strong>
+             FreeRTOS文件夹结构
+            </strong>
+           </h4>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/185285f17408aa1015269dd23c869c2e.png"/>
+           </p>
+           <h4 id="%C2%A03.2.3%C2%A0%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8BSource%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84%E5%A6%82%E4%B8%8B">
+            3.2.3 ​​​​​​​
+            <strong>
+             Source文件夹结构如下
+            </strong>
+           </h4>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/b2afb6357f21bdf098ba8f9f7fd451d3.png"/>
+           </p>
+           <p>
+            include 文件夹和.c 文件是通用的头文件和 C 文件，这两部分的文件适用于各种编译器 和处理器，是通用的。标红的是移植必需的，其他.c 文件根据需要选取。
+           </p>
+           <h4 id="3.2.4%C2%A0%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8B%E2%80%8Bportable%E6%96%87%E4%BB%B6%E5%A4%B9%E7%BB%93%E6%9E%84">
+            3.2.4 ​​​​​​​
+            <strong>
+             portable文件夹结构
+            </strong>
+           </h4>
+           <p style="text-align:left;">
+            FreeRTOS操作系统归根到底是一个软件层面的东西，那FreeRTOS是如何跟硬件联系在一起的呢？portable文件夹里面的东西就是连接桥梁.portable 文件夹里根据编译器、内核等实际环境对应选取。由于我们使用 MDK 开发，因此这里只重点介绍其中的部分移植文件。
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/c5942eb31a0277ffc58be3a9afacb246.png"/>
+           </p>
+           <p>
+            Keil文件夹里只有一个 See-also-the-RVDS-directory.txt，意思是让我们看RVDS 文件夹。
+           </p>
+           <h5 id="3.2.4.1%C2%A0RVDS%20%E6%96%87%E4%BB%B6%E5%A4%B9">
+            3.2.4.1 RVDS 文件夹
+           </h5>
+           <p>
+            RVDS 文件夹包含了各种处理器相关的文件夹，FreeRTOS 是一个软件，单片机是一个硬件，FreeRTOS 要想运行在一个单片机上面，它们就必须关联在一起。
+            <span style="color:#1c7331;">
+             <strong>
+              关联还是得通过写代码来关联，这部分关联的文件叫
+             </strong>
+            </span>
+            <span style="color:#be191c;">
+             <strong>
+              接口文件
+             </strong>
+            </span>
+            <span style="color:#1c7331;">
+             <strong>
+              ，通常由汇编和 C语言联合编写
+             </strong>
+            </span>
+            。这些接口文件都是跟硬件密切相关的，不同的硬件接口文件是不一样的，但都大同小 异。
+            <span style="color:#1c7331;">
+             <strong>
+              编写这些接口文件的过程我们就叫移植，移植的过程通常由 FreeRTOS 和 mcu 原厂的 人来负责，移植好的这些接口文件就放在 RVDS 这个文件夹的目录下。
+             </strong>
+            </span>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/07101d6634f551f2e6170652c01bfc09.png"/>
+           </p>
+           <p>
+            FreeRTOS 为我们提供了 cortex-m0、m3、m4 和 m7 等内核的单片机的接口文件，根 据 mcu 的内核选择对应的接口文件即可。其实准确来说，不能够叫移植，应该叫使用官方 的移植， 因为这些跟硬件相关的接口文件，RTOS 官方都已经写好了，我们只是使用而已。以 ARM_CM3 这个文件夹为例，里面只有“port.c”与“portmacro.h” 两个文件：
+           </p>
+           <blockquote>
+            <ol>
+             <li>
+              port.c 文件：里面的内容是由 FreeRTOS 官方的技术人员为 Cortex-M3 内核的处理器写的接口文件，里面核心的上下文切换代码是由汇编语言编写而成，对技术员的要求比 较高，我们只是使用的话只需拷贝过来用即可。
+             </li>
+             <li>
+              portmacro.h 文件：port.c 文件对应的头文件，主要是一些数据类型和宏定义。
+             </li>
+            </ol>
+           </blockquote>
+           <h5 id="3.2.4.2%20MemMang%20%E6%96%87%E4%BB%B6%E5%A4%B9">
+            3.2.4.2 MemMang 文件夹
+           </h5>
+           <p>
+            MemMang 文件夹下存放的是跟
+            <span style="color:#be191c;">
+             <strong>
+              内存管理
+             </strong>
+            </span>
+            相关的，总共有五个 heap 文件以及一个 readme 说明文件。
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/cacb18130dda3e06af228b4173322a27.png"/>
+            这五个 heap 文件在移植的时候必须使用一个，
+            <span style="color:#1c7331;">
+             <strong>
+              因为 FreeRTOS 在创建内核对象的时候使用的是动态分配内存，而这些动态内存分配的函数则在这几个文件里面实现，不同的分配算法会导致不同的效率与结果
+             </strong>
+            </span>
+            ，后面在内存管理中我们会讲解每个文件的区别，由于现在是初学，所以我们选用 heap4.c 即可。
+           </p>
+           <h3 id="3.3%C2%A0FreeRTOS%E6%89%8B%E6%8A%8A%E6%89%8B%E7%A7%BB%E6%A4%8D%EF%BC%88%E6%8E%8C%E6%8F%A1%EF%BC%89">
+            3.3 FreeRTOS手把手移植（掌握）
+           </h3>
+           <p>
+            1）在本地⼯程⽂件夹中新建两个⽂件：
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/66dc94717326c419d0c5d02af67fd3b6.png"/>
+           </p>
+           <p>
+           </p>
+           <p>
+            2）将Source（源码）下的.c⽂件 和 include⽂件中的.h⽂件（头文件）复制到 Free RTOS_CORE中
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/5a116bc6cd88556c45ad575f3fb51570.png"/>
+           </p>
+           <p>
+            3）将FreeRTOSv202212.00\FreeRTOS\Source\portable\RVDS\ARM_CM4F下⾯的⽂件复制到Free RTOS_PORT 中 将FreeRTOSv202212.00\FreeRTOS\Source\portable\MemMang中的heap_4c也复制进来。
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/a82b2c22eb4eab9f5abacf47b37ced2f.png"/>
+           </p>
+           <p>
+            4）添加FreeRTOSConfig.h⽂件：FreeRTOSConfig.h 是 FreeRTOS 的配置⽂件，通过此⽂件来实现对内核的裁剪。 获取配置⽂件：（1）⾃⼰编写（难度有点⼤）（2）从官⽅给的DEMO⽂件中获取
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ed2b482fe96974ed795185fa418277a4.png"/>
+           </p>
+           <p>
+            在我们的⼯程中添加⼀个⽂件夹⽤来存放系统配置⽂件（FreeRTOSConfig.h)
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/5a380748baab114b49e408e9ff987a9e.png"/>
+           </p>
+           <p>
+            编译我们的⼯程
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/20732a44deaacc70f90b9acb657be45e.png"/>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/90cbe1fb89200aa47535813dc9d53591.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/75bce63fcd176a468763e61a17c89b4a.png"/>
+           </p>
+           <h3 id="3.3%C2%A0%E6%9C%80%E7%BB%88%E4%BF%AE%E6%94%B9%E6%88%90%E5%8A%9F%E7%9A%84config%E2%BD%82%E4%BB%B6">
+            3.3 最终修改成功的config⽂件
+           </h3>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/091709b61b36af1862e82ace6d93b654.png"/>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/04631587cac77d0ebc43c770817eb8d3.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/d54e321e4326ada943643e685f91999b.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/41789a1d86c08fbdce5923d2bc21f88a.png"/>
+           </p>
+           <h3 id="3.4%C2%A0%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E">
+            3.4 系统配置文件说明
+           </h3>
+           <p>
+            FreeRTOSConfig.h 配置文件作用：
+            <span style="color:#be191c;">
+             <strong>
+              对FreeRTOS的功能进行配置和裁剪，以及API函数的使能等
+             </strong>
+            </span>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/5d8e88c1030800192b730e52e78b2826.png"/>
+           </p>
+           <p>
+            <strong>
+             相关宏大致可分为三类:
+            </strong>
+           </p>
+           <p style="text-align:center;">
+            <span style="color:#002060;">
+             <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/824d0567898264cc044c69e9acafdb64.png"/>
+            </span>
+           </p>
+           <h2 id="%E5%9B%9B%E3%80%81%E7%A7%BB%E6%A4%8D%E6%B5%8B%E8%AF%95" style="background-color:transparent;">
+            四、移植测试
+           </h2>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ed15c26e85b91da40fa35de7f7aff430.png"/>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/09c14c9e8326b7b47246c09f69440be4.png"/>
+           </p>
+           <p>
+            至此，FreeRTOS入门结束，相对于裸机开发虽然更加方便了，但也对于程序的控制带来一定的难度，初次学习，循序渐进，一步步掌握即可！以上就是全部内容！请务必掌握，创作不易，欢迎大家点赞加关注评论，您的支持是我前进最大的动力！下期再见！
+           </p>
+          </div>
+         </div>
+        </article>
+       </div>
+       <div class="directory-boxshadow-dialog" style="display:none;">
+        <div class="directory-boxshadow-dialog-box">
+        </div>
+        <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new">
+         <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png"/>
+         <div class="vip-limited-time-top">
+          确定要放弃本次机会？
+         </div>
+         <span class="vip-limited-time-text">
+          福利倒计时
+         </span>
+         <div class="limited-time-box-new">
+          <span class="time-hour">
+          </span>
+          <i>
+           :
+          </i>
+          <span class="time-minite">
+          </span>
+          <i>
+           :
+          </i>
+          <span class="time-second">
+          </span>
+         </div>
+         <div class="limited-time-vip-box">
+          <p>
+           <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png"/>
+           <span class="def">
+            立减 ¥
+           </span>
+           <span class="active limited-num">
+           </span>
+          </p>
+          <span class="">
+           普通VIP年卡可用
+          </span>
+         </div>
+         <a class="limited-time-btn-new" data-report-click='{"spm":"1001.2101.3001.9621"}' data-report-query="spm=1001.2101.3001.9621" href="https://mall.csdn.net/vip">
+          立即使用
+         </a>
+        </div>
+       </div>
+       <a id="commentBox" name="commentBox">
+       </a>
+      </main>
+     </div>
+     <div class="recommend-right1 align-items-stretch clearfix" data-type="recommend" id="rightAsideConcision">
+      <aside class="recommend-right_aside">
+       <div id="recommend-right-concision">
+        <div class="flex-column aside-box groupfile" id="groupfileConcision">
+         <div class="groupfile-div1">
+          <h3 class="aside-title">
+           目录
+          </h3>
+          <div class="align-items-stretch group_item">
+           <div class="pos-box">
+            <div class="scroll-box">
+             <div class="toc-box">
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </aside>
+     </div>
+    </div>
+    <div class="mask-dark">
+    </div>
+    <div class="skin-boxshadow">
+    </div>
+    <div class="directory-boxshadow">
+    </div>
+    <div style="display:none;">
+     <img onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);' src=""/>
+    </div>
+    <div class="keyword-dec-box" id="keywordDecBox">
+    </div>
+   </link>
+  </link>
+ </body>
+ <!-- 富文本柱状图  -->
+ <link href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css" rel="stylesheet">
+  <link href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css" rel="stylesheet"/>
+  <link href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css" rel="stylesheet"/>
+ </link>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FreeRTOS 原理图解教学 — 从 PY32C882 裸机到多任务</title>
+<style>
+:root{
+  --paper:#f6f4ef; --card:#fffefb; --ink:#1b1a17; --ink2:#4a453c; --muted:#8a8175;
+  --line:#e3ddd1; --line2:#cdc5b4; --accent:#b45309; --accent-soft:#fdf3e6;
+  --danger:#b91c1c; --danger-soft:#fdeceb; --ok:#15803d; --ok-soft:#eef7f0;
+  --code-bg:#f1eee7; --code-ink:#2a3b4d; --stack:#e8f0f7; --stack2:#fdf0e2;
+  --mono:"JetBrains Mono","Cascadia Mono",Consolas,"Courier New",monospace;
+  --sans:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",system-ui,sans-serif;
+  --r:10px;
+}
+html[data-theme="dark"]{
+  --paper:#121110; --card:#1b1a17; --ink:#eae5da; --ink2:#b6ad9d; --muted:#8b8375;
+  --line:#2c2924; --line2:#413c33; --accent:#f0a35e; --accent-soft:#2a2018;
+  --danger:#f87171; --danger-soft:#2b1a1a; --ok:#4ade80; --ok-soft:#16241b;
+  --code-bg:#221f1a; --code-ink:#d6cdbe; --stack:#1b2733; --stack2:#2b2016;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.8 var(--sans);
+  -webkit-font-smoothing:antialiased}
+.wrap{display:grid;grid-template-columns:252px minmax(0,1fr);gap:44px;
+  max-width:1260px;margin:0 auto;padding:0 28px 96px}
+nav.toc{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:30px 18px 30px 0;border-right:1px solid var(--line)}
+nav.toc .tb{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:t}
+nav.toc li{counter-increment:t;margin:2px 0}
+nav.toc a{display:flex;gap:8px;padding:5px 8px;border-radius:6px;color:var(--ink2);
+  text-decoration:none;font-size:13.5px;line-height:1.5}
+nav.toc a::before{content:counter(t,decimal-leading-zero);font:11px/1.6 var(--mono);color:var(--muted)}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav.toc a.on::before{color:var(--accent)}
+nav.toc .sep{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line2)}
+main{min-width:0;padding-top:30px}
+.tgl{position:fixed;right:20px;bottom:20px;z-index:9;display:flex;gap:0;
+  border:1px solid var(--line2);border-radius:999px;background:var(--card);
+  overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.10)}
+.tgl button{border:0;background:transparent;color:var(--ink2);cursor:pointer;
+  font:12px/1 var(--sans);padding:9px 14px}
+.tgl button.on{background:var(--accent);color:#fff}
+
+/* ---------- hero ---------- */
+header.hero{border-bottom:2px solid var(--ink);padding-bottom:26px;margin-bottom:38px}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.2em;color:var(--accent);
+  text-transform:uppercase}
+h1{font-size:39px;line-height:1.22;margin:14px 0 12px;letter-spacing:-.01em}
+h1 small{display:block;font-size:16px;font-weight:400;color:var(--ink2);margin-top:12px;
+  letter-spacing:0;line-height:1.7}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  background:var(--card);margin-top:26px}
+.spec div{padding:12px 14px;border-right:1px solid var(--line)}
+.spec div:last-child{border-right:0}
+.spec b{display:block;font:600 19px/1.3 var(--mono);color:var(--accent)}
+.spec span{font-size:11.5px;color:var(--muted)}
+
+/* ---------- 章节 ---------- */
+section.ch{margin:0 0 66px;scroll-margin-top:24px}
+.h2{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line2);
+  padding-bottom:10px;margin-bottom:26px}
+.h2 i{font:600 12px/1 var(--mono);color:var(--accent);letter-spacing:.1em;
+  border:1px solid var(--accent);border-radius:5px;padding:4px 7px;font-style:normal;
+  white-space:nowrap}
+h2{font-size:25px;margin:0;line-height:1.35;letter-spacing:-.005em}
+h3{font-size:17.5px;margin:34px 0 12px;padding-left:11px;border-left:3px solid var(--line2)}
+h4{font-size:15.5px;margin:24px 0 8px;color:var(--ink2)}
+p{margin:0 0 15px}
+a{color:var(--accent)}
+strong{font-weight:700}
+ul,ol{padding-left:22px;margin:0 0 15px}
+li{margin:5px 0}
+code{font:13px/1.5 var(--mono);background:var(--code-bg);color:var(--code-ink);
+  padding:2px 5px;border-radius:4px;white-space:nowrap}
+pre{margin:0 0 18px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 16px;overflow-x:auto}
+pre code{background:0;padding:0;white-space:pre;font-size:12.6px;line-height:1.72;color:var(--code-ink)}
+pre .c{color:var(--muted)}
+pre .k{color:var(--accent);font-weight:600}
+pre .hl{background:var(--accent-soft);border-radius:3px;box-shadow:0 0 0 2px var(--accent-soft)}
+.kv{font:600 13px/1 var(--mono);color:var(--accent);white-space:nowrap}
+
+/* ---------- 知识点 / 提示块 ---------- */
+.pt{border-top:2px solid var(--ink);padding-top:14px;margin:26px 0}
+.pt h4{margin:0 0 8px;font-size:15px;color:var(--ink)}
+.pt h4 em{font:11px/1 var(--mono);color:var(--accent);font-style:normal;margin-right:8px}
+.call{border:1px solid var(--line2);border-radius:var(--r);padding:14px 16px;margin:20px 0;
+  background:var(--card)}
+.call.warn{border-color:var(--danger);background:var(--danger-soft)}
+.call.key{border-color:var(--accent);background:var(--accent-soft)}
+.call.story{border-color:var(--line2);background:var(--card)}
+.call .tag{font:600 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:8px}
+.call.warn .tag{color:var(--danger)}
+.call.key .tag{color:var(--accent)}
+.call p:last-child,.call ul:last-child{margin-bottom:0}
+figure{margin:22px 0;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--card);padding:16px 14px 8px}
+figure svg{display:block;width:100%;height:auto}
+figcaption{font-size:12.5px;color:var(--muted);padding:10px 4px 6px;line-height:1.6}
+figcaption b{color:var(--ink2)}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--code-bg);font-weight:600;font-size:13px}
+tr:last-child td{border-bottom:0}
+td code,th code{white-space:nowrap}
+details{border:1px solid var(--line);border-radius:var(--r);margin:10px 0;background:var(--card)}
+details summary{cursor:pointer;padding:11px 15px;font-weight:600;font-size:14.5px}
+details summary::marker{color:var(--accent)}
+details>div{padding:2px 15px 14px;border-top:1px solid var(--line);font-size:14.5px}
+details>div p:last-child{margin-bottom:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1000px){
+  .wrap{grid-template-columns:1fr;gap:0;padding:0 18px 72px}
+  nav.toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);
+    padding:22px 0}
+  nav.toc ol{columns:2;column-gap:22px}
+  h1{font-size:29px}
+  .grid2{grid-template-columns:1fr}
+}
+/* SVG 视觉语言 */
+.f-bx{fill:var(--card);stroke:var(--line2);stroke-width:1.4}
+.f-bx.hi{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.8}
+.f-bx.dg{fill:var(--danger-soft);stroke:var(--danger)}
+.f-bx.st{fill:var(--stack)}
+.f-bx.st2{fill:var(--stack2)}
+.f-t{fill:var(--ink);font:12px var(--mono)}
+.f-t.s{font-size:11px;fill:var(--ink2)}
+.f-t.b{font-weight:700}
+.f-t.a{fill:var(--accent);font-weight:700}
+.f-t.r{fill:var(--danger);font-weight:700}
+.f-t.m{fill:var(--muted)}
+.f-ln{stroke:var(--ink2);stroke-width:1.3;fill:none}
+.f-ln.a{stroke:var(--accent);stroke-width:2}
+.f-ln.r{stroke:var(--danger);stroke-width:2;stroke-dasharray:5 4}
+.f-dash{stroke:var(--line2);stroke-width:1;stroke-dasharray:4 4;fill:none}
+.mono{font-family:var(--mono)}
+@media print{nav.toc,.tgl{display:none}.wrap{display:block}section.ch{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="tgl" role="group" aria-label="主题切换">
+  <button id="t-light" class="on" type="button">浅色</button>
+  <button id="t-dark" type="button">深色</button>
+</div>
+
+<div class="wrap">
+<nav class="toc" aria-label="目录">
+  <p class="tb">目录 · Contents</p>
+  <ol>
+    <li><a href="#c1">上电那一刻发生了什么</a></li>
+    <li><a href="#c2">CPU 的 16 个寄存器和两个栈</a></li>
+    <li><a href="#c3">异常、向量表与优先级</a></li>
+    <li><a href="#c4">SysTick：时间从哪来</a></li>
+    <li><a href="#c5">一次异常的完整进出</a></li>
+    <li><a href="#c6">任务到底是什么</a></li>
+    <li><a href="#c7">上下文切换全过程</a></li>
+    <li><a href="#c8">调度器启动的那一瞬间</a></li>
+    <li><a href="#c9">并发、临界区与 ISR 三范式</a></li>
+    <li><a href="#c10">应用：把裸机程序变成多任务</a></li>
+    <li><a href="#c11">调试与验证手段</a></li>
+    <li><a href="#c12">自测题（10 题）</a></li>
+    <li><a href="#c13">速查表 CM0+ vs M3/M4</a></li>
+  </ol>
+  <div class="sep"><a href="#appendix">附录 · 本工程实测数据</a></div>
+</nav>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">PY32C882 · Cortex-M0+ · FreeRTOS V10.5.1</p>
+  <h1>FreeRTOS 原理图解教学
+    <small>从"上电第一条指令"讲到"两个任务为什么能同时跑"。全部结论来自本机源码实测与真实工程验证，不是教程转述。</small>
+  </h1>
+  <div class="spec">
+    <div><b>8 MHz</b><span>HSI 直出主频</span></div>
+    <div><b>0.04 µs</b><span>一条指令（25ns×?) 单周期 ~125ns</span></div>
+    <div><b>7999</b><span>SysTick 重载值 = 1ms</span></div>
+    <div><b>0xC0C00000</b><span>SHPR3 实测值</span></div>
+    <div><b>16 字</b><span>任务切换帧 64B</span></div>
+    <div><b>9520 B</b><span>本工程 Flash 占用</span></div>
+  </div>
+</header>

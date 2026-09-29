@@ -1,0 +1,952 @@
+<DataBase Version="1.0.3" Update="2026-07-21">
+  <Device>
+    <ChipInfo Vendor="Puya" Name="HY32U010x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4800" Loader="Devices\Puya\PY064xx_18.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="HY32U026x6" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY108xx_32.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY108xx_OB.FLM" Map="OptionBytes\P0108.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY108xx_OTP.FLM"/>
+  </Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="MS32C001x2" WorkRAMAddr="0x20000000" WorkRAMSize="0x400" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x2000" Loader="Devices\Puya\MS32C0xx_8.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\MS32C0xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\MS32C0xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="MS32C001x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4800" Loader="Devices\Puya\MS32C0xx_18.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\MS32C0xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\MS32C0xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="MS32C001Bx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\MS107xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0040" MaxSize="0x40" Loader="Devices\Puya\MS107xx_OB.FLM" Map="OptionBytes\P0107.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF01C0" MaxSize="0x40" Loader="Devices\Puya\MS107xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="MS32C011x3" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x3000" Loader="Devices\Puya\MS32C0xx_12.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\MS32C0xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\MS32C0xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="MS32C012x3" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x3000" Loader="Devices\Puya\MS32C0xx_12.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\MS32C0xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\MS32C0xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61xx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY061xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61xx5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY061xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61xx6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61xx7" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61xx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C610x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C611x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C612x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C613x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C615x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C616x5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY061xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C617x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C618x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C619x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Ax6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Bx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Cx5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY061xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Dx5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY061xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Ex8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Fx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Gx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Hx5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY061xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Ix8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Kx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Lx5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY061xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C61Mx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C63xx6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY063xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C63xx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY063xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C63xx9" WorkRAMAddr="0x20000000" WorkRAMSize="0x3000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x18000" Loader="Devices\Puya\PY063xx_96.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C63xxB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY063xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C630xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY063xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C631xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY063xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C64xx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY064xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C64xx5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C640x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C641x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C642x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C642Xx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY107xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0040" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OB.FLM" Map="OptionBytes\P0107.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF01C0" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C643x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY064xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C644x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C645x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C647x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C648x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C649x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C64Ax4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4800" Loader="Devices\Puya\PY064xx_18.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C64Cx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4800" Loader="Devices\Puya\PY064xx_18.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C67xx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY067xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C67xx6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY067xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C67xx7" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY067xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C67xx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C670x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C671x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C672x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C673x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C674x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY067xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C675x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C68xx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY068xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C68xx5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY068xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C68xx6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY068xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C681x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY068xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C682x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY068xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C682Bx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY068xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068B.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C683x5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY068xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C684x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY068xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C685x3" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x3000" Loader="Devices\Puya\PY068xx_12.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C686x5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY068xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C687x3" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x3000" Loader="Devices\Puya\PY068xx_12.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C88xx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY088xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C88xxB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY088xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C88xxC" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY088xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C880x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY088xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32C881xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY088xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32C882xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY088xx_256.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+  </Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA0xx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY100xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA0xxB" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY100xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA0xxC" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY100xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA0xxD" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x60000" Loader="Devices\Puya\PY100xx_384.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA00xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY100xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA00xD" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x60000" Loader="Devices\Puya\PY100xx_384.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA01xD" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x60000" Loader="Devices\Puya\PY100xx_384.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA2xxE" WorkRAMAddr="0x20000000" WorkRAMSize="0x18000" Core="JLINK_CORE_CORTEX_M4"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x80000" Loader="Devices\Puya\PY102xx_512.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF7400" MaxSize="0x20" Loader="Devices\Puya\PY102xx_OB.FLM" Map="OptionBytes\P0102.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF7000" MaxSize="0x400" Loader="Devices\Puya\PY102xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA20xE" WorkRAMAddr="0x20000000" WorkRAMSize="0x18000" Core="JLINK_CORE_CORTEX_M4"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x80000" Loader="Devices\Puya\PY102xx_512.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF7400" MaxSize="0x20" Loader="Devices\Puya\PY102xx_OB.FLM" Map="OptionBytes\P0102.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF7000" MaxSize="0x400" Loader="Devices\Puya\PY102xx_OTP.FLM"/>
+  </Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA6xx8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA60x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA7xx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY107xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0040" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OB.FLM" Map="OptionBytes\P0107.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF01C0" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32CA70x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY107xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0040" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OB.FLM" Map="OptionBytes\P0107.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF01C0" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OTP.FLM"/>
+	</Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA71x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY107xx_16.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0040" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OB.FLM" Map="OptionBytes\P0107.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF01C0" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA73x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY107xx_16.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0040" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OB.FLM" Map="OptionBytes\P0107.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF01C0" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA8xx6" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY108xx_32.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY108xx_OB.FLM" Map="OptionBytes\P0108.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY108xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA80x6" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY108xx_32.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY108xx_OB.FLM" Map="OptionBytes\P0108.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY108xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA81x6" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY108xx_32.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY108xx_OB.FLM" Map="OptionBytes\P0108.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY108xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32CA82x6" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY108xx_32.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY108xx_OB.FLM" Map="OptionBytes\P0108.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY108xx_OTP.FLM"/>
+  </Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32E407xE" WorkRAMAddr="0x20000000" WorkRAMSize="0x18000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x80000" Loader="Devices\Puya\PY102xx_512.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF7400" MaxSize="0x20" Loader="Devices\Puya\PY102xx_OB.FLM" Map="OptionBytes\P0102.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF7000" MaxSize="0x400" Loader="Devices\Puya\PY102xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F001x4" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY064xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F001Bx4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY107xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0040" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OB.FLM" Map="OptionBytes\P0107.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF01C0" MaxSize="0x40" Loader="Devices\Puya\PY107xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F002Ax5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x5000" Loader="Devices\Puya\PY061xx_20.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F002Bx5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F002Xx5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F002Yx5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY064xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F003x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY061xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F003x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F003x7" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F003x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32F005x6" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY108xx_32.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY108xx_OB.FLM" Map="OptionBytes\P0108.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY108xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32F006x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0E00" MaxSize="0x80" Loader="Devices\Puya\PY106xx_OTP.FLM"/>
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32F020x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY068xx_32.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+  </Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F021x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F030x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY061xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F030x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F030x7" WorkRAMAddr="0x20000000" WorkRAMSize="0x1800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0xC000" Loader="Devices\Puya\PY061xx_48.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F030x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F031x4" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x4000" Loader="Devices\Puya\PY067xx_16.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F031x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY067xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F031x7" WorkRAMAddr="0x20000000" WorkRAMSize="0x1800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0xC000" Loader="Devices\Puya\PY067xx_48.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F031x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F032x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0E00" MaxSize="0x80" Loader="Devices\Puya\PY106xx_OTP.FLM"/>
+	</Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32F033x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0E00" MaxSize="0x80" Loader="Devices\Puya\PY106xx_OTP.FLM"/>
+  </Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F040x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY063xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F040x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY063xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F040x9" WorkRAMAddr="0x20000000" WorkRAMSize="0x3000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x18000" Loader="Devices\Puya\PY063xx_96.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F040xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY063xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F071x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY063xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F071x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY063xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F071x9" WorkRAMAddr="0x20000000" WorkRAMSize="0x3000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x18000" Loader="Devices\Puya\PY063xx_96.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F071xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY063xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F072x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY063xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F072x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY063xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F072x9" WorkRAMAddr="0x20000000" WorkRAMSize="0x3000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x18000" Loader="Devices\Puya\PY063xx_96.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F072xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY063xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F090xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY088xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F090xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY088xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F092xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY088xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F403xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY100xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F403xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY100xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F403xD" WorkRAMAddr="0x20000000" WorkRAMSize="0x10000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x60000" Loader="Devices\Puya\PY100xx_384.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF5000" MaxSize="0x10" Loader="Devices\Puya\PY100xx_OB.FLM" Map="OptionBytes\P0100.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F410x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY103xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1100" MaxSize="0x20" Loader="Devices\Puya\PY103xx_OB.FLM" Map="OptionBytes\P0103.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1080" MaxSize="0x80" Loader="Devices\Puya\PY103xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F410xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY103xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1100" MaxSize="0x20" Loader="Devices\Puya\PY103xx_OB.FLM" Map="OptionBytes\P0103.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1080" MaxSize="0x80" Loader="Devices\Puya\PY103xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F415x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PYCD101xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1B00" MaxSize="0x200" Loader="Devices\Puya\PYCD101xx_OB.FLM" Map="OptionBytes\PCD0101.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1080" MaxSize="0x200" Loader="Devices\Puya\PYCD101xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F415xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x6000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PYCD101xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1B00" MaxSize="0x200" Loader="Devices\Puya\PYCD101xx_OB.FLM" Map="OptionBytes\PCD0101.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1080" MaxSize="0x200" Loader="Devices\Puya\PYCD101xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F420xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x6000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY104xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x40022020" MaxSize="0x100" Loader="Devices\Puya\PY104xx_OB.FLM" Map="OptionBytes\P0104.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1700" MaxSize="0x200" Loader="Devices\Puya\PY104xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32F420xC" WorkRAMAddr="0x20000000" WorkRAMSize="0xC000" Core="JLINK_CORE_CORTEX_M4"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY104xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x40022000" MaxSize="0x100" Loader="Devices\Puya\PY104xx_OB.FLM" Map="OptionBytes\P0104.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1700" MaxSize="0x200" Loader="Devices\Puya\PY104xx_OTP.FLM"/>
+	</Device>
+  <Device>
+    <ChipInfo Vendor="Puya" Name="PY32F426xC" WorkRAMAddr="0x20000000" WorkRAMSize="0xC000" Core="JLINK_CORE_CORTEX_M4"/>
+    <FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY104xx_256.FLM"/>
+    <FlashBankInfo Name="OB_FLASH" BaseAddr="0x40022000" MaxSize="0x100" Loader="Devices\Puya\PY104xx_OB.FLM" Map="OptionBytes\P0104.xml"/>
+    <FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1700" MaxSize="0x200" Loader="Devices\Puya\PY104xx_OTP.FLM"/>
+  </Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32L020x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32L090xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY088xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32L090xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY088xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32M010x5" WorkRAMAddr="0x20000000" WorkRAMSize="0xC00" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x6000" Loader="Devices\Puya\PY064xx_24.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY064xx_OB.FLM" Map="OptionBytes\P0064.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY064xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32M020x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY061xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32M030x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32M031x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32M070xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY063xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF3100" MaxSize="0x20" Loader="Devices\Puya\PY063xx_OB.FLM" Map="OptionBytes\P0063.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD310x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD320x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY061xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY061xx_OB.FLM" Map="OptionBytes\P0061.xml"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD410x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD420x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD430x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY067xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0E80" MaxSize="0x10" Loader="Devices\Puya\PY067xx_OB.FLM" Map="OptionBytes\P0067.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD530x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD540x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32MD550x8" WorkRAMAddr="0x20000000" WorkRAMSize="0x2000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x10000" Loader="Devices\Puya\PY106xx_64.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0F80" MaxSize="0x20" Loader="Devices\Puya\PY106xx_OB.FLM" Map="OptionBytes\P0106.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0D00" MaxSize="0x80" Loader="Devices\Puya\PY067xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32T020x5" WorkRAMAddr="0x20000000" WorkRAMSize="0x800" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x5000" Loader="Devices\Puya\PY068xx_20.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32T020x6" WorkRAMAddr="0x20000000" WorkRAMSize="0x1000" Core="JLINK_CORE_CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x8000" Loader="Devices\Puya\PY068xx_32.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF0080" MaxSize="0x10" Loader="Devices\Puya\PY068xx_OB.FLM" Map="OptionBytes\P0068.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF0280" MaxSize="0x80" Loader="Devices\Puya\PY068xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32T090xB" WorkRAMAddr="0x20000000" WorkRAMSize="0x4000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x20000" Loader="Devices\Puya\PY088xx_128.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32T090xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY088xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+	<Device>
+		<ChipInfo Vendor="Puya" Name="PY32T092xC" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000" Core="CORTEX_M0"/>
+		<FlashBankInfo Name="MAIN_FLASH" BaseAddr="0x08000000" MaxSize="0x40000" Loader="Devices\Puya\PY088xx_256.FLM"/>
+		<FlashBankInfo Name="OB_FLASH" BaseAddr="0x1FFF1D00" MaxSize="0x40" Loader="Devices\Puya\PY088xx_OB.FLM" Map="OptionBytes\P0088.xml"/>
+		<FlashBankInfo Name="OTP_FLASH" BaseAddr="0x1FFF1A00" MaxSize="0x100" Loader="Devices\Puya\PY088xx_OTP.FLM"/>
+	</Device>
+</DataBase>

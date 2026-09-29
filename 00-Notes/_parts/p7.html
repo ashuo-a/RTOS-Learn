@@ -1,0 +1,212 @@
+<section class="ch" id="c11">
+  <div class="h2"><i>11</i><h2>调试与验证手段</h2></div>
+
+  <p>RTOS 出问题时的现象往往"和代码位置完全对不上"（第 8 章就是典型）。所以必须有一套不依赖眼睛的验证方法。</p>
+
+  <h3>手段 1：看 <code>.map</code> 文件，用符号链证明接线正确</h3>
+  <p>编译产生的 <code>Project.map</code> 里有一段 "Section Cross References"，它记录了"谁调用了谁"。对于 SysTick 归属这种问题，这是<b>不用上板就能拿到的证据</b>：</p>
+<pre><code><span class="c">; 期望看到的四行（本工程实测）</span>
+startup_py32c882xx.o(RESET) refers to py32c882_it.o(i.SysTick_Handler) for SysTick_Handler
+py32c882_it.o(i.SysTick_Handler) refers to port.o(i.xPortSysTickHandler)  for xPortSysTickHandler
+py32c882_it.o(i.SysTick_Handler) refers to py32c882_hal.o(i.HAL_IncTick)  for HAL_IncTick
+py32c882_it.o(i.SysTick_Handler) refers to tasks.o(i.xTaskGetSchedulerState) for xTaskGetSchedulerState</code></pre>
+  <p>第一行说明<b>向量表已指向我们的分派函数</b>（不是 port.c 直接接管）；后面三行说明它只调用这三个东西 —— 逻辑与设计完全一致。</p>
+
+  <h3>手段 2：命令行编译（不开 Keil GUI，10 秒出结论）</h3>
+<pre><code>$uv   = 'D:\Keil_v5\UV4\UV4.exe'
+$proj = 'D:\RTOS-Learn\01-FreeRTOS-Port\GPIO_Toggle\MDK-ARM\Project.uvprojx'
+$log  = 'D:\RTOS-Learn\01-FreeRTOS-Port\GPIO_Toggle\MDK-ARM\build_log.txt'
+
+<span class="c"># ★PowerShell 里不要写 &amp; $uv ...（&amp; 会被当成后台符号），用 Start-Process</span>
+$p = Start-Process -FilePath $uv -ArgumentList @('-r', "`"$proj`"", '-j0', '-o', "`"$log`"") `
+                   -Wait -NoNewWindow -PassThru
+"ExitCode = $($p.ExitCode)"</code></pre>
+  <table>
+    <tr><th>参数 / 退出码</th><th>含义</th></tr>
+    <tr><td><code>-r</code> / <code>-b</code></td><td>全量重编 / 增量编译（验证一定要用 <code>-r</code>，否则旧 <code>.o</code> 会骗你）</td></tr>
+    <tr><td>退出码 <code>0 / 1 / 2</code></td><td>无错无警告 / 仅警告 / 有错误</td></tr>
+    <tr><td>日志编码</td><td>★UTF-16BE 无 BOM，用 UTF-8 读会全是乱码</td></tr>
+  </table>
+
+  <h3>手段 3：CM0+ 的 HardFault 怎么定位（它没有 CFSR！）</h3>
+  <div class="call warn">
+    <span class="tag">和 M3/M4 教程最大的不同</span>
+    <p>网上讲 "HardFault 看 <code>SCB-&gt;CFSR</code> 就知道原因" 的教程，<b>在 CM0+ 上全部无效</b> —— CM0+ 只有 HardFault，没有 CFSR / HFSR / BFAR / MMFAR。你唯一能拿到的是<b>压栈帧</b>（第 5 章那张图）。</p>
+  </div>
+  <p>把下面这段临时放进 <code>HardFault_Handler</code>，然后看那几个全局变量：</p>
+<pre><code>volatile uint32_t hf_r0,hf_r1,hf_r2,hf_r3,hf_r12,hf_lr,hf_pc,hf_psr,hf_exc_return;
+
+void HardFault_Handler(void)
+{
+    __asm volatile (
+        " tst lr, #4        \n"   <span class="c">/* LR(EXC_RETURN) bit2：0=用 MSP，1=用 PSP */</span>
+        " ite eq            \n"
+        " mrseq r0, msp     \n"
+        " mrsne r0, psp     \n"
+        " ldr r1, =hf_r0    \n"
+        " ldmia r0!, {r2-r6}\n"   <span class="c">/* 取 R0,R1,R2,R3,R12 */</span>
+        " stmia r1!, {r2-r6}\n"
+        " ldmia r0!, {r2-r6}\n"   <span class="c">/* 取 LR,PC,xPSR */</span>
+        " stmia r1!, {r2-r6}\n"
+        " mov r6, lr        \n"
+        " str r6, [r1]      \n"   <span class="c">/* 保存 EXC_RETURN */</span>
+        " b .               \n"
+    );
+}</code></pre>
+  <table>
+    <tr><th>看到的</th><th>说明</th></tr>
+    <tr><td><code>hf_pc</code></td><td><b>出错的那条指令地址</b> → 拿 <code>.map</code> 或反汇编查它属于哪个函数</td></tr>
+    <tr><td><code>hf_exc_return = 0xFFFFFFF9</code></td><td>故障发生在<b>线程模式 + MSP</b> → 初始化代码 / 裸机部分出错</td></tr>
+    <tr><td><code>hf_exc_return = 0xFFFFFFFD</code></td><td>故障发生在<b>任务里（PSP）</b> → 多半是任务栈溢出或野指针</td></tr>
+    <tr><td>在 <code>HardFault_Handler</code> 看 Call Stack</td><td>若是 <code>xPortSysTickHandler</code> 调下来的 → 调度器/节拍问题；若是 <code>vTaskSwitchContext</code> → 链表/栈被写坏</td></tr>
+  </table>
+  <p>用这套方法看第 8 章那次事故，会看到 <code>hf_pc</code> 落在 <code>xTaskIncrementTick()</code> 里、<code>hf_exc_return = 0xFFFFFFF9</code> —— 与"启动前 SysTick 抢跑"的结论完全吻合。</p>
+
+  <h3>手段 4：三个必须会看的运行时指标</h3>
+  <table>
+    <tr><th>表达式</th><th>稳态期望</th><th>异常时的含义</th></tr>
+    <tr><td><code>uxCriticalNesting</code></td><td><code>0</code></td><td>&gt;0 且不回落 → 某处漏了 <code>taskEXIT_CRITICAL()</code>，tick 进不来、时间变慢</td></tr>
+    <tr><td><code>uxTaskGetStackHighWaterMark(h)</code></td><td>&gt; 30 字</td><td>接近 0 → 任务栈不够，加 <code>xTaskCreate</code> 的第 3 个参数</td></tr>
+    <tr><td><code>xPortGetFreeHeapSize()</code></td><td>明显 &gt; 0</td><td>贴 0 → <code>configTOTAL_HEAP_SIZE</code> 不够，迟早 <code>MALLOC FAILED</code></td></tr>
+    <tr><td><code>pxDelayedTaskList</code> / <code>xNextTaskUnblockTime</code></td><td>非 NULL / 非 0</td><td>为 NULL / 为 0 → <b>RTOS 还没启动</b>，此时不该有任何 tick 在处理（第 8 章）</td></tr>
+  </table>
+</section>
+
+<section class="ch" id="c12">
+  <div class="h2"><i>12</i><h2>自测题（10 题）</h2></div>
+  <p>能不看答案答出 8 题，这套原理就算真正过了一遍。点击题号展开答案。</p>
+
+  <details><summary>1. 上电后 CPU 执行的第一条指令地址是怎么来的？</summary>
+    <div><p>硬件从向量表第 1 个字（<code>0x08000004</code>）读出 <code>Reset_Handler</code> 的地址并跳过去；第 0 个字被用来装载 MSP。<b>这两个字是硬件约定，任何软件都还没运行。</b></p></div></details>
+
+  <details><summary>2. 为什么 CM0+ 上 <code>taskENTER_CRITICAL()</code> 会关掉全部中断？</summary>
+    <div><p>因为 CM0+ 只有 <code>PRIMASK</code>（总闸），没有 <code>BASEPRI</code>。FreeRTOS 的 CM0 端口用 <code>cpsid i</code> 实现临界区，没有"只屏蔽低于某优先级"的能力。推论：<b>CM0+ 上 ISR 必须极短</b>，<code>configMAX_SYSCALL_INTERRUPT_PRIORITY</code> 这个宏在 CM0+ 上不生效。</p></div></details>
+
+  <details><summary>3. <code>SHPR3</code> 里写的是 255，为什么调试器读回 <code>0xC0</code>？</summary>
+    <div><p>CM0+ 只用 2 位表示优先级（4 级），即每个 8 位优先级字段里只有高 2 位（bit7:6）被实现。写 <code>0b1111_1111</code>，实际落地 <code>0b1100_0000</code> = <code>0xC0</code>，即优先级 3（最低）。 <code>SHPR3 = 0xC0C00000</code> 说明 PendSV 和 SysTick 都是最低优先级。</p></div></details>
+
+  <details><summary>4. HAL 工程接 RTOS 时，<code>HAL_IncTick()</code> 为什么要搬家？搬到哪？</summary>
+    <div><p>因为原来的 <code>SysTick_Handler</code> 要让位给 RTOS。如果只是注释掉，HAL 侧不会报错，但 <code>HAL_GetTick()</code> 永远是 0 → <code>HAL_Delay()</code> 死等不返回、所有 HAL 超时立即失效。搬到 <code>vApplicationTickHook()</code>（<code>configUSE_TICK_HOOK</code> 必须为 1），让 HAL 时基与 RTOS 节拍同源。</p></div></details>
+
+  <details><summary>5. 任务栈参数写 <code>128</code>，是多少字节？含 <code>printf</code> 的任务该给多少？</summary>
+    <div><p><code>128</code> 的单位是<b>字</b>（<code>StackType_t</code> = uint32_t）= 512 字节。含 <code>printf</code> 或 <code>vTaskList</code>（内部 <code>sprintf</code>）的任务建议 <b>256 字 = 1KB</b>，并留 30% 余量。本工程 log 任务给的就是 256 字。</p></div></details>
+
+  <details><summary>6. 任务切换时，硬件帮你保存了几个寄存器？剩下谁保存？</summary>
+    <div><p>硬件自动压 <b>8 个</b>：R0–R3、R12、LR、PC、xPSR（共 32 字节）。<b>R4–R11 硬件不管</b>，由 PendSV 里的 <code>stmia</code> 手工压入 —— 所以完整帧是 <b>16 个字 = 64 字节</b>。</p></div></details>
+
+  <details><summary>7. <code>bx r3</code> 里的 <code>r3</code> 装的是什么？为什么跳完就"换了任务"？</summary>
+    <div><p>装的是 <b>EXC_RETURN</b>（异常返回暗号，如 <code>0xFFFFFFFD</code>）。<code>bx</code> 到它就等于"告诉硬件：我要退出异常"。硬件于是按 bit2 决定从 <b>PSP</b> 弹 8 字帧 —— 而 PSP 在上一句刚被设成<b>新任务</b>的栈，于是 PC 被换成新任务的下一条指令。<b>切换 = 伪造一次异常返回。</b></p></div></details>
+
+  <details><summary>8. CM0+ 的 FreeRTOS 端口用 <code>SVC</code> 启动第一个任务吗？</summary>
+    <div><p><b>不用。</b><code>port.c</code> 里 <code>vPortSVCHandler()</code> 是空函数（注释写着 *"no longer used, but retained for backward compatibility"*），启动第一个任务走 <code>prvPortStartFirstTask()</code>：手工设置 PSP → 写 <code>CONTROL</code> 切栈 → <code>pop</code> 出寄存器 → <code>bx</code> 进任务函数。原因见源码注释：M0 没有 VTOR，无法定位初始栈值。</p></div></details>
+
+  <details><summary>9. 为什么 <code>vTaskDelay(1000)</code> 在那次事故里只等了约 111ms？</summary>
+    <div><p>那不是事故现象，而是<b>主频配置错误的典型症状</b>：板子实际 72MHz，却把 <code>configCPU_CLOCK_HZ</code> 写成 8000000 → SysTick 重载 = 7999，实际节拍 = 72MHz/8000 = 9kHz → 1000 个 tick 只花约 111ms。验证方法：调试器看 <code>SystemCoreClock</code> 必须等于 <code>configCPU_CLOCK_HZ</code>。</p></div></details>
+
+  <details><summary>10. 为什么周期任务要用 <code>vTaskDelayUntil</code> 而不是 <code>vTaskDelay</code>？</summary>
+    <div><p><code>vTaskDelay(n)</code> 从"现在"起睡 n 个 tick，<b>任务本身执行的时间会被累加进去</b>，周期越来越长；<code>vTaskDelayUntil(&amp;last, n)</code> 睡到"上次唤醒时刻 + n"，<b>以上次唤醒为基准，不累积漂移</b>。你的 50ms 采样、1s 打印、定时喂狗都必须用后者。</p></div></details>
+</section>
+
+<section class="ch" id="c13">
+  <div class="h2"><i>13</i><h2>速查表：CM0+ vs M3/M4</h2></div>
+  <p>这张表是"为什么抄 F103 教程会翻车"的完整清单 —— 每一条都在本工程里验证过。</p>
+  <table>
+    <tr><th>能力</th><th>PY32C882（CM0+）</th><th>STM32F103 等（M3/M4）</th><th>对 RTOS 的影响</th></tr>
+    <tr><td>临界区实现</td><td><code>cpsid i</code> 全屏蔽</td><td><code>BASEPRI</code> 部分屏蔽</td><td>CM0+ 的 ISR 必须更短</td></tr>
+    <tr><td><code>configMAX_SYSCALL_INTERRUPT_PRIORITY</code></td><td><b>无效</b>（无 BASEPRI）</td><td>有效，且必须配</td><td>CM0+ 别抄这条配置</td></tr>
+    <tr><td>硬件优先级级数</td><td>2 位 = 4 级</td><td>4 位 = 16 级</td><td>外设只能用 0~2，3 留给内核</td></tr>
+    <tr><td>启动首个任务</td><td>纯软件 <code>bx</code>，不用 SVC</td><td>常用 <code>SVC</code></td><td>别找 M4 教程里的 SVC 流程</td></tr>
+    <tr><td><code>CLZ</code> 指令</td><td><b>没有</b></td><td>有</td><td><code>configUSE_PORT_OPTIMISED_TASK_SELECTION</code> 必须 <b>0</b></td></tr>
+    <tr><td>原子指令 LDREX/STREX</td><td><b>没有</b></td><td>有</td><td>共享标志必须走 RTOS 原语</td></tr>
+    <tr><td>VTOR（向量表重定位）</td><td><b>没有</b></td><td>有</td><td>IAP 只能靠启动模式 / <code>SYSCFG.MEM_MODE</code></td></tr>
+    <tr><td><code>CFSR/HFSR/BFAR</code></td><td><b>没有</b>（只有 HardFault）</td><td>有</td><td>HardFault 只能解析压栈帧</td></tr>
+    <tr><td>DWT CYCCNT</td><td><b>没有</b></td><td>有</td><td><code>configGENERATE_RUN_TIME_STATS</code> 不能用 DWT</td></tr>
+    <tr><td>FPU</td><td>无</td><td>M4F 有</td><td>无 FPU 上下文，切换帧更小</td></tr>
+    <tr><td>SysTick 校准值</td><td>手册: 6000/1ms @6MHz</td><td>类似</td><td>以 <code>configSYSTICK_CLOCK_HZ</code> 计算为准</td></tr>
+  </table>
+</section>
+
+<section class="ch" id="appendix">
+  <div class="h2"><i>A</i><h2>附录 · 本工程实测数据（可核对）</h2></div>
+  <div class="grid2">
+    <div>
+      <h4>编译结果（UV4 命令行全量重编）</h4>
+<pre><code>UV4 ExitCode = 0
+Program Size: Code=9576 RO-data=652
+              RW-data=128 ZI-data=11176
+".\Output\Project.axf" - 0 Error(s), 0 Warning(s).</code></pre>
+      <h4>关键寄存器（调试器实测）</h4>
+<pre><code>SysTick-&gt;LOAD (0xE000E014) = 7999
+SHPR3        (0xE000ED20) = 0xC0C00000
+uxCriticalNesting         = 0
+SystemCoreClock           = 8000000</code></pre>
+    </div>
+    <div>
+      <h4>工程文件（改动过的地方）</h4>
+<pre><code>GPIO_Toggle\
+├ Inc\FreeRTOSConfig.h      新增
+├ Src\app_rtos_hooks.c      新增
+├ Src\main.c                重写
+├ Src\py32c882_it.c         改
+├ MDK-ARM\startup_*.s       栈 0x400→0x800
+└ MDK-ARM\Project.uvprojx   分组+路径+编译选项</code></pre>
+      <h4>FreeRTOS 关键宏（本工程值）</h4>
+<pre><code>configCPU_CLOCK_HZ      8000000
+configTICK_RATE_HZ      1000
+configMAX_PRIORITIES    8
+configMINIMAL_STACK_SIZE 128
+configTOTAL_HEAP_SIZE   8192
+configUSE_TICK_HOOK     1</code></pre>
+    </div>
+  </div>
+  <div class="call key">
+    <span class="tag">延伸阅读（同目录）</span>
+    <p><code>阶段0-CM0+异常模型与任务切换.md</code> —— 更细的源码级笔记（含逐行行号）；<br>
+    <code>..\01-FreeRTOS-Port\阶段1-FreeRTOS移植手册.md</code> —— 移植实操手册（HAL 版，含全部踩坑与报错对照表）。</p>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+  // 主题切换（记忆在 localStorage）
+  var root = document.documentElement;
+  var bL = document.getElementById('t-light'), bD = document.getElementById('t-dark');
+  function apply(t){
+    root.setAttribute('data-theme', t);
+    bL.className = (t === 'light') ? 'on' : '';
+    bD.className = (t === 'dark')  ? 'on' : '';
+    try { localStorage.setItem('rtos-theme', t); } catch(e){}
+  }
+  try { var sv = localStorage.getItem('rtos-theme'); if (sv) apply(sv); } catch(e){}
+  bL.addEventListener('click', function(){ apply('light'); });
+  bD.addEventListener('click', function(){ apply('dark'); });
+
+  // 目录高亮
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a[href^="#"]'));
+  var map = {};
+  links.forEach(function(a){ var el = document.querySelector(a.getAttribute('href')); if (el) map[el.id] = a; });
+  var targets = Object.keys(map).map(function(id){ return document.getElementById(id); });
+  function setOn(id){
+    links.forEach(function(a){ a.classList.remove('on'); });
+    if (map[id]) map[id].classList.add('on');
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      var best = null, bestTop = 1e9;
+      entries.forEach(function(en){
+        if (en.isIntersecting) {
+          var t = Math.abs(en.boundingClientRect.top);
+          if (t < bestTop) { bestTop = t; best = en.target.id; }
+        }
+      });
+      if (best) setOn(best);
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: [0, 1] });
+    targets.forEach(function(t){ io.observe(t); });
+  }
+  setOn('c1');
+})();
+</script>
+</body>
+</html>

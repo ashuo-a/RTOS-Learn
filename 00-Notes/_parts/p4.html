@@ -1,0 +1,119 @@
+<section class="ch" id="c5">
+  <div class="h2"><i>05</i><h2>一次异常的完整进出</h2></div>
+
+  <p>这是整篇最重要的一节。理解了"异常进出时硬件替你做了什么"，你就会明白：<strong>任务切换根本不是什么魔法，而是把这个机制借来用了一次。</strong></p>
+
+  <h3>进入异常：硬件自动压 8 个字</h3>
+  <p>当异常被响应，CPU <strong>不执行任何指令</strong>就先做这几件事：把当前要保护的 8 个寄存器压到<strong>当前使用的栈</strong>上 → 从向量表取异常处理函数的地址 → 把 PC 跳过去。压栈顺序是固定的：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 330" role="img" aria-label="异常压栈帧布局">
+      <text class="f-t b" x="14" y="26">发生异常时，硬件自动压入的 8 个字（低地址在下）</text>
+      <!-- 栈帧 -->
+      <rect class="f-bx st" x="150" y="44" width="250" height="30" rx="4"/><text class="f-t" x="164" y="64">R0　　← SP 指向这里（异常处理里读到的栈顶）</text>
+      <rect class="f-bx st" x="150" y="74" width="250" height="30" rx="4"/><text class="f-t" x="164" y="94">R1</text>
+      <rect class="f-bx st" x="150" y="104" width="250" height="30" rx="4"/><text class="f-t" x="164" y="124">R2</text>
+      <rect class="f-bx st" x="150" y="134" width="250" height="30" rx="4"/><text class="f-t" x="164" y="154">R3</text>
+      <rect class="f-bx st2" x="150" y="164" width="250" height="30" rx="4"/><text class="f-t" x="164" y="184">R12</text>
+      <rect class="f-bx st2" x="150" y="194" width="250" height="30" rx="4"/><text class="f-t" x="164" y="214">LR（被打断处的返回地址）</text>
+      <rect class="f-bx hi" x="150" y="224" width="250" height="30" rx="4"/><text class="f-t a" x="164" y="244">PC（被打断的那条指令）</text>
+      <rect class="f-bx hi" x="150" y="254" width="250" height="30" rx="4"/><text class="f-t a" x="164" y="274">xPSR（含 Thumb 位）</text>
+      <text class="f-t s" x="150" y="304">8 个字 = 32 字节，硬件完成，不需要任何指令</text>
+
+      <!-- 右侧解读 -->
+      <rect class="f-bx" x="430" y="44" width="416" height="92" rx="10"/>
+      <text class="f-t b" x="446" y="68">8 字节对齐规则</text>
+      <text class="f-t s" x="446" y="90">异常进栈前 SP 必须 8 字节对齐。若原本不对齐，</text>
+      <text class="f-t s" x="446" y="110">硬件会插入一个"填充字"，并用 xPSR.bit9 记住</text>
+      <text class="f-t s" x="446" y="130">→ 返回时自动丢掉，程序无感知</text>
+      <rect class="f-bx" x="430" y="152" width="416" height="132" rx="10"/>
+      <text class="f-t b" x="446" y="176">为什么是"这 8 个"</text>
+      <text class="f-t s" x="446" y="198">R0–R3　　函数调用的参数/返回值（最可能被用到）</text>
+      <text class="f-t s" x="446" y="218">R12　　　 调用时的临时寄存器</text>
+      <text class="f-t s" x="446" y="238">LR / PC / xPSR　恢复执行必需</text>
+      <text class="f-t a" x="446" y="264">R4–R11 硬件不管！想保存只能自己压栈</text>
+      <text class="f-t s" x="446" y="280" style="font-size:10px">← 这正是 PendSV 里手写 stmia 的原因</text>
+    </svg>
+    <figcaption><b>记住这张图，后面全部靠它：</b>硬件只保护 8 个寄存器（约占 32 字节），剩下 R4–R11 由软件负责。任务切换要"完整保存现场"，所以必须自己把那 8 个也压进去 —— 一共 16 个字 = 64 字节。</figcaption>
+  </figure>
+
+  <h3>退出异常：靠 LR 里的"暗号"</h3>
+  <p>异常发生瞬间，LR 被硬件改写成特殊值 <strong>EXC_RETURN</strong>（不是普通返回地址）。异常处理函数返回时，只要 <code>bx</code> 跳回这个值，硬件就知道"这是要退出异常"，于是自动弹栈、恢复现场。</p>
+
+  <table>
+    <tr><th>EXC_RETURN 值</th><th>含义</th><th>弹栈时用哪个栈</th><th>常见于</th></tr>
+    <tr><td><code>0xFFFFFFF1</code></td><td>返回 <b>Handler 模式</b>（异常嵌套）</td><td>MSP</td><td>中断嵌套</td></tr>
+    <tr><td><code>0xFFFFFFF9</code></td><td>返回 <b>线程模式</b></td><td><b>MSP</b></td><td>普通裸机代码、启动阶段</td></tr>
+    <tr><td><code>0xFFFFFFFD</code></td><td>返回 <b>线程模式</b></td><td><b>PSP</b></td><td>★<b>返回任务（RTOS 里最常见）</b></td></tr>
+  </table>
+
+  <div class="call key">
+    <span class="tag">核心结论</span>
+    <p><strong>"切换任务"就是"让硬件从另一个栈上弹帧"。</strong>因为弹哪个栈由 EXC_RETURN 的 bit2 决定（1 → PSP），所以只要在 PendSV 里把 PSP 换成新任务的栈，再 <code>bx</code> 回去，硬件就会老老实实把新任务的现场装进 CPU —— 一个字节的指令都不用改，全靠硬件。</p>
+    <p>这就解释了 FreeRTOS 里那两处看起来奇怪的写法：<code>pxPortInitialiseStack()</code> 在任务栈上"手工伪造一个帧"，<code>prvPortStartFirstTask()</code> 最后用 <code>bx</code> 跳进任务函数。</p>
+  </div>
+
+  <div class="pt">
+    <h4><em>知识点 5.1</em>tail-chaining 与 late-arrival</h4>
+    <ul>
+      <li><b>tail-chaining（背靠背）</b>：一个异常刚处理完，另一个已挂起 → 硬件不弹栈再压栈，直接跳到下一个处理函数。省掉的正是那 8 个字的时间。</li>
+      <li><b>late-arrival（晚到抢占）</b>：异常刚进入压栈阶段，一个更高优先级的异常来了 → 硬件改去执行高优先级的，压栈动作复用。</li>
+      <li><b>对 RTOS 的意义</b>：频繁发生的中断（比如 1ms 的 SysTick）大部分时间都走了 tail-chaining，代价远小于"完整进出一次"。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="ch" id="c6">
+  <div class="h2"><i>06</i><h2>任务到底是什么</h2></div>
+
+  <p>裸机里"任务"就是 <code>while(1)</code> 里的一段流程。RTOS 里的任务是一个<strong>数据结构 + 一份私有栈</strong>：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 322" role="img" aria-label="TCB 与三类链表">
+      <!-- TCB -->
+      <rect class="f-bx hi" x="14" y="20" width="286" height="188" rx="10"/>
+      <text class="f-t b" x="28" y="44">TCB（任务控制块）</text>
+      <rect class="f-bx" x="28" y="56" width="258" height="30" rx="5"/>
+      <text class="f-t a" x="40" y="76">pxTopOfStack ← ★第 1 个字段</text>
+      <rect class="f-bx" x="28" y="90" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="107">xStateListItem（就绪/阻塞链节）</text>
+      <rect class="f-bx" x="28" y="118" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="135">xEventListItem（等超时用）</text>
+      <rect class="f-bx" x="28" y="146" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="163">uxPriority　uxBasePriority</text>
+      <rect class="f-bx" x="28" y="174" width="258" height="24" rx="5"/>
+      <text class="f-t s" x="40" y="191">pcTaskName　pxStack（栈底，查溢出用）</text>
+
+      <!-- 链表 -->
+      <rect class="f-bx" x="330" y="20" width="516" height="76" rx="10"/>
+      <text class="f-t b" x="344" y="44">就绪链表 pxReadyTasksLists[0..7]</text>
+      <text class="f-t s" x="344" y="66">每个优先级一条。任务处于"可以跑"状态时坐在这条链表上，</text>
+      <text class="f-t s" x="344" y="84">调度器要做的永远是：<tspan class="f-t a">从最高优先级的非空链表里挑一个</tspan></text>
+      <rect class="f-bx" x="330" y="106" width="516" height="70" rx="10"/>
+      <text class="f-t b" x="344" y="130">延迟链表 pxDelayedTaskList</text>
+      <text class="f-t s" x="344" y="152">调用了 vTaskDelay 的任务搬到这里，按"唤醒时刻"排序；</text>
+      <text class="f-t s" x="344" y="170">xNextTaskUnblockTime 记住最早那个的到期时间</text>
+      <rect class="f-bx dg" x="330" y="186" width="516" height="76" rx="10"/>
+      <text class="f-t r" x="344" y="210">★ pxDelayedTaskList 在第一个任务创建前 = NULL</text>
+      <text class="f-t r" x="344" y="230">★ xNextTaskUnblockTime 在调度器启动前 = 0</text>
+      <text class="f-t s" x="344" y="250">这两个"还没准备好"的状态，就是你上次 HardFault 的直接原因（第 8 章）</text>
+
+      <!-- pxCurrentTCB -->
+      <rect class="f-bx" x="330" y="276" width="250" height="34" rx="8"/>
+      <text class="f-t a" x="344" y="298">pxCurrentTCB → 当前正在跑的任务</text>
+      <path class="f-ln a" d="M330 293 L302 293 L302 120 L300 120"/>
+      <text class="f-t s" x="330" y="322" style="font-size:10px">切换的本质就是改这个指针，然后从新 TCB 的栈里恢复现场</text>
+    </svg>
+    <figcaption><b>三个数据就够了：</b>当前任务指针（pxCurrentTCB）、就绪链表（谁可以跑）、延迟链表（谁在睡觉）。<code>xTaskCreate()</code> 干的事就是：从堆里挖一块当栈 → 初始化栈上的"伪造帧" → 建一个 TCB → 挂到就绪链表上。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 6.1</em>任务的"优先级"是软件概念，和硬件的 4 级无关</h4>
+    <p>CM0+ 的硬件优先级只有 4 级，但 <code>configMAX_PRIORITIES</code> 可以设 8、16、32。原因：</p>
+    <ul>
+      <li>硬件优先级决定的是 <b>中断能不能互相抢占</b>；</li>
+      <li>任务优先级只是"就绪链表的下标"。任务是靠 <b>PendSV 这个唯一的切换点</b>轮流跑的，根本不经过硬件优先级比较。</li>
+    </ul>
+    <p>所以本工程 <code>configMAX_PRIORITIES = 8</code>，而外设中断只能用 0 ~ 2。</p>
+  </div>
+</section>

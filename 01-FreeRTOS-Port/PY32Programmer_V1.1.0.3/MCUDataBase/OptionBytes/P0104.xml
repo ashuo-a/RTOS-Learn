@@ -1,0 +1,3661 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<memoryMap>
+  <name>FlashOption</name>
+  <baseAddress>0x40022000</baseAddress>
+  <addressBlock>
+    <offset>0x0</offset>
+    <size>0x100</size>
+  </addressBlock>
+  <registers>
+    <register>
+      <name>OPTR1</name>
+      <description>Flash Option 1</description>
+      <addressOffset>0x20</addressOffset>
+      <resetValue>0x0005FBAA</resetValue>
+      <fields>
+        <field>
+          <name>RDP</name>
+          <description>Read protection option byte</description>
+          <bitRange>[7:0]</bitRange>
+          <options>
+            <option Value="0xAA" Display="level 0, read protection disable" Default="1" />
+            <option Value="0x55" Display="level 1, read protection enable" />
+			      <option Value="0xCC" Display="level 2, read protection enable" />
+          </options>
+        </field>
+		    <field>
+		      <name>nRST_STDBY</name>
+		      <description>Reset generated when entering Standby mode</description>
+		      <bitRange>[8:8]</bitRange>
+		      <options>
+		        <option Value="0" Display="Reset generated when entering the Standby mode" />
+		        <option Value="1" Display="No reset generated when entering the Standby mode"  Default="1"/>
+		      </options>
+		    </field>
+		    <field>
+		      <name>nRST_STOP</name>
+		      <description>Reset generated when entering Stop mode</description>
+		      <bitRange>[9:9]</bitRange>
+		      <options>
+		    	 <option Value="0" Display="Reset generated when entering the Stop mode" />
+		    	 <option Value="1" Display="No reset generated when entering the Stop mode" Default="1" />
+		      </options>
+		    </field>
+		    <field>
+		      <name>nRST_MODE</name>
+		      <description>NRST pin mode</description>
+		      <bitRange>[11:10]</bitRange>
+		      <options>
+		    	  <option Value="0" Display="Reset input/output" Default="1" />
+		    	  <option Value="1" Display="Reset input only" />
+		    	  <option Value="2" Display="GPIO" />
+		    	  <option Value="3" Display="Reset input/output"/>
+		      </options>
+		    </field>
+		    <field>
+		      <name>IWDG_STDBY</name>
+		      <description>IWDG stop mode option byte</description>
+		      <bitRange>[12:12]</bitRange>
+		      <options>
+		    	  <option Value="0" Display="Freeze IWDG counter in Standby mode" />
+		    	  <option Value="1" Display="IWDG counter active in Standby mode" Default="1" />
+		      </options>
+		    </field> 
+         <field>
+              <name>IWDG_STOP</name>
+              <description>IWDG stop mode option byte</description>
+              <bitRange>[13:13]</bitRange>
+              <options>
+                <option Value="0" Display="Freeze IWDG counter in Stop mode" />
+                <option Value="1" Display="IWDG counter active in Stop mode" Default="1" />
+              </options>
+         </field>
+		    <field>
+		      <name>IWDG_SW</name>
+		      <description>Independent watchdog</description>
+		      <bitRange>[14:14]</bitRange>
+		      <options>
+		    	 <option Value="0" Display="Hardware watchdog" />
+		    	 <option Value="1" Display="Software watchdog" Default="1" />
+		      </options>
+		    </field>
+        <field>
+          <name>WWDG_SW</name>
+          <description>Window watchdog</description>
+          <bitRange>[15:15]</bitRange>
+          <options>
+            <option Value="0" Display="Hardware watchdog" />
+            <option Value="1" Display="Software watchdog" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>nBOOT0</name>
+          <description>nBOOT0 value</description>
+          <bitRange>[16:16]</bitRange>
+          <options>
+            <option Value="0" Display="Boot from Flash" />
+            <option Value="1" Display="Determined by nBOOT1" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>nBOOT1</name>
+          <description>BOOT1 value</description>
+          <bitRange>[17:17]</bitRange>
+          <options>
+            <option Value="0" Display="Boot from Flash if BOOT0 = 0, otherwise Embedded SRAM" />
+            <option Value="1" Display="Boot from Flash if BOOT0 = 0, otherwise system memory" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>nSWBOOT0</name>
+          <description>nSWBOOT0 value</description>
+          <bitRange>[18:18]</bitRange>
+          <options>
+            <option Value="0" Display="BOOT0 Determined by nBOOT0 optiont byte" />
+            <option Value="1" Display="BOOT0 Determined by PD3/BOOT0 pin" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>BOOT_LOCK</name>
+          <description>Boot option</description>
+          <bitRange>[20:20]</bitRange>
+          <options>
+            <option Value="0" Display="Boot by BOOT0(pin) and nBOOT1(option bytes)" Default="1" />
+            <option Value="1" Display="Boot from Main Flash" />
+          </options>
+        </field>
+        <field>
+          <name>SWD_MODE</name>
+          <description>SWD PIN Mode</description>
+          <bitRange>[26:25]</bitRange>
+          <options>
+            <option Value="0" Display="PA11:SWCLK PA13:SWDIO"/>
+            <option Value="1" Display="PA14:SWCLK PA13:SWDIO" Default="1"/>
+            <option Value="2" Display="PA11:SWCLK PA13:SWDIO"/>
+            <option Value="3" Display="PA11:SWCLK PA13:SWDIO"/>
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>OPTR2</name>
+      <description>Flash Option 2</description>
+      <addressOffset>0x24</addressOffset>
+      <resetValue>0x00000007</resetValue>
+      <fields>
+        <field>
+          <name>ACC_CTRL0</name>
+          <description>Prefetch enable control</description>
+          <bitRange>[0:0]</bitRange>
+          <options>
+            <option Value="0" Display="Disable" />
+            <option Value="1" Display="Enable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>ACC_CTRL1</name>
+          <description>Instruction Cache Enable Control</description>
+          <bitRange>[1:1]</bitRange>
+          <options>
+            <option Value="0" Display="Disable" />
+            <option Value="1" Display="Enable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>ACC_CTRL2</name>
+          <description>Data Cache Enable Control</description>
+          <bitRange>[2:2]</bitRange>
+          <options>
+            <option Value="0" Display="Disable" />
+            <option Value="1" Display="Enable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>PLL_UNLOCK_RSTEN</name>
+          <description>PLL_UNLOCK_RSTEN value</description>
+          <bitRange>[3:3]</bitRange>
+          <options>
+            <option Value="0" Display="Disable" Default="1" />
+            <option Value="1" Display="Enable" />
+          </options>
+        </field>
+        <field>
+          <name>VERIFY_READ_EN</name>
+          <description>VERIFY_READ_EN value</description>
+          <bitRange>[4:4]</bitRange>
+          <options>
+            <option Value="0" Display="Disable verify read functionality and Enable read-write functionality" Default="1" />
+            <option Value="1" Display="Enable verify read functionality and Disable read-write functionality" />
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>WRPR0</name>
+      <description>Bank0 Write Protection</description>
+      <addressOffset>0x28</addressOffset>
+      <resetValue>0x0000FFFF</resetValue>
+      <fields>
+        <field>
+          <name>WRP0</name>
+          <description>Write protection for 0x00000000 ~ 0x00001FFF</description>
+          <bitRange>[0:0]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP1</name>
+          <description>Write protection for 0x00002000 ~ 0x00003FFF</description>
+          <bitRange>[1:1]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP2</name>
+          <description>Write protection for 0x00004000 ~ 0x00005FFF</description>
+          <bitRange>[2:2]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP3</name>
+          <description>Write protection for 0x00006000 ~ 0x00007FFF</description>
+          <bitRange>[3:3]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP4</name>
+          <description>Write protection for 0x00008000 ~ 0x00009FFF</description>
+          <bitRange>[4:4]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP5</name>
+          <description>Write protection for 0x0000A000 ~ 0x0000BFFF</description>
+          <bitRange>[5:5]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP6</name>
+          <description>Write protection for 0x0000C000 ~ 0x0000DFFF</description>
+          <bitRange>[6:6]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP7</name>
+          <description>Write protection for 0x0000E000 ~ 0x0000FFFF</description>
+          <bitRange>[7:7]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP8</name>
+          <description>Write protection for 0x00010000 ~ 0x00011FFF</description>
+          <bitRange>[8:8]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP9</name>
+          <description>Write protection for 0x00012000 ~ 0x00013FFF</description>
+          <bitRange>[9:9]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP10</name>
+          <description>Write protection for 0x00014000 ~ 0x00015FFF</description>
+          <bitRange>[10:10]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP11</name>
+          <description>Write protection for 0x00016000 ~ 0x00017FFF</description>
+          <bitRange>[11:11]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP12</name>
+          <description>Write protection for 0x00018000 ~ 0x00019FFF</description>
+          <bitRange>[12:12]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP13</name>
+          <description>Write protection for 0x0001A000 ~ 0x0001BFFF</description>
+          <bitRange>[13:13]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP14</name>
+          <description>Write protection for 0x0001C000 ~ 0x0001DFFF</description>
+          <bitRange>[14:14]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP15</name>
+          <description>Write protection for 0x0001E000 ~ 0x0001FFFF</description>
+          <bitRange>[15:15]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>PCROPR0</name>
+      <description>Bank0 Private Code Read Out Protection</description>
+      <addressOffset>0x2C</addressOffset>
+      <resetValue>0x0000FFFF</resetValue>
+      <fields>
+        <field>
+          <name>PCROP0SR</name>
+          <description>Bank0 private code read out protection start address</description>
+          <bitRange>[8:0]</bitRange>
+          <options>
+            <option Value="0x0" Display="0x00000000"/>
+            <option Value="0x1" Display="0x00000100"/>
+            <option Value="0x2" Display="0x00000200"/>
+            <option Value="0x3" Display="0x00000300"/>
+            <option Value="0x4" Display="0x00000400"/>
+            <option Value="0x5" Display="0x00000500"/>
+            <option Value="0x6" Display="0x00000600"/>
+            <option Value="0x7" Display="0x00000700"/>
+            <option Value="0x8" Display="0x00000800"/>
+            <option Value="0x9" Display="0x00000900"/>
+            <option Value="0xA" Display="0x00000A00"/>
+            <option Value="0xB" Display="0x00000B00"/>
+            <option Value="0xC" Display="0x00000C00"/>
+            <option Value="0xD" Display="0x00000D00"/>
+            <option Value="0xE" Display="0x00000E00"/>
+            <option Value="0xF" Display="0x00000F00"/>
+            <option Value="0x10" Display="0x00001000"/>
+            <option Value="0x11" Display="0x00001100"/>
+            <option Value="0x12" Display="0x00001200"/>
+            <option Value="0x13" Display="0x00001300"/>
+            <option Value="0x14" Display="0x00001400"/>
+            <option Value="0x15" Display="0x00001500"/>
+            <option Value="0x16" Display="0x00001600"/>
+            <option Value="0x17" Display="0x00001700"/>
+            <option Value="0x18" Display="0x00001800"/>
+            <option Value="0x19" Display="0x00001900"/>
+            <option Value="0x1A" Display="0x00001A00"/>
+            <option Value="0x1B" Display="0x00001B00"/>
+            <option Value="0x1C" Display="0x00001C00"/>
+            <option Value="0x1D" Display="0x00001D00"/>
+            <option Value="0x1E" Display="0x00001E00"/>
+            <option Value="0x1F" Display="0x00001F00"/>
+            <option Value="0x20" Display="0x00002000"/>
+            <option Value="0x21" Display="0x00002100"/>
+            <option Value="0x22" Display="0x00002200"/>
+            <option Value="0x23" Display="0x00002300"/>
+            <option Value="0x24" Display="0x00002400"/>
+            <option Value="0x25" Display="0x00002500"/>
+            <option Value="0x26" Display="0x00002600"/>
+            <option Value="0x27" Display="0x00002700"/>
+            <option Value="0x28" Display="0x00002800"/>
+            <option Value="0x29" Display="0x00002900"/>
+            <option Value="0x2A" Display="0x00002A00"/>
+            <option Value="0x2B" Display="0x00002B00"/>
+            <option Value="0x2C" Display="0x00002C00"/>
+            <option Value="0x2D" Display="0x00002D00"/>
+            <option Value="0x2E" Display="0x00002E00"/>
+            <option Value="0x2F" Display="0x00002F00"/>
+            <option Value="0x30" Display="0x00003000"/>
+            <option Value="0x31" Display="0x00003100"/>
+            <option Value="0x32" Display="0x00003200"/>
+            <option Value="0x33" Display="0x00003300"/>
+            <option Value="0x34" Display="0x00003400"/>
+            <option Value="0x35" Display="0x00003500"/>
+            <option Value="0x36" Display="0x00003600"/>
+            <option Value="0x37" Display="0x00003700"/>
+            <option Value="0x38" Display="0x00003800"/>
+            <option Value="0x39" Display="0x00003900"/>
+            <option Value="0x3A" Display="0x00003A00"/>
+            <option Value="0x3B" Display="0x00003B00"/>
+            <option Value="0x3C" Display="0x00003C00"/>
+            <option Value="0x3D" Display="0x00003D00"/>
+            <option Value="0x3E" Display="0x00003E00"/>
+            <option Value="0x3F" Display="0x00003F00"/>
+            <option Value="0x40" Display="0x00004000"/>
+            <option Value="0x41" Display="0x00004100"/>
+            <option Value="0x42" Display="0x00004200"/>
+            <option Value="0x43" Display="0x00004300"/>
+            <option Value="0x44" Display="0x00004400"/>
+            <option Value="0x45" Display="0x00004500"/>
+            <option Value="0x46" Display="0x00004600"/>
+            <option Value="0x47" Display="0x00004700"/>
+            <option Value="0x48" Display="0x00004800"/>
+            <option Value="0x49" Display="0x00004900"/>
+            <option Value="0x4A" Display="0x00004A00"/>
+            <option Value="0x4B" Display="0x00004B00"/>
+            <option Value="0x4C" Display="0x00004C00"/>
+            <option Value="0x4D" Display="0x00004D00"/>
+            <option Value="0x4E" Display="0x00004E00"/>
+            <option Value="0x4F" Display="0x00004F00"/>
+            <option Value="0x50" Display="0x00005000"/>
+            <option Value="0x51" Display="0x00005100"/>
+            <option Value="0x52" Display="0x00005200"/>
+            <option Value="0x53" Display="0x00005300"/>
+            <option Value="0x54" Display="0x00005400"/>
+            <option Value="0x55" Display="0x00005500"/>
+            <option Value="0x56" Display="0x00005600"/>
+            <option Value="0x57" Display="0x00005700"/>
+            <option Value="0x58" Display="0x00005800"/>
+            <option Value="0x59" Display="0x00005900"/>
+            <option Value="0x5A" Display="0x00005A00"/>
+            <option Value="0x5B" Display="0x00005B00"/>
+            <option Value="0x5C" Display="0x00005C00"/>
+            <option Value="0x5D" Display="0x00005D00"/>
+            <option Value="0x5E" Display="0x00005E00"/>
+            <option Value="0x5F" Display="0x00005F00"/>
+            <option Value="0x60" Display="0x00006000"/>
+            <option Value="0x61" Display="0x00006100"/>
+            <option Value="0x62" Display="0x00006200"/>
+            <option Value="0x63" Display="0x00006300"/>
+            <option Value="0x64" Display="0x00006400"/>
+            <option Value="0x65" Display="0x00006500"/>
+            <option Value="0x66" Display="0x00006600"/>
+            <option Value="0x67" Display="0x00006700"/>
+            <option Value="0x68" Display="0x00006800"/>
+            <option Value="0x69" Display="0x00006900"/>
+            <option Value="0x6A" Display="0x00006A00"/>
+            <option Value="0x6B" Display="0x00006B00"/>
+            <option Value="0x6C" Display="0x00006C00"/>
+            <option Value="0x6D" Display="0x00006D00"/>
+            <option Value="0x6E" Display="0x00006E00"/>
+            <option Value="0x6F" Display="0x00006F00"/>
+            <option Value="0x70" Display="0x00007000"/>
+            <option Value="0x71" Display="0x00007100"/>
+            <option Value="0x72" Display="0x00007200"/>
+            <option Value="0x73" Display="0x00007300"/>
+            <option Value="0x74" Display="0x00007400"/>
+            <option Value="0x75" Display="0x00007500"/>
+            <option Value="0x76" Display="0x00007600"/>
+            <option Value="0x77" Display="0x00007700"/>
+            <option Value="0x78" Display="0x00007800"/>
+            <option Value="0x79" Display="0x00007900"/>
+            <option Value="0x7A" Display="0x00007A00"/>
+            <option Value="0x7B" Display="0x00007B00"/>
+            <option Value="0x7C" Display="0x00007C00"/>
+            <option Value="0x7D" Display="0x00007D00"/>
+            <option Value="0x7E" Display="0x00007E00"/>
+            <option Value="0x7F" Display="0x00007F00"/>
+            <option Value="0x80" Display="0x00008000"/>
+            <option Value="0x81" Display="0x00008100"/>
+            <option Value="0x82" Display="0x00008200"/>
+            <option Value="0x83" Display="0x00008300"/>
+            <option Value="0x84" Display="0x00008400"/>
+            <option Value="0x85" Display="0x00008500"/>
+            <option Value="0x86" Display="0x00008600"/>
+            <option Value="0x87" Display="0x00008700"/>
+            <option Value="0x88" Display="0x00008800"/>
+            <option Value="0x89" Display="0x00008900"/>
+            <option Value="0x8A" Display="0x00008A00"/>
+            <option Value="0x8B" Display="0x00008B00"/>
+            <option Value="0x8C" Display="0x00008C00"/>
+            <option Value="0x8D" Display="0x00008D00"/>
+            <option Value="0x8E" Display="0x00008E00"/>
+            <option Value="0x8F" Display="0x00008F00"/>
+            <option Value="0x90" Display="0x00009000"/>
+            <option Value="0x91" Display="0x00009100"/>
+            <option Value="0x92" Display="0x00009200"/>
+            <option Value="0x93" Display="0x00009300"/>
+            <option Value="0x94" Display="0x00009400"/>
+            <option Value="0x95" Display="0x00009500"/>
+            <option Value="0x96" Display="0x00009600"/>
+            <option Value="0x97" Display="0x00009700"/>
+            <option Value="0x98" Display="0x00009800"/>
+            <option Value="0x99" Display="0x00009900"/>
+            <option Value="0x9A" Display="0x00009A00"/>
+            <option Value="0x9B" Display="0x00009B00"/>
+            <option Value="0x9C" Display="0x00009C00"/>
+            <option Value="0x9D" Display="0x00009D00"/>
+            <option Value="0x9E" Display="0x00009E00"/>
+            <option Value="0x9F" Display="0x00009F00"/>
+            <option Value="0xA0" Display="0x0000A000"/>
+            <option Value="0xA1" Display="0x0000A100"/>
+            <option Value="0xA2" Display="0x0000A200"/>
+            <option Value="0xA3" Display="0x0000A300"/>
+            <option Value="0xA4" Display="0x0000A400"/>
+            <option Value="0xA5" Display="0x0000A500"/>
+            <option Value="0xA6" Display="0x0000A600"/>
+            <option Value="0xA7" Display="0x0000A700"/>
+            <option Value="0xA8" Display="0x0000A800"/>
+            <option Value="0xA9" Display="0x0000A900"/>
+            <option Value="0xAA" Display="0x0000AA00"/>
+            <option Value="0xAB" Display="0x0000AB00"/>
+            <option Value="0xAC" Display="0x0000AC00"/>
+            <option Value="0xAD" Display="0x0000AD00"/>
+            <option Value="0xAE" Display="0x0000AE00"/>
+            <option Value="0xAF" Display="0x0000AF00"/>
+            <option Value="0xB0" Display="0x0000B000"/>
+            <option Value="0xB1" Display="0x0000B100"/>
+            <option Value="0xB2" Display="0x0000B200"/>
+            <option Value="0xB3" Display="0x0000B300"/>
+            <option Value="0xB4" Display="0x0000B400"/>
+            <option Value="0xB5" Display="0x0000B500"/>
+            <option Value="0xB6" Display="0x0000B600"/>
+            <option Value="0xB7" Display="0x0000B700"/>
+            <option Value="0xB8" Display="0x0000B800"/>
+            <option Value="0xB9" Display="0x0000B900"/>
+            <option Value="0xBA" Display="0x0000BA00"/>
+            <option Value="0xBB" Display="0x0000BB00"/>
+            <option Value="0xBC" Display="0x0000BC00"/>
+            <option Value="0xBD" Display="0x0000BD00"/>
+            <option Value="0xBE" Display="0x0000BE00"/>
+            <option Value="0xBF" Display="0x0000BF00"/>
+            <option Value="0xC0" Display="0x0000C000"/>
+            <option Value="0xC1" Display="0x0000C100"/>
+            <option Value="0xC2" Display="0x0000C200"/>
+            <option Value="0xC3" Display="0x0000C300"/>
+            <option Value="0xC4" Display="0x0000C400"/>
+            <option Value="0xC5" Display="0x0000C500"/>
+            <option Value="0xC6" Display="0x0000C600"/>
+            <option Value="0xC7" Display="0x0000C700"/>
+            <option Value="0xC8" Display="0x0000C800"/>
+            <option Value="0xC9" Display="0x0000C900"/>
+            <option Value="0xCA" Display="0x0000CA00"/>
+            <option Value="0xCB" Display="0x0000CB00"/>
+            <option Value="0xCC" Display="0x0000CC00"/>
+            <option Value="0xCD" Display="0x0000CD00"/>
+            <option Value="0xCE" Display="0x0000CE00"/>
+            <option Value="0xCF" Display="0x0000CF00"/>
+            <option Value="0xD0" Display="0x0000D000"/>
+            <option Value="0xD1" Display="0x0000D100"/>
+            <option Value="0xD2" Display="0x0000D200"/>
+            <option Value="0xD3" Display="0x0000D300"/>
+            <option Value="0xD4" Display="0x0000D400"/>
+            <option Value="0xD5" Display="0x0000D500"/>
+            <option Value="0xD6" Display="0x0000D600"/>
+            <option Value="0xD7" Display="0x0000D700"/>
+            <option Value="0xD8" Display="0x0000D800"/>
+            <option Value="0xD9" Display="0x0000D900"/>
+            <option Value="0xDA" Display="0x0000DA00"/>
+            <option Value="0xDB" Display="0x0000DB00"/>
+            <option Value="0xDC" Display="0x0000DC00"/>
+            <option Value="0xDD" Display="0x0000DD00"/>
+            <option Value="0xDE" Display="0x0000DE00"/>
+            <option Value="0xDF" Display="0x0000DF00"/>
+            <option Value="0xE0" Display="0x0000E000"/>
+            <option Value="0xE1" Display="0x0000E100"/>
+            <option Value="0xE2" Display="0x0000E200"/>
+            <option Value="0xE3" Display="0x0000E300"/>
+            <option Value="0xE4" Display="0x0000E400"/>
+            <option Value="0xE5" Display="0x0000E500"/>
+            <option Value="0xE6" Display="0x0000E600"/>
+            <option Value="0xE7" Display="0x0000E700"/>
+            <option Value="0xE8" Display="0x0000E800"/>
+            <option Value="0xE9" Display="0x0000E900"/>
+            <option Value="0xEA" Display="0x0000EA00"/>
+            <option Value="0xEB" Display="0x0000EB00"/>
+            <option Value="0xEC" Display="0x0000EC00"/>
+            <option Value="0xED" Display="0x0000ED00"/>
+            <option Value="0xEE" Display="0x0000EE00"/>
+            <option Value="0xEF" Display="0x0000EF00"/>
+            <option Value="0xF0" Display="0x0000F000"/>
+            <option Value="0xF1" Display="0x0000F100"/>
+            <option Value="0xF2" Display="0x0000F200"/>
+            <option Value="0xF3" Display="0x0000F300"/>
+            <option Value="0xF4" Display="0x0000F400"/>
+            <option Value="0xF5" Display="0x0000F500"/>
+            <option Value="0xF6" Display="0x0000F600"/>
+            <option Value="0xF7" Display="0x0000F700"/>
+            <option Value="0xF8" Display="0x0000F800"/>
+            <option Value="0xF9" Display="0x0000F900"/>
+            <option Value="0xFA" Display="0x0000FA00"/>
+            <option Value="0xFB" Display="0x0000FB00"/>
+            <option Value="0xFC" Display="0x0000FC00"/>
+            <option Value="0xFD" Display="0x0000FD00"/>
+            <option Value="0xFE" Display="0x0000FE00"/>
+            <option Value="0xFF" Display="0x0000FF00"/>
+            <option Value="0x100" Display="0x00010000"/>
+            <option Value="0x101" Display="0x00010100"/>
+            <option Value="0x102" Display="0x00010200"/>
+            <option Value="0x103" Display="0x00010300"/>
+            <option Value="0x104" Display="0x00010400"/>
+            <option Value="0x105" Display="0x00010500"/>
+            <option Value="0x106" Display="0x00010600"/>
+            <option Value="0x107" Display="0x00010700"/>
+            <option Value="0x108" Display="0x00010800"/>
+            <option Value="0x109" Display="0x00010900"/>
+            <option Value="0x10A" Display="0x00010A00"/>
+            <option Value="0x10B" Display="0x00010B00"/>
+            <option Value="0x10C" Display="0x00010C00"/>
+            <option Value="0x10D" Display="0x00010D00"/>
+            <option Value="0x10E" Display="0x00010E00"/>
+            <option Value="0x10F" Display="0x00010F00"/>
+            <option Value="0x110" Display="0x00011000"/>
+            <option Value="0x111" Display="0x00011100"/>
+            <option Value="0x112" Display="0x00011200"/>
+            <option Value="0x113" Display="0x00011300"/>
+            <option Value="0x114" Display="0x00011400"/>
+            <option Value="0x115" Display="0x00011500"/>
+            <option Value="0x116" Display="0x00011600"/>
+            <option Value="0x117" Display="0x00011700"/>
+            <option Value="0x118" Display="0x00011800"/>
+            <option Value="0x119" Display="0x00011900"/>
+            <option Value="0x11A" Display="0x00011A00"/>
+            <option Value="0x11B" Display="0x00011B00"/>
+            <option Value="0x11C" Display="0x00011C00"/>
+            <option Value="0x11D" Display="0x00011D00"/>
+            <option Value="0x11E" Display="0x00011E00"/>
+            <option Value="0x11F" Display="0x00011F00"/>
+            <option Value="0x120" Display="0x00012000"/>
+            <option Value="0x121" Display="0x00012100"/>
+            <option Value="0x122" Display="0x00012200"/>
+            <option Value="0x123" Display="0x00012300"/>
+            <option Value="0x124" Display="0x00012400"/>
+            <option Value="0x125" Display="0x00012500"/>
+            <option Value="0x126" Display="0x00012600"/>
+            <option Value="0x127" Display="0x00012700"/>
+            <option Value="0x128" Display="0x00012800"/>
+            <option Value="0x129" Display="0x00012900"/>
+            <option Value="0x12A" Display="0x00012A00"/>
+            <option Value="0x12B" Display="0x00012B00"/>
+            <option Value="0x12C" Display="0x00012C00"/>
+            <option Value="0x12D" Display="0x00012D00"/>
+            <option Value="0x12E" Display="0x00012E00"/>
+            <option Value="0x12F" Display="0x00012F00"/>
+            <option Value="0x130" Display="0x00013000"/>
+            <option Value="0x131" Display="0x00013100"/>
+            <option Value="0x132" Display="0x00013200"/>
+            <option Value="0x133" Display="0x00013300"/>
+            <option Value="0x134" Display="0x00013400"/>
+            <option Value="0x135" Display="0x00013500"/>
+            <option Value="0x136" Display="0x00013600"/>
+            <option Value="0x137" Display="0x00013700"/>
+            <option Value="0x138" Display="0x00013800"/>
+            <option Value="0x139" Display="0x00013900"/>
+            <option Value="0x13A" Display="0x00013A00"/>
+            <option Value="0x13B" Display="0x00013B00"/>
+            <option Value="0x13C" Display="0x00013C00"/>
+            <option Value="0x13D" Display="0x00013D00"/>
+            <option Value="0x13E" Display="0x00013E00"/>
+            <option Value="0x13F" Display="0x00013F00"/>
+            <option Value="0x140" Display="0x00014000"/>
+            <option Value="0x141" Display="0x00014100"/>
+            <option Value="0x142" Display="0x00014200"/>
+            <option Value="0x143" Display="0x00014300"/>
+            <option Value="0x144" Display="0x00014400"/>
+            <option Value="0x145" Display="0x00014500"/>
+            <option Value="0x146" Display="0x00014600"/>
+            <option Value="0x147" Display="0x00014700"/>
+            <option Value="0x148" Display="0x00014800"/>
+            <option Value="0x149" Display="0x00014900"/>
+            <option Value="0x14A" Display="0x00014A00"/>
+            <option Value="0x14B" Display="0x00014B00"/>
+            <option Value="0x14C" Display="0x00014C00"/>
+            <option Value="0x14D" Display="0x00014D00"/>
+            <option Value="0x14E" Display="0x00014E00"/>
+            <option Value="0x14F" Display="0x00014F00"/>
+            <option Value="0x150" Display="0x00015000"/>
+            <option Value="0x151" Display="0x00015100"/>
+            <option Value="0x152" Display="0x00015200"/>
+            <option Value="0x153" Display="0x00015300"/>
+            <option Value="0x154" Display="0x00015400"/>
+            <option Value="0x155" Display="0x00015500"/>
+            <option Value="0x156" Display="0x00015600"/>
+            <option Value="0x157" Display="0x00015700"/>
+            <option Value="0x158" Display="0x00015800"/>
+            <option Value="0x159" Display="0x00015900"/>
+            <option Value="0x15A" Display="0x00015A00"/>
+            <option Value="0x15B" Display="0x00015B00"/>
+            <option Value="0x15C" Display="0x00015C00"/>
+            <option Value="0x15D" Display="0x00015D00"/>
+            <option Value="0x15E" Display="0x00015E00"/>
+            <option Value="0x15F" Display="0x00015F00"/>
+            <option Value="0x160" Display="0x00016000"/>
+            <option Value="0x161" Display="0x00016100"/>
+            <option Value="0x162" Display="0x00016200"/>
+            <option Value="0x163" Display="0x00016300"/>
+            <option Value="0x164" Display="0x00016400"/>
+            <option Value="0x165" Display="0x00016500"/>
+            <option Value="0x166" Display="0x00016600"/>
+            <option Value="0x167" Display="0x00016700"/>
+            <option Value="0x168" Display="0x00016800"/>
+            <option Value="0x169" Display="0x00016900"/>
+            <option Value="0x16A" Display="0x00016A00"/>
+            <option Value="0x16B" Display="0x00016B00"/>
+            <option Value="0x16C" Display="0x00016C00"/>
+            <option Value="0x16D" Display="0x00016D00"/>
+            <option Value="0x16E" Display="0x00016E00"/>
+            <option Value="0x16F" Display="0x00016F00"/>
+            <option Value="0x170" Display="0x00017000"/>
+            <option Value="0x171" Display="0x00017100"/>
+            <option Value="0x172" Display="0x00017200"/>
+            <option Value="0x173" Display="0x00017300"/>
+            <option Value="0x174" Display="0x00017400"/>
+            <option Value="0x175" Display="0x00017500"/>
+            <option Value="0x176" Display="0x00017600"/>
+            <option Value="0x177" Display="0x00017700"/>
+            <option Value="0x178" Display="0x00017800"/>
+            <option Value="0x179" Display="0x00017900"/>
+            <option Value="0x17A" Display="0x00017A00"/>
+            <option Value="0x17B" Display="0x00017B00"/>
+            <option Value="0x17C" Display="0x00017C00"/>
+            <option Value="0x17D" Display="0x00017D00"/>
+            <option Value="0x17E" Display="0x00017E00"/>
+            <option Value="0x17F" Display="0x00017F00"/>
+            <option Value="0x180" Display="0x00018000"/>
+            <option Value="0x181" Display="0x00018100"/>
+            <option Value="0x182" Display="0x00018200"/>
+            <option Value="0x183" Display="0x00018300"/>
+            <option Value="0x184" Display="0x00018400"/>
+            <option Value="0x185" Display="0x00018500"/>
+            <option Value="0x186" Display="0x00018600"/>
+            <option Value="0x187" Display="0x00018700"/>
+            <option Value="0x188" Display="0x00018800"/>
+            <option Value="0x189" Display="0x00018900"/>
+            <option Value="0x18A" Display="0x00018A00"/>
+            <option Value="0x18B" Display="0x00018B00"/>
+            <option Value="0x18C" Display="0x00018C00"/>
+            <option Value="0x18D" Display="0x00018D00"/>
+            <option Value="0x18E" Display="0x00018E00"/>
+            <option Value="0x18F" Display="0x00018F00"/>
+            <option Value="0x190" Display="0x00019000"/>
+            <option Value="0x191" Display="0x00019100"/>
+            <option Value="0x192" Display="0x00019200"/>
+            <option Value="0x193" Display="0x00019300"/>
+            <option Value="0x194" Display="0x00019400"/>
+            <option Value="0x195" Display="0x00019500"/>
+            <option Value="0x196" Display="0x00019600"/>
+            <option Value="0x197" Display="0x00019700"/>
+            <option Value="0x198" Display="0x00019800"/>
+            <option Value="0x199" Display="0x00019900"/>
+            <option Value="0x19A" Display="0x00019A00"/>
+            <option Value="0x19B" Display="0x00019B00"/>
+            <option Value="0x19C" Display="0x00019C00"/>
+            <option Value="0x19D" Display="0x00019D00"/>
+            <option Value="0x19E" Display="0x00019E00"/>
+            <option Value="0x19F" Display="0x00019F00"/>
+            <option Value="0x1A0" Display="0x0001A000"/>
+            <option Value="0x1A1" Display="0x0001A100"/>
+            <option Value="0x1A2" Display="0x0001A200"/>
+            <option Value="0x1A3" Display="0x0001A300"/>
+            <option Value="0x1A4" Display="0x0001A400"/>
+            <option Value="0x1A5" Display="0x0001A500"/>
+            <option Value="0x1A6" Display="0x0001A600"/>
+            <option Value="0x1A7" Display="0x0001A700"/>
+            <option Value="0x1A8" Display="0x0001A800"/>
+            <option Value="0x1A9" Display="0x0001A900"/>
+            <option Value="0x1AA" Display="0x0001AA00"/>
+            <option Value="0x1AB" Display="0x0001AB00"/>
+            <option Value="0x1AC" Display="0x0001AC00"/>
+            <option Value="0x1AD" Display="0x0001AD00"/>
+            <option Value="0x1AE" Display="0x0001AE00"/>
+            <option Value="0x1AF" Display="0x0001AF00"/>
+            <option Value="0x1B0" Display="0x0001B000"/>
+            <option Value="0x1B1" Display="0x0001B100"/>
+            <option Value="0x1B2" Display="0x0001B200"/>
+            <option Value="0x1B3" Display="0x0001B300"/>
+            <option Value="0x1B4" Display="0x0001B400"/>
+            <option Value="0x1B5" Display="0x0001B500"/>
+            <option Value="0x1B6" Display="0x0001B600"/>
+            <option Value="0x1B7" Display="0x0001B700"/>
+            <option Value="0x1B8" Display="0x0001B800"/>
+            <option Value="0x1B9" Display="0x0001B900"/>
+            <option Value="0x1BA" Display="0x0001BA00"/>
+            <option Value="0x1BB" Display="0x0001BB00"/>
+            <option Value="0x1BC" Display="0x0001BC00"/>
+            <option Value="0x1BD" Display="0x0001BD00"/>
+            <option Value="0x1BE" Display="0x0001BE00"/>
+            <option Value="0x1BF" Display="0x0001BF00"/>
+            <option Value="0x1C0" Display="0x0001C000"/>
+            <option Value="0x1C1" Display="0x0001C100"/>
+            <option Value="0x1C2" Display="0x0001C200"/>
+            <option Value="0x1C3" Display="0x0001C300"/>
+            <option Value="0x1C4" Display="0x0001C400"/>
+            <option Value="0x1C5" Display="0x0001C500"/>
+            <option Value="0x1C6" Display="0x0001C600"/>
+            <option Value="0x1C7" Display="0x0001C700"/>
+            <option Value="0x1C8" Display="0x0001C800"/>
+            <option Value="0x1C9" Display="0x0001C900"/>
+            <option Value="0x1CA" Display="0x0001CA00"/>
+            <option Value="0x1CB" Display="0x0001CB00"/>
+            <option Value="0x1CC" Display="0x0001CC00"/>
+            <option Value="0x1CD" Display="0x0001CD00"/>
+            <option Value="0x1CE" Display="0x0001CE00"/>
+            <option Value="0x1CF" Display="0x0001CF00"/>
+            <option Value="0x1D0" Display="0x0001D000"/>
+            <option Value="0x1D1" Display="0x0001D100"/>
+            <option Value="0x1D2" Display="0x0001D200"/>
+            <option Value="0x1D3" Display="0x0001D300"/>
+            <option Value="0x1D4" Display="0x0001D400"/>
+            <option Value="0x1D5" Display="0x0001D500"/>
+            <option Value="0x1D6" Display="0x0001D600"/>
+            <option Value="0x1D7" Display="0x0001D700"/>
+            <option Value="0x1D8" Display="0x0001D800"/>
+            <option Value="0x1D9" Display="0x0001D900"/>
+            <option Value="0x1DA" Display="0x0001DA00"/>
+            <option Value="0x1DB" Display="0x0001DB00"/>
+            <option Value="0x1DC" Display="0x0001DC00"/>
+            <option Value="0x1DD" Display="0x0001DD00"/>
+            <option Value="0x1DE" Display="0x0001DE00"/>
+            <option Value="0x1DF" Display="0x0001DF00"/>
+            <option Value="0x1E0" Display="0x0001E000"/>
+            <option Value="0x1E1" Display="0x0001E100"/>
+            <option Value="0x1E2" Display="0x0001E200"/>
+            <option Value="0x1E3" Display="0x0001E300"/>
+            <option Value="0x1E4" Display="0x0001E400"/>
+            <option Value="0x1E5" Display="0x0001E500"/>
+            <option Value="0x1E6" Display="0x0001E600"/>
+            <option Value="0x1E7" Display="0x0001E700"/>
+            <option Value="0x1E8" Display="0x0001E800"/>
+            <option Value="0x1E9" Display="0x0001E900"/>
+            <option Value="0x1EA" Display="0x0001EA00"/>
+            <option Value="0x1EB" Display="0x0001EB00"/>
+            <option Value="0x1EC" Display="0x0001EC00"/>
+            <option Value="0x1ED" Display="0x0001ED00"/>
+            <option Value="0x1EE" Display="0x0001EE00"/>
+            <option Value="0x1EF" Display="0x0001EF00"/>
+            <option Value="0x1F0" Display="0x0001F000"/>
+            <option Value="0x1F1" Display="0x0001F100"/>
+            <option Value="0x1F2" Display="0x0001F200"/>
+            <option Value="0x1F3" Display="0x0001F300"/>
+            <option Value="0x1F4" Display="0x0001F400"/>
+            <option Value="0x1F5" Display="0x0001F500"/>
+            <option Value="0x1F6" Display="0x0001F600"/>
+            <option Value="0x1F7" Display="0x0001F700"/>
+            <option Value="0x1F8" Display="0x0001F800"/>
+            <option Value="0x1F9" Display="0x0001F900"/>
+            <option Value="0x1FA" Display="0x0001FA00"/>
+            <option Value="0x1FB" Display="0x0001FB00"/>
+            <option Value="0x1FC" Display="0x0001FC00"/>
+            <option Value="0x1FD" Display="0x0001FD00"/>
+            <option Value="0x1FE" Display="0x0001FE00"/>
+            <option Value="0x1FF" Display="0x0001FF00" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>PCROP0ER</name>
+          <description>Bank0 private code read out protection end address</description>
+          <bitRange>[24:16]</bitRange>
+          <options>
+            <option Value="0x0" Display="0x000000FF" Default="1" />
+            <option Value="0x1" Display="0x000001FF"/>
+            <option Value="0x2" Display="0x000002FF"/>
+            <option Value="0x3" Display="0x000003FF"/>
+            <option Value="0x4" Display="0x000004FF"/>
+            <option Value="0x5" Display="0x000005FF"/>
+            <option Value="0x6" Display="0x000006FF"/>
+            <option Value="0x7" Display="0x000007FF"/>
+            <option Value="0x8" Display="0x000008FF"/>
+            <option Value="0x9" Display="0x000009FF"/>
+            <option Value="0xA" Display="0x00000AFF"/>
+            <option Value="0xB" Display="0x00000BFF"/>
+            <option Value="0xC" Display="0x00000CFF"/>
+            <option Value="0xD" Display="0x00000DFF"/>
+            <option Value="0xE" Display="0x00000EFF"/>
+            <option Value="0xF" Display="0x00000FFF"/>
+            <option Value="0x10" Display="0x000010FF"/>
+            <option Value="0x11" Display="0x000011FF"/>
+            <option Value="0x12" Display="0x000012FF"/>
+            <option Value="0x13" Display="0x000013FF"/>
+            <option Value="0x14" Display="0x000014FF"/>
+            <option Value="0x15" Display="0x000015FF"/>
+            <option Value="0x16" Display="0x000016FF"/>
+            <option Value="0x17" Display="0x000017FF"/>
+            <option Value="0x18" Display="0x000018FF"/>
+            <option Value="0x19" Display="0x000019FF"/>
+            <option Value="0x1A" Display="0x00001AFF"/>
+            <option Value="0x1B" Display="0x00001BFF"/>
+            <option Value="0x1C" Display="0x00001CFF"/>
+            <option Value="0x1D" Display="0x00001DFF"/>
+            <option Value="0x1E" Display="0x00001EFF"/>
+            <option Value="0x1F" Display="0x00001FFF"/>
+            <option Value="0x20" Display="0x000020FF"/>
+            <option Value="0x21" Display="0x000021FF"/>
+            <option Value="0x22" Display="0x000022FF"/>
+            <option Value="0x23" Display="0x000023FF"/>
+            <option Value="0x24" Display="0x000024FF"/>
+            <option Value="0x25" Display="0x000025FF"/>
+            <option Value="0x26" Display="0x000026FF"/>
+            <option Value="0x27" Display="0x000027FF"/>
+            <option Value="0x28" Display="0x000028FF"/>
+            <option Value="0x29" Display="0x000029FF"/>
+            <option Value="0x2A" Display="0x00002AFF"/>
+            <option Value="0x2B" Display="0x00002BFF"/>
+            <option Value="0x2C" Display="0x00002CFF"/>
+            <option Value="0x2D" Display="0x00002DFF"/>
+            <option Value="0x2E" Display="0x00002EFF"/>
+            <option Value="0x2F" Display="0x00002FFF"/>
+            <option Value="0x30" Display="0x000030FF"/>
+            <option Value="0x31" Display="0x000031FF"/>
+            <option Value="0x32" Display="0x000032FF"/>
+            <option Value="0x33" Display="0x000033FF"/>
+            <option Value="0x34" Display="0x000034FF"/>
+            <option Value="0x35" Display="0x000035FF"/>
+            <option Value="0x36" Display="0x000036FF"/>
+            <option Value="0x37" Display="0x000037FF"/>
+            <option Value="0x38" Display="0x000038FF"/>
+            <option Value="0x39" Display="0x000039FF"/>
+            <option Value="0x3A" Display="0x00003AFF"/>
+            <option Value="0x3B" Display="0x00003BFF"/>
+            <option Value="0x3C" Display="0x00003CFF"/>
+            <option Value="0x3D" Display="0x00003DFF"/>
+            <option Value="0x3E" Display="0x00003EFF"/>
+            <option Value="0x3F" Display="0x00003FFF"/>
+            <option Value="0x40" Display="0x000040FF"/>
+            <option Value="0x41" Display="0x000041FF"/>
+            <option Value="0x42" Display="0x000042FF"/>
+            <option Value="0x43" Display="0x000043FF"/>
+            <option Value="0x44" Display="0x000044FF"/>
+            <option Value="0x45" Display="0x000045FF"/>
+            <option Value="0x46" Display="0x000046FF"/>
+            <option Value="0x47" Display="0x000047FF"/>
+            <option Value="0x48" Display="0x000048FF"/>
+            <option Value="0x49" Display="0x000049FF"/>
+            <option Value="0x4A" Display="0x00004AFF"/>
+            <option Value="0x4B" Display="0x00004BFF"/>
+            <option Value="0x4C" Display="0x00004CFF"/>
+            <option Value="0x4D" Display="0x00004DFF"/>
+            <option Value="0x4E" Display="0x00004EFF"/>
+            <option Value="0x4F" Display="0x00004FFF"/>
+            <option Value="0x50" Display="0x000050FF"/>
+            <option Value="0x51" Display="0x000051FF"/>
+            <option Value="0x52" Display="0x000052FF"/>
+            <option Value="0x53" Display="0x000053FF"/>
+            <option Value="0x54" Display="0x000054FF"/>
+            <option Value="0x55" Display="0x000055FF"/>
+            <option Value="0x56" Display="0x000056FF"/>
+            <option Value="0x57" Display="0x000057FF"/>
+            <option Value="0x58" Display="0x000058FF"/>
+            <option Value="0x59" Display="0x000059FF"/>
+            <option Value="0x5A" Display="0x00005AFF"/>
+            <option Value="0x5B" Display="0x00005BFF"/>
+            <option Value="0x5C" Display="0x00005CFF"/>
+            <option Value="0x5D" Display="0x00005DFF"/>
+            <option Value="0x5E" Display="0x00005EFF"/>
+            <option Value="0x5F" Display="0x00005FFF"/>
+            <option Value="0x60" Display="0x000060FF"/>
+            <option Value="0x61" Display="0x000061FF"/>
+            <option Value="0x62" Display="0x000062FF"/>
+            <option Value="0x63" Display="0x000063FF"/>
+            <option Value="0x64" Display="0x000064FF"/>
+            <option Value="0x65" Display="0x000065FF"/>
+            <option Value="0x66" Display="0x000066FF"/>
+            <option Value="0x67" Display="0x000067FF"/>
+            <option Value="0x68" Display="0x000068FF"/>
+            <option Value="0x69" Display="0x000069FF"/>
+            <option Value="0x6A" Display="0x00006AFF"/>
+            <option Value="0x6B" Display="0x00006BFF"/>
+            <option Value="0x6C" Display="0x00006CFF"/>
+            <option Value="0x6D" Display="0x00006DFF"/>
+            <option Value="0x6E" Display="0x00006EFF"/>
+            <option Value="0x6F" Display="0x00006FFF"/>
+            <option Value="0x70" Display="0x000070FF"/>
+            <option Value="0x71" Display="0x000071FF"/>
+            <option Value="0x72" Display="0x000072FF"/>
+            <option Value="0x73" Display="0x000073FF"/>
+            <option Value="0x74" Display="0x000074FF"/>
+            <option Value="0x75" Display="0x000075FF"/>
+            <option Value="0x76" Display="0x000076FF"/>
+            <option Value="0x77" Display="0x000077FF"/>
+            <option Value="0x78" Display="0x000078FF"/>
+            <option Value="0x79" Display="0x000079FF"/>
+            <option Value="0x7A" Display="0x00007AFF"/>
+            <option Value="0x7B" Display="0x00007BFF"/>
+            <option Value="0x7C" Display="0x00007CFF"/>
+            <option Value="0x7D" Display="0x00007DFF"/>
+            <option Value="0x7E" Display="0x00007EFF"/>
+            <option Value="0x7F" Display="0x00007FFF"/>
+            <option Value="0x80" Display="0x000080FF"/>
+            <option Value="0x81" Display="0x000081FF"/>
+            <option Value="0x82" Display="0x000082FF"/>
+            <option Value="0x83" Display="0x000083FF"/>
+            <option Value="0x84" Display="0x000084FF"/>
+            <option Value="0x85" Display="0x000085FF"/>
+            <option Value="0x86" Display="0x000086FF"/>
+            <option Value="0x87" Display="0x000087FF"/>
+            <option Value="0x88" Display="0x000088FF"/>
+            <option Value="0x89" Display="0x000089FF"/>
+            <option Value="0x8A" Display="0x00008AFF"/>
+            <option Value="0x8B" Display="0x00008BFF"/>
+            <option Value="0x8C" Display="0x00008CFF"/>
+            <option Value="0x8D" Display="0x00008DFF"/>
+            <option Value="0x8E" Display="0x00008EFF"/>
+            <option Value="0x8F" Display="0x00008FFF"/>
+            <option Value="0x90" Display="0x000090FF"/>
+            <option Value="0x91" Display="0x000091FF"/>
+            <option Value="0x92" Display="0x000092FF"/>
+            <option Value="0x93" Display="0x000093FF"/>
+            <option Value="0x94" Display="0x000094FF"/>
+            <option Value="0x95" Display="0x000095FF"/>
+            <option Value="0x96" Display="0x000096FF"/>
+            <option Value="0x97" Display="0x000097FF"/>
+            <option Value="0x98" Display="0x000098FF"/>
+            <option Value="0x99" Display="0x000099FF"/>
+            <option Value="0x9A" Display="0x00009AFF"/>
+            <option Value="0x9B" Display="0x00009BFF"/>
+            <option Value="0x9C" Display="0x00009CFF"/>
+            <option Value="0x9D" Display="0x00009DFF"/>
+            <option Value="0x9E" Display="0x00009EFF"/>
+            <option Value="0x9F" Display="0x00009FFF"/>
+            <option Value="0xA0" Display="0x0000A0FF"/>
+            <option Value="0xA1" Display="0x0000A1FF"/>
+            <option Value="0xA2" Display="0x0000A2FF"/>
+            <option Value="0xA3" Display="0x0000A3FF"/>
+            <option Value="0xA4" Display="0x0000A4FF"/>
+            <option Value="0xA5" Display="0x0000A5FF"/>
+            <option Value="0xA6" Display="0x0000A6FF"/>
+            <option Value="0xA7" Display="0x0000A7FF"/>
+            <option Value="0xA8" Display="0x0000A8FF"/>
+            <option Value="0xA9" Display="0x0000A9FF"/>
+            <option Value="0xAA" Display="0x0000AAFF"/>
+            <option Value="0xAB" Display="0x0000ABFF"/>
+            <option Value="0xAC" Display="0x0000ACFF"/>
+            <option Value="0xAD" Display="0x0000ADFF"/>
+            <option Value="0xAE" Display="0x0000AEFF"/>
+            <option Value="0xAF" Display="0x0000AFFF"/>
+            <option Value="0xB0" Display="0x0000B0FF"/>
+            <option Value="0xB1" Display="0x0000B1FF"/>
+            <option Value="0xB2" Display="0x0000B2FF"/>
+            <option Value="0xB3" Display="0x0000B3FF"/>
+            <option Value="0xB4" Display="0x0000B4FF"/>
+            <option Value="0xB5" Display="0x0000B5FF"/>
+            <option Value="0xB6" Display="0x0000B6FF"/>
+            <option Value="0xB7" Display="0x0000B7FF"/>
+            <option Value="0xB8" Display="0x0000B8FF"/>
+            <option Value="0xB9" Display="0x0000B9FF"/>
+            <option Value="0xBA" Display="0x0000BAFF"/>
+            <option Value="0xBB" Display="0x0000BBFF"/>
+            <option Value="0xBC" Display="0x0000BCFF"/>
+            <option Value="0xBD" Display="0x0000BDFF"/>
+            <option Value="0xBE" Display="0x0000BEFF"/>
+            <option Value="0xBF" Display="0x0000BFFF"/>
+            <option Value="0xC0" Display="0x0000C0FF"/>
+            <option Value="0xC1" Display="0x0000C1FF"/>
+            <option Value="0xC2" Display="0x0000C2FF"/>
+            <option Value="0xC3" Display="0x0000C3FF"/>
+            <option Value="0xC4" Display="0x0000C4FF"/>
+            <option Value="0xC5" Display="0x0000C5FF"/>
+            <option Value="0xC6" Display="0x0000C6FF"/>
+            <option Value="0xC7" Display="0x0000C7FF"/>
+            <option Value="0xC8" Display="0x0000C8FF"/>
+            <option Value="0xC9" Display="0x0000C9FF"/>
+            <option Value="0xCA" Display="0x0000CAFF"/>
+            <option Value="0xCB" Display="0x0000CBFF"/>
+            <option Value="0xCC" Display="0x0000CCFF"/>
+            <option Value="0xCD" Display="0x0000CDFF"/>
+            <option Value="0xCE" Display="0x0000CEFF"/>
+            <option Value="0xCF" Display="0x0000CFFF"/>
+            <option Value="0xD0" Display="0x0000D0FF"/>
+            <option Value="0xD1" Display="0x0000D1FF"/>
+            <option Value="0xD2" Display="0x0000D2FF"/>
+            <option Value="0xD3" Display="0x0000D3FF"/>
+            <option Value="0xD4" Display="0x0000D4FF"/>
+            <option Value="0xD5" Display="0x0000D5FF"/>
+            <option Value="0xD6" Display="0x0000D6FF"/>
+            <option Value="0xD7" Display="0x0000D7FF"/>
+            <option Value="0xD8" Display="0x0000D8FF"/>
+            <option Value="0xD9" Display="0x0000D9FF"/>
+            <option Value="0xDA" Display="0x0000DAFF"/>
+            <option Value="0xDB" Display="0x0000DBFF"/>
+            <option Value="0xDC" Display="0x0000DCFF"/>
+            <option Value="0xDD" Display="0x0000DDFF"/>
+            <option Value="0xDE" Display="0x0000DEFF"/>
+            <option Value="0xDF" Display="0x0000DFFF"/>
+            <option Value="0xE0" Display="0x0000E0FF"/>
+            <option Value="0xE1" Display="0x0000E1FF"/>
+            <option Value="0xE2" Display="0x0000E2FF"/>
+            <option Value="0xE3" Display="0x0000E3FF"/>
+            <option Value="0xE4" Display="0x0000E4FF"/>
+            <option Value="0xE5" Display="0x0000E5FF"/>
+            <option Value="0xE6" Display="0x0000E6FF"/>
+            <option Value="0xE7" Display="0x0000E7FF"/>
+            <option Value="0xE8" Display="0x0000E8FF"/>
+            <option Value="0xE9" Display="0x0000E9FF"/>
+            <option Value="0xEA" Display="0x0000EAFF"/>
+            <option Value="0xEB" Display="0x0000EBFF"/>
+            <option Value="0xEC" Display="0x0000ECFF"/>
+            <option Value="0xED" Display="0x0000EDFF"/>
+            <option Value="0xEE" Display="0x0000EEFF"/>
+            <option Value="0xEF" Display="0x0000EFFF"/>
+            <option Value="0xF0" Display="0x0000F0FF"/>
+            <option Value="0xF1" Display="0x0000F1FF"/>
+            <option Value="0xF2" Display="0x0000F2FF"/>
+            <option Value="0xF3" Display="0x0000F3FF"/>
+            <option Value="0xF4" Display="0x0000F4FF"/>
+            <option Value="0xF5" Display="0x0000F5FF"/>
+            <option Value="0xF6" Display="0x0000F6FF"/>
+            <option Value="0xF7" Display="0x0000F7FF"/>
+            <option Value="0xF8" Display="0x0000F8FF"/>
+            <option Value="0xF9" Display="0x0000F9FF"/>
+            <option Value="0xFA" Display="0x0000FAFF"/>
+            <option Value="0xFB" Display="0x0000FBFF"/>
+            <option Value="0xFC" Display="0x0000FCFF"/>
+            <option Value="0xFD" Display="0x0000FDFF"/>
+            <option Value="0xFE" Display="0x0000FEFF"/>
+            <option Value="0xFF" Display="0x0000FFFF"/>
+            <option Value="0x100" Display="0x000100FF"/>
+            <option Value="0x101" Display="0x000101FF"/>
+            <option Value="0x102" Display="0x000102FF"/>
+            <option Value="0x103" Display="0x000103FF"/>
+            <option Value="0x104" Display="0x000104FF"/>
+            <option Value="0x105" Display="0x000105FF"/>
+            <option Value="0x106" Display="0x000106FF"/>
+            <option Value="0x107" Display="0x000107FF"/>
+            <option Value="0x108" Display="0x000108FF"/>
+            <option Value="0x109" Display="0x000109FF"/>
+            <option Value="0x10A" Display="0x00010AFF"/>
+            <option Value="0x10B" Display="0x00010BFF"/>
+            <option Value="0x10C" Display="0x00010CFF"/>
+            <option Value="0x10D" Display="0x00010DFF"/>
+            <option Value="0x10E" Display="0x00010EFF"/>
+            <option Value="0x10F" Display="0x00010FFF"/>
+            <option Value="0x110" Display="0x000110FF"/>
+            <option Value="0x111" Display="0x000111FF"/>
+            <option Value="0x112" Display="0x000112FF"/>
+            <option Value="0x113" Display="0x000113FF"/>
+            <option Value="0x114" Display="0x000114FF"/>
+            <option Value="0x115" Display="0x000115FF"/>
+            <option Value="0x116" Display="0x000116FF"/>
+            <option Value="0x117" Display="0x000117FF"/>
+            <option Value="0x118" Display="0x000118FF"/>
+            <option Value="0x119" Display="0x000119FF"/>
+            <option Value="0x11A" Display="0x00011AFF"/>
+            <option Value="0x11B" Display="0x00011BFF"/>
+            <option Value="0x11C" Display="0x00011CFF"/>
+            <option Value="0x11D" Display="0x00011DFF"/>
+            <option Value="0x11E" Display="0x00011EFF"/>
+            <option Value="0x11F" Display="0x00011FFF"/>
+            <option Value="0x120" Display="0x000120FF"/>
+            <option Value="0x121" Display="0x000121FF"/>
+            <option Value="0x122" Display="0x000122FF"/>
+            <option Value="0x123" Display="0x000123FF"/>
+            <option Value="0x124" Display="0x000124FF"/>
+            <option Value="0x125" Display="0x000125FF"/>
+            <option Value="0x126" Display="0x000126FF"/>
+            <option Value="0x127" Display="0x000127FF"/>
+            <option Value="0x128" Display="0x000128FF"/>
+            <option Value="0x129" Display="0x000129FF"/>
+            <option Value="0x12A" Display="0x00012AFF"/>
+            <option Value="0x12B" Display="0x00012BFF"/>
+            <option Value="0x12C" Display="0x00012CFF"/>
+            <option Value="0x12D" Display="0x00012DFF"/>
+            <option Value="0x12E" Display="0x00012EFF"/>
+            <option Value="0x12F" Display="0x00012FFF"/>
+            <option Value="0x130" Display="0x000130FF"/>
+            <option Value="0x131" Display="0x000131FF"/>
+            <option Value="0x132" Display="0x000132FF"/>
+            <option Value="0x133" Display="0x000133FF"/>
+            <option Value="0x134" Display="0x000134FF"/>
+            <option Value="0x135" Display="0x000135FF"/>
+            <option Value="0x136" Display="0x000136FF"/>
+            <option Value="0x137" Display="0x000137FF"/>
+            <option Value="0x138" Display="0x000138FF"/>
+            <option Value="0x139" Display="0x000139FF"/>
+            <option Value="0x13A" Display="0x00013AFF"/>
+            <option Value="0x13B" Display="0x00013BFF"/>
+            <option Value="0x13C" Display="0x00013CFF"/>
+            <option Value="0x13D" Display="0x00013DFF"/>
+            <option Value="0x13E" Display="0x00013EFF"/>
+            <option Value="0x13F" Display="0x00013FFF"/>
+            <option Value="0x140" Display="0x000140FF"/>
+            <option Value="0x141" Display="0x000141FF"/>
+            <option Value="0x142" Display="0x000142FF"/>
+            <option Value="0x143" Display="0x000143FF"/>
+            <option Value="0x144" Display="0x000144FF"/>
+            <option Value="0x145" Display="0x000145FF"/>
+            <option Value="0x146" Display="0x000146FF"/>
+            <option Value="0x147" Display="0x000147FF"/>
+            <option Value="0x148" Display="0x000148FF"/>
+            <option Value="0x149" Display="0x000149FF"/>
+            <option Value="0x14A" Display="0x00014AFF"/>
+            <option Value="0x14B" Display="0x00014BFF"/>
+            <option Value="0x14C" Display="0x00014CFF"/>
+            <option Value="0x14D" Display="0x00014DFF"/>
+            <option Value="0x14E" Display="0x00014EFF"/>
+            <option Value="0x14F" Display="0x00014FFF"/>
+            <option Value="0x150" Display="0x000150FF"/>
+            <option Value="0x151" Display="0x000151FF"/>
+            <option Value="0x152" Display="0x000152FF"/>
+            <option Value="0x153" Display="0x000153FF"/>
+            <option Value="0x154" Display="0x000154FF"/>
+            <option Value="0x155" Display="0x000155FF"/>
+            <option Value="0x156" Display="0x000156FF"/>
+            <option Value="0x157" Display="0x000157FF"/>
+            <option Value="0x158" Display="0x000158FF"/>
+            <option Value="0x159" Display="0x000159FF"/>
+            <option Value="0x15A" Display="0x00015AFF"/>
+            <option Value="0x15B" Display="0x00015BFF"/>
+            <option Value="0x15C" Display="0x00015CFF"/>
+            <option Value="0x15D" Display="0x00015DFF"/>
+            <option Value="0x15E" Display="0x00015EFF"/>
+            <option Value="0x15F" Display="0x00015FFF"/>
+            <option Value="0x160" Display="0x000160FF"/>
+            <option Value="0x161" Display="0x000161FF"/>
+            <option Value="0x162" Display="0x000162FF"/>
+            <option Value="0x163" Display="0x000163FF"/>
+            <option Value="0x164" Display="0x000164FF"/>
+            <option Value="0x165" Display="0x000165FF"/>
+            <option Value="0x166" Display="0x000166FF"/>
+            <option Value="0x167" Display="0x000167FF"/>
+            <option Value="0x168" Display="0x000168FF"/>
+            <option Value="0x169" Display="0x000169FF"/>
+            <option Value="0x16A" Display="0x00016AFF"/>
+            <option Value="0x16B" Display="0x00016BFF"/>
+            <option Value="0x16C" Display="0x00016CFF"/>
+            <option Value="0x16D" Display="0x00016DFF"/>
+            <option Value="0x16E" Display="0x00016EFF"/>
+            <option Value="0x16F" Display="0x00016FFF"/>
+            <option Value="0x170" Display="0x000170FF"/>
+            <option Value="0x171" Display="0x000171FF"/>
+            <option Value="0x172" Display="0x000172FF"/>
+            <option Value="0x173" Display="0x000173FF"/>
+            <option Value="0x174" Display="0x000174FF"/>
+            <option Value="0x175" Display="0x000175FF"/>
+            <option Value="0x176" Display="0x000176FF"/>
+            <option Value="0x177" Display="0x000177FF"/>
+            <option Value="0x178" Display="0x000178FF"/>
+            <option Value="0x179" Display="0x000179FF"/>
+            <option Value="0x17A" Display="0x00017AFF"/>
+            <option Value="0x17B" Display="0x00017BFF"/>
+            <option Value="0x17C" Display="0x00017CFF"/>
+            <option Value="0x17D" Display="0x00017DFF"/>
+            <option Value="0x17E" Display="0x00017EFF"/>
+            <option Value="0x17F" Display="0x00017FFF"/>
+            <option Value="0x180" Display="0x000180FF"/>
+            <option Value="0x181" Display="0x000181FF"/>
+            <option Value="0x182" Display="0x000182FF"/>
+            <option Value="0x183" Display="0x000183FF"/>
+            <option Value="0x184" Display="0x000184FF"/>
+            <option Value="0x185" Display="0x000185FF"/>
+            <option Value="0x186" Display="0x000186FF"/>
+            <option Value="0x187" Display="0x000187FF"/>
+            <option Value="0x188" Display="0x000188FF"/>
+            <option Value="0x189" Display="0x000189FF"/>
+            <option Value="0x18A" Display="0x00018AFF"/>
+            <option Value="0x18B" Display="0x00018BFF"/>
+            <option Value="0x18C" Display="0x00018CFF"/>
+            <option Value="0x18D" Display="0x00018DFF"/>
+            <option Value="0x18E" Display="0x00018EFF"/>
+            <option Value="0x18F" Display="0x00018FFF"/>
+            <option Value="0x190" Display="0x000190FF"/>
+            <option Value="0x191" Display="0x000191FF"/>
+            <option Value="0x192" Display="0x000192FF"/>
+            <option Value="0x193" Display="0x000193FF"/>
+            <option Value="0x194" Display="0x000194FF"/>
+            <option Value="0x195" Display="0x000195FF"/>
+            <option Value="0x196" Display="0x000196FF"/>
+            <option Value="0x197" Display="0x000197FF"/>
+            <option Value="0x198" Display="0x000198FF"/>
+            <option Value="0x199" Display="0x000199FF"/>
+            <option Value="0x19A" Display="0x00019AFF"/>
+            <option Value="0x19B" Display="0x00019BFF"/>
+            <option Value="0x19C" Display="0x00019CFF"/>
+            <option Value="0x19D" Display="0x00019DFF"/>
+            <option Value="0x19E" Display="0x00019EFF"/>
+            <option Value="0x19F" Display="0x00019FFF"/>
+            <option Value="0x1A0" Display="0x0001A0FF"/>
+            <option Value="0x1A1" Display="0x0001A1FF"/>
+            <option Value="0x1A2" Display="0x0001A2FF"/>
+            <option Value="0x1A3" Display="0x0001A3FF"/>
+            <option Value="0x1A4" Display="0x0001A4FF"/>
+            <option Value="0x1A5" Display="0x0001A5FF"/>
+            <option Value="0x1A6" Display="0x0001A6FF"/>
+            <option Value="0x1A7" Display="0x0001A7FF"/>
+            <option Value="0x1A8" Display="0x0001A8FF"/>
+            <option Value="0x1A9" Display="0x0001A9FF"/>
+            <option Value="0x1AA" Display="0x0001AAFF"/>
+            <option Value="0x1AB" Display="0x0001ABFF"/>
+            <option Value="0x1AC" Display="0x0001ACFF"/>
+            <option Value="0x1AD" Display="0x0001ADFF"/>
+            <option Value="0x1AE" Display="0x0001AEFF"/>
+            <option Value="0x1AF" Display="0x0001AFFF"/>
+            <option Value="0x1B0" Display="0x0001B0FF"/>
+            <option Value="0x1B1" Display="0x0001B1FF"/>
+            <option Value="0x1B2" Display="0x0001B2FF"/>
+            <option Value="0x1B3" Display="0x0001B3FF"/>
+            <option Value="0x1B4" Display="0x0001B4FF"/>
+            <option Value="0x1B5" Display="0x0001B5FF"/>
+            <option Value="0x1B6" Display="0x0001B6FF"/>
+            <option Value="0x1B7" Display="0x0001B7FF"/>
+            <option Value="0x1B8" Display="0x0001B8FF"/>
+            <option Value="0x1B9" Display="0x0001B9FF"/>
+            <option Value="0x1BA" Display="0x0001BAFF"/>
+            <option Value="0x1BB" Display="0x0001BBFF"/>
+            <option Value="0x1BC" Display="0x0001BCFF"/>
+            <option Value="0x1BD" Display="0x0001BDFF"/>
+            <option Value="0x1BE" Display="0x0001BEFF"/>
+            <option Value="0x1BF" Display="0x0001BFFF"/>
+            <option Value="0x1C0" Display="0x0001C0FF"/>
+            <option Value="0x1C1" Display="0x0001C1FF"/>
+            <option Value="0x1C2" Display="0x0001C2FF"/>
+            <option Value="0x1C3" Display="0x0001C3FF"/>
+            <option Value="0x1C4" Display="0x0001C4FF"/>
+            <option Value="0x1C5" Display="0x0001C5FF"/>
+            <option Value="0x1C6" Display="0x0001C6FF"/>
+            <option Value="0x1C7" Display="0x0001C7FF"/>
+            <option Value="0x1C8" Display="0x0001C8FF"/>
+            <option Value="0x1C9" Display="0x0001C9FF"/>
+            <option Value="0x1CA" Display="0x0001CAFF"/>
+            <option Value="0x1CB" Display="0x0001CBFF"/>
+            <option Value="0x1CC" Display="0x0001CCFF"/>
+            <option Value="0x1CD" Display="0x0001CDFF"/>
+            <option Value="0x1CE" Display="0x0001CEFF"/>
+            <option Value="0x1CF" Display="0x0001CFFF"/>
+            <option Value="0x1D0" Display="0x0001D0FF"/>
+            <option Value="0x1D1" Display="0x0001D1FF"/>
+            <option Value="0x1D2" Display="0x0001D2FF"/>
+            <option Value="0x1D3" Display="0x0001D3FF"/>
+            <option Value="0x1D4" Display="0x0001D4FF"/>
+            <option Value="0x1D5" Display="0x0001D5FF"/>
+            <option Value="0x1D6" Display="0x0001D6FF"/>
+            <option Value="0x1D7" Display="0x0001D7FF"/>
+            <option Value="0x1D8" Display="0x0001D8FF"/>
+            <option Value="0x1D9" Display="0x0001D9FF"/>
+            <option Value="0x1DA" Display="0x0001DAFF"/>
+            <option Value="0x1DB" Display="0x0001DBFF"/>
+            <option Value="0x1DC" Display="0x0001DCFF"/>
+            <option Value="0x1DD" Display="0x0001DDFF"/>
+            <option Value="0x1DE" Display="0x0001DEFF"/>
+            <option Value="0x1DF" Display="0x0001DFFF"/>
+            <option Value="0x1E0" Display="0x0001E0FF"/>
+            <option Value="0x1E1" Display="0x0001E1FF"/>
+            <option Value="0x1E2" Display="0x0001E2FF"/>
+            <option Value="0x1E3" Display="0x0001E3FF"/>
+            <option Value="0x1E4" Display="0x0001E4FF"/>
+            <option Value="0x1E5" Display="0x0001E5FF"/>
+            <option Value="0x1E6" Display="0x0001E6FF"/>
+            <option Value="0x1E7" Display="0x0001E7FF"/>
+            <option Value="0x1E8" Display="0x0001E8FF"/>
+            <option Value="0x1E9" Display="0x0001E9FF"/>
+            <option Value="0x1EA" Display="0x0001EAFF"/>
+            <option Value="0x1EB" Display="0x0001EBFF"/>
+            <option Value="0x1EC" Display="0x0001ECFF"/>
+            <option Value="0x1ED" Display="0x0001EDFF"/>
+            <option Value="0x1EE" Display="0x0001EEFF"/>
+            <option Value="0x1EF" Display="0x0001EFFF"/>
+            <option Value="0x1F0" Display="0x0001F0FF"/>
+            <option Value="0x1F1" Display="0x0001F1FF"/>
+            <option Value="0x1F2" Display="0x0001F2FF"/>
+            <option Value="0x1F3" Display="0x0001F3FF"/>
+            <option Value="0x1F4" Display="0x0001F4FF"/>
+            <option Value="0x1F5" Display="0x0001F5FF"/>
+            <option Value="0x1F6" Display="0x0001F6FF"/>
+            <option Value="0x1F7" Display="0x0001F7FF"/>
+            <option Value="0x1F8" Display="0x0001F8FF"/>
+            <option Value="0x1F9" Display="0x0001F9FF"/>
+            <option Value="0x1FA" Display="0x0001FAFF"/>
+            <option Value="0x1FB" Display="0x0001FBFF"/>
+            <option Value="0x1FC" Display="0x0001FCFF"/>
+            <option Value="0x1FD" Display="0x0001FDFF"/>
+            <option Value="0x1FE" Display="0x0001FEFF"/>
+            <option Value="0x1FF" Display="0x0001FFFF"/>
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>SECR0</name>
+      <description>Bank0 Secure Memory Region Pages </description>
+      <addressOffset>0x30</addressOffset>
+      <resetValue>0x0000FFFF</resetValue>
+      <fields>
+        <field>
+          <name>SEC_SIZE0</name>
+          <description>Bank0 Secure Memory Region Pages</description>
+          <bitRange>[24:16]</bitRange>
+          <options>
+            <option Value="0x0" Display="0x000000FF" Default="1" />
+            <option Value="0x1" Display="0x000001FF"/>
+            <option Value="0x2" Display="0x000002FF"/>
+            <option Value="0x3" Display="0x000003FF"/>
+            <option Value="0x4" Display="0x000004FF"/>
+            <option Value="0x5" Display="0x000005FF"/>
+            <option Value="0x6" Display="0x000006FF"/>
+            <option Value="0x7" Display="0x000007FF"/>
+            <option Value="0x8" Display="0x000008FF"/>
+            <option Value="0x9" Display="0x000009FF"/>
+            <option Value="0xA" Display="0x00000AFF"/>
+            <option Value="0xB" Display="0x00000BFF"/>
+            <option Value="0xC" Display="0x00000CFF"/>
+            <option Value="0xD" Display="0x00000DFF"/>
+            <option Value="0xE" Display="0x00000EFF"/>
+            <option Value="0xF" Display="0x00000FFF"/>
+            <option Value="0x10" Display="0x000010FF"/>
+            <option Value="0x11" Display="0x000011FF"/>
+            <option Value="0x12" Display="0x000012FF"/>
+            <option Value="0x13" Display="0x000013FF"/>
+            <option Value="0x14" Display="0x000014FF"/>
+            <option Value="0x15" Display="0x000015FF"/>
+            <option Value="0x16" Display="0x000016FF"/>
+            <option Value="0x17" Display="0x000017FF"/>
+            <option Value="0x18" Display="0x000018FF"/>
+            <option Value="0x19" Display="0x000019FF"/>
+            <option Value="0x1A" Display="0x00001AFF"/>
+            <option Value="0x1B" Display="0x00001BFF"/>
+            <option Value="0x1C" Display="0x00001CFF"/>
+            <option Value="0x1D" Display="0x00001DFF"/>
+            <option Value="0x1E" Display="0x00001EFF"/>
+            <option Value="0x1F" Display="0x00001FFF"/>
+            <option Value="0x20" Display="0x000020FF"/>
+            <option Value="0x21" Display="0x000021FF"/>
+            <option Value="0x22" Display="0x000022FF"/>
+            <option Value="0x23" Display="0x000023FF"/>
+            <option Value="0x24" Display="0x000024FF"/>
+            <option Value="0x25" Display="0x000025FF"/>
+            <option Value="0x26" Display="0x000026FF"/>
+            <option Value="0x27" Display="0x000027FF"/>
+            <option Value="0x28" Display="0x000028FF"/>
+            <option Value="0x29" Display="0x000029FF"/>
+            <option Value="0x2A" Display="0x00002AFF"/>
+            <option Value="0x2B" Display="0x00002BFF"/>
+            <option Value="0x2C" Display="0x00002CFF"/>
+            <option Value="0x2D" Display="0x00002DFF"/>
+            <option Value="0x2E" Display="0x00002EFF"/>
+            <option Value="0x2F" Display="0x00002FFF"/>
+            <option Value="0x30" Display="0x000030FF"/>
+            <option Value="0x31" Display="0x000031FF"/>
+            <option Value="0x32" Display="0x000032FF"/>
+            <option Value="0x33" Display="0x000033FF"/>
+            <option Value="0x34" Display="0x000034FF"/>
+            <option Value="0x35" Display="0x000035FF"/>
+            <option Value="0x36" Display="0x000036FF"/>
+            <option Value="0x37" Display="0x000037FF"/>
+            <option Value="0x38" Display="0x000038FF"/>
+            <option Value="0x39" Display="0x000039FF"/>
+            <option Value="0x3A" Display="0x00003AFF"/>
+            <option Value="0x3B" Display="0x00003BFF"/>
+            <option Value="0x3C" Display="0x00003CFF"/>
+            <option Value="0x3D" Display="0x00003DFF"/>
+            <option Value="0x3E" Display="0x00003EFF"/>
+            <option Value="0x3F" Display="0x00003FFF"/>
+            <option Value="0x40" Display="0x000040FF"/>
+            <option Value="0x41" Display="0x000041FF"/>
+            <option Value="0x42" Display="0x000042FF"/>
+            <option Value="0x43" Display="0x000043FF"/>
+            <option Value="0x44" Display="0x000044FF"/>
+            <option Value="0x45" Display="0x000045FF"/>
+            <option Value="0x46" Display="0x000046FF"/>
+            <option Value="0x47" Display="0x000047FF"/>
+            <option Value="0x48" Display="0x000048FF"/>
+            <option Value="0x49" Display="0x000049FF"/>
+            <option Value="0x4A" Display="0x00004AFF"/>
+            <option Value="0x4B" Display="0x00004BFF"/>
+            <option Value="0x4C" Display="0x00004CFF"/>
+            <option Value="0x4D" Display="0x00004DFF"/>
+            <option Value="0x4E" Display="0x00004EFF"/>
+            <option Value="0x4F" Display="0x00004FFF"/>
+            <option Value="0x50" Display="0x000050FF"/>
+            <option Value="0x51" Display="0x000051FF"/>
+            <option Value="0x52" Display="0x000052FF"/>
+            <option Value="0x53" Display="0x000053FF"/>
+            <option Value="0x54" Display="0x000054FF"/>
+            <option Value="0x55" Display="0x000055FF"/>
+            <option Value="0x56" Display="0x000056FF"/>
+            <option Value="0x57" Display="0x000057FF"/>
+            <option Value="0x58" Display="0x000058FF"/>
+            <option Value="0x59" Display="0x000059FF"/>
+            <option Value="0x5A" Display="0x00005AFF"/>
+            <option Value="0x5B" Display="0x00005BFF"/>
+            <option Value="0x5C" Display="0x00005CFF"/>
+            <option Value="0x5D" Display="0x00005DFF"/>
+            <option Value="0x5E" Display="0x00005EFF"/>
+            <option Value="0x5F" Display="0x00005FFF"/>
+            <option Value="0x60" Display="0x000060FF"/>
+            <option Value="0x61" Display="0x000061FF"/>
+            <option Value="0x62" Display="0x000062FF"/>
+            <option Value="0x63" Display="0x000063FF"/>
+            <option Value="0x64" Display="0x000064FF"/>
+            <option Value="0x65" Display="0x000065FF"/>
+            <option Value="0x66" Display="0x000066FF"/>
+            <option Value="0x67" Display="0x000067FF"/>
+            <option Value="0x68" Display="0x000068FF"/>
+            <option Value="0x69" Display="0x000069FF"/>
+            <option Value="0x6A" Display="0x00006AFF"/>
+            <option Value="0x6B" Display="0x00006BFF"/>
+            <option Value="0x6C" Display="0x00006CFF"/>
+            <option Value="0x6D" Display="0x00006DFF"/>
+            <option Value="0x6E" Display="0x00006EFF"/>
+            <option Value="0x6F" Display="0x00006FFF"/>
+            <option Value="0x70" Display="0x000070FF"/>
+            <option Value="0x71" Display="0x000071FF"/>
+            <option Value="0x72" Display="0x000072FF"/>
+            <option Value="0x73" Display="0x000073FF"/>
+            <option Value="0x74" Display="0x000074FF"/>
+            <option Value="0x75" Display="0x000075FF"/>
+            <option Value="0x76" Display="0x000076FF"/>
+            <option Value="0x77" Display="0x000077FF"/>
+            <option Value="0x78" Display="0x000078FF"/>
+            <option Value="0x79" Display="0x000079FF"/>
+            <option Value="0x7A" Display="0x00007AFF"/>
+            <option Value="0x7B" Display="0x00007BFF"/>
+            <option Value="0x7C" Display="0x00007CFF"/>
+            <option Value="0x7D" Display="0x00007DFF"/>
+            <option Value="0x7E" Display="0x00007EFF"/>
+            <option Value="0x7F" Display="0x00007FFF"/>
+            <option Value="0x80" Display="0x000080FF"/>
+            <option Value="0x81" Display="0x000081FF"/>
+            <option Value="0x82" Display="0x000082FF"/>
+            <option Value="0x83" Display="0x000083FF"/>
+            <option Value="0x84" Display="0x000084FF"/>
+            <option Value="0x85" Display="0x000085FF"/>
+            <option Value="0x86" Display="0x000086FF"/>
+            <option Value="0x87" Display="0x000087FF"/>
+            <option Value="0x88" Display="0x000088FF"/>
+            <option Value="0x89" Display="0x000089FF"/>
+            <option Value="0x8A" Display="0x00008AFF"/>
+            <option Value="0x8B" Display="0x00008BFF"/>
+            <option Value="0x8C" Display="0x00008CFF"/>
+            <option Value="0x8D" Display="0x00008DFF"/>
+            <option Value="0x8E" Display="0x00008EFF"/>
+            <option Value="0x8F" Display="0x00008FFF"/>
+            <option Value="0x90" Display="0x000090FF"/>
+            <option Value="0x91" Display="0x000091FF"/>
+            <option Value="0x92" Display="0x000092FF"/>
+            <option Value="0x93" Display="0x000093FF"/>
+            <option Value="0x94" Display="0x000094FF"/>
+            <option Value="0x95" Display="0x000095FF"/>
+            <option Value="0x96" Display="0x000096FF"/>
+            <option Value="0x97" Display="0x000097FF"/>
+            <option Value="0x98" Display="0x000098FF"/>
+            <option Value="0x99" Display="0x000099FF"/>
+            <option Value="0x9A" Display="0x00009AFF"/>
+            <option Value="0x9B" Display="0x00009BFF"/>
+            <option Value="0x9C" Display="0x00009CFF"/>
+            <option Value="0x9D" Display="0x00009DFF"/>
+            <option Value="0x9E" Display="0x00009EFF"/>
+            <option Value="0x9F" Display="0x00009FFF"/>
+            <option Value="0xA0" Display="0x0000A0FF"/>
+            <option Value="0xA1" Display="0x0000A1FF"/>
+            <option Value="0xA2" Display="0x0000A2FF"/>
+            <option Value="0xA3" Display="0x0000A3FF"/>
+            <option Value="0xA4" Display="0x0000A4FF"/>
+            <option Value="0xA5" Display="0x0000A5FF"/>
+            <option Value="0xA6" Display="0x0000A6FF"/>
+            <option Value="0xA7" Display="0x0000A7FF"/>
+            <option Value="0xA8" Display="0x0000A8FF"/>
+            <option Value="0xA9" Display="0x0000A9FF"/>
+            <option Value="0xAA" Display="0x0000AAFF"/>
+            <option Value="0xAB" Display="0x0000ABFF"/>
+            <option Value="0xAC" Display="0x0000ACFF"/>
+            <option Value="0xAD" Display="0x0000ADFF"/>
+            <option Value="0xAE" Display="0x0000AEFF"/>
+            <option Value="0xAF" Display="0x0000AFFF"/>
+            <option Value="0xB0" Display="0x0000B0FF"/>
+            <option Value="0xB1" Display="0x0000B1FF"/>
+            <option Value="0xB2" Display="0x0000B2FF"/>
+            <option Value="0xB3" Display="0x0000B3FF"/>
+            <option Value="0xB4" Display="0x0000B4FF"/>
+            <option Value="0xB5" Display="0x0000B5FF"/>
+            <option Value="0xB6" Display="0x0000B6FF"/>
+            <option Value="0xB7" Display="0x0000B7FF"/>
+            <option Value="0xB8" Display="0x0000B8FF"/>
+            <option Value="0xB9" Display="0x0000B9FF"/>
+            <option Value="0xBA" Display="0x0000BAFF"/>
+            <option Value="0xBB" Display="0x0000BBFF"/>
+            <option Value="0xBC" Display="0x0000BCFF"/>
+            <option Value="0xBD" Display="0x0000BDFF"/>
+            <option Value="0xBE" Display="0x0000BEFF"/>
+            <option Value="0xBF" Display="0x0000BFFF"/>
+            <option Value="0xC0" Display="0x0000C0FF"/>
+            <option Value="0xC1" Display="0x0000C1FF"/>
+            <option Value="0xC2" Display="0x0000C2FF"/>
+            <option Value="0xC3" Display="0x0000C3FF"/>
+            <option Value="0xC4" Display="0x0000C4FF"/>
+            <option Value="0xC5" Display="0x0000C5FF"/>
+            <option Value="0xC6" Display="0x0000C6FF"/>
+            <option Value="0xC7" Display="0x0000C7FF"/>
+            <option Value="0xC8" Display="0x0000C8FF"/>
+            <option Value="0xC9" Display="0x0000C9FF"/>
+            <option Value="0xCA" Display="0x0000CAFF"/>
+            <option Value="0xCB" Display="0x0000CBFF"/>
+            <option Value="0xCC" Display="0x0000CCFF"/>
+            <option Value="0xCD" Display="0x0000CDFF"/>
+            <option Value="0xCE" Display="0x0000CEFF"/>
+            <option Value="0xCF" Display="0x0000CFFF"/>
+            <option Value="0xD0" Display="0x0000D0FF"/>
+            <option Value="0xD1" Display="0x0000D1FF"/>
+            <option Value="0xD2" Display="0x0000D2FF"/>
+            <option Value="0xD3" Display="0x0000D3FF"/>
+            <option Value="0xD4" Display="0x0000D4FF"/>
+            <option Value="0xD5" Display="0x0000D5FF"/>
+            <option Value="0xD6" Display="0x0000D6FF"/>
+            <option Value="0xD7" Display="0x0000D7FF"/>
+            <option Value="0xD8" Display="0x0000D8FF"/>
+            <option Value="0xD9" Display="0x0000D9FF"/>
+            <option Value="0xDA" Display="0x0000DAFF"/>
+            <option Value="0xDB" Display="0x0000DBFF"/>
+            <option Value="0xDC" Display="0x0000DCFF"/>
+            <option Value="0xDD" Display="0x0000DDFF"/>
+            <option Value="0xDE" Display="0x0000DEFF"/>
+            <option Value="0xDF" Display="0x0000DFFF"/>
+            <option Value="0xE0" Display="0x0000E0FF"/>
+            <option Value="0xE1" Display="0x0000E1FF"/>
+            <option Value="0xE2" Display="0x0000E2FF"/>
+            <option Value="0xE3" Display="0x0000E3FF"/>
+            <option Value="0xE4" Display="0x0000E4FF"/>
+            <option Value="0xE5" Display="0x0000E5FF"/>
+            <option Value="0xE6" Display="0x0000E6FF"/>
+            <option Value="0xE7" Display="0x0000E7FF"/>
+            <option Value="0xE8" Display="0x0000E8FF"/>
+            <option Value="0xE9" Display="0x0000E9FF"/>
+            <option Value="0xEA" Display="0x0000EAFF"/>
+            <option Value="0xEB" Display="0x0000EBFF"/>
+            <option Value="0xEC" Display="0x0000ECFF"/>
+            <option Value="0xED" Display="0x0000EDFF"/>
+            <option Value="0xEE" Display="0x0000EEFF"/>
+            <option Value="0xEF" Display="0x0000EFFF"/>
+            <option Value="0xF0" Display="0x0000F0FF"/>
+            <option Value="0xF1" Display="0x0000F1FF"/>
+            <option Value="0xF2" Display="0x0000F2FF"/>
+            <option Value="0xF3" Display="0x0000F3FF"/>
+            <option Value="0xF4" Display="0x0000F4FF"/>
+            <option Value="0xF5" Display="0x0000F5FF"/>
+            <option Value="0xF6" Display="0x0000F6FF"/>
+            <option Value="0xF7" Display="0x0000F7FF"/>
+            <option Value="0xF8" Display="0x0000F8FF"/>
+            <option Value="0xF9" Display="0x0000F9FF"/>
+            <option Value="0xFA" Display="0x0000FAFF"/>
+            <option Value="0xFB" Display="0x0000FBFF"/>
+            <option Value="0xFC" Display="0x0000FCFF"/>
+            <option Value="0xFD" Display="0x0000FDFF"/>
+            <option Value="0xFE" Display="0x0000FEFF"/>
+            <option Value="0xFF" Display="0x0000FFFF"/>
+            <option Value="0x100" Display="0x000100FF"/>
+            <option Value="0x101" Display="0x000101FF"/>
+            <option Value="0x102" Display="0x000102FF"/>
+            <option Value="0x103" Display="0x000103FF"/>
+            <option Value="0x104" Display="0x000104FF"/>
+            <option Value="0x105" Display="0x000105FF"/>
+            <option Value="0x106" Display="0x000106FF"/>
+            <option Value="0x107" Display="0x000107FF"/>
+            <option Value="0x108" Display="0x000108FF"/>
+            <option Value="0x109" Display="0x000109FF"/>
+            <option Value="0x10A" Display="0x00010AFF"/>
+            <option Value="0x10B" Display="0x00010BFF"/>
+            <option Value="0x10C" Display="0x00010CFF"/>
+            <option Value="0x10D" Display="0x00010DFF"/>
+            <option Value="0x10E" Display="0x00010EFF"/>
+            <option Value="0x10F" Display="0x00010FFF"/>
+            <option Value="0x110" Display="0x000110FF"/>
+            <option Value="0x111" Display="0x000111FF"/>
+            <option Value="0x112" Display="0x000112FF"/>
+            <option Value="0x113" Display="0x000113FF"/>
+            <option Value="0x114" Display="0x000114FF"/>
+            <option Value="0x115" Display="0x000115FF"/>
+            <option Value="0x116" Display="0x000116FF"/>
+            <option Value="0x117" Display="0x000117FF"/>
+            <option Value="0x118" Display="0x000118FF"/>
+            <option Value="0x119" Display="0x000119FF"/>
+            <option Value="0x11A" Display="0x00011AFF"/>
+            <option Value="0x11B" Display="0x00011BFF"/>
+            <option Value="0x11C" Display="0x00011CFF"/>
+            <option Value="0x11D" Display="0x00011DFF"/>
+            <option Value="0x11E" Display="0x00011EFF"/>
+            <option Value="0x11F" Display="0x00011FFF"/>
+            <option Value="0x120" Display="0x000120FF"/>
+            <option Value="0x121" Display="0x000121FF"/>
+            <option Value="0x122" Display="0x000122FF"/>
+            <option Value="0x123" Display="0x000123FF"/>
+            <option Value="0x124" Display="0x000124FF"/>
+            <option Value="0x125" Display="0x000125FF"/>
+            <option Value="0x126" Display="0x000126FF"/>
+            <option Value="0x127" Display="0x000127FF"/>
+            <option Value="0x128" Display="0x000128FF"/>
+            <option Value="0x129" Display="0x000129FF"/>
+            <option Value="0x12A" Display="0x00012AFF"/>
+            <option Value="0x12B" Display="0x00012BFF"/>
+            <option Value="0x12C" Display="0x00012CFF"/>
+            <option Value="0x12D" Display="0x00012DFF"/>
+            <option Value="0x12E" Display="0x00012EFF"/>
+            <option Value="0x12F" Display="0x00012FFF"/>
+            <option Value="0x130" Display="0x000130FF"/>
+            <option Value="0x131" Display="0x000131FF"/>
+            <option Value="0x132" Display="0x000132FF"/>
+            <option Value="0x133" Display="0x000133FF"/>
+            <option Value="0x134" Display="0x000134FF"/>
+            <option Value="0x135" Display="0x000135FF"/>
+            <option Value="0x136" Display="0x000136FF"/>
+            <option Value="0x137" Display="0x000137FF"/>
+            <option Value="0x138" Display="0x000138FF"/>
+            <option Value="0x139" Display="0x000139FF"/>
+            <option Value="0x13A" Display="0x00013AFF"/>
+            <option Value="0x13B" Display="0x00013BFF"/>
+            <option Value="0x13C" Display="0x00013CFF"/>
+            <option Value="0x13D" Display="0x00013DFF"/>
+            <option Value="0x13E" Display="0x00013EFF"/>
+            <option Value="0x13F" Display="0x00013FFF"/>
+            <option Value="0x140" Display="0x000140FF"/>
+            <option Value="0x141" Display="0x000141FF"/>
+            <option Value="0x142" Display="0x000142FF"/>
+            <option Value="0x143" Display="0x000143FF"/>
+            <option Value="0x144" Display="0x000144FF"/>
+            <option Value="0x145" Display="0x000145FF"/>
+            <option Value="0x146" Display="0x000146FF"/>
+            <option Value="0x147" Display="0x000147FF"/>
+            <option Value="0x148" Display="0x000148FF"/>
+            <option Value="0x149" Display="0x000149FF"/>
+            <option Value="0x14A" Display="0x00014AFF"/>
+            <option Value="0x14B" Display="0x00014BFF"/>
+            <option Value="0x14C" Display="0x00014CFF"/>
+            <option Value="0x14D" Display="0x00014DFF"/>
+            <option Value="0x14E" Display="0x00014EFF"/>
+            <option Value="0x14F" Display="0x00014FFF"/>
+            <option Value="0x150" Display="0x000150FF"/>
+            <option Value="0x151" Display="0x000151FF"/>
+            <option Value="0x152" Display="0x000152FF"/>
+            <option Value="0x153" Display="0x000153FF"/>
+            <option Value="0x154" Display="0x000154FF"/>
+            <option Value="0x155" Display="0x000155FF"/>
+            <option Value="0x156" Display="0x000156FF"/>
+            <option Value="0x157" Display="0x000157FF"/>
+            <option Value="0x158" Display="0x000158FF"/>
+            <option Value="0x159" Display="0x000159FF"/>
+            <option Value="0x15A" Display="0x00015AFF"/>
+            <option Value="0x15B" Display="0x00015BFF"/>
+            <option Value="0x15C" Display="0x00015CFF"/>
+            <option Value="0x15D" Display="0x00015DFF"/>
+            <option Value="0x15E" Display="0x00015EFF"/>
+            <option Value="0x15F" Display="0x00015FFF"/>
+            <option Value="0x160" Display="0x000160FF"/>
+            <option Value="0x161" Display="0x000161FF"/>
+            <option Value="0x162" Display="0x000162FF"/>
+            <option Value="0x163" Display="0x000163FF"/>
+            <option Value="0x164" Display="0x000164FF"/>
+            <option Value="0x165" Display="0x000165FF"/>
+            <option Value="0x166" Display="0x000166FF"/>
+            <option Value="0x167" Display="0x000167FF"/>
+            <option Value="0x168" Display="0x000168FF"/>
+            <option Value="0x169" Display="0x000169FF"/>
+            <option Value="0x16A" Display="0x00016AFF"/>
+            <option Value="0x16B" Display="0x00016BFF"/>
+            <option Value="0x16C" Display="0x00016CFF"/>
+            <option Value="0x16D" Display="0x00016DFF"/>
+            <option Value="0x16E" Display="0x00016EFF"/>
+            <option Value="0x16F" Display="0x00016FFF"/>
+            <option Value="0x170" Display="0x000170FF"/>
+            <option Value="0x171" Display="0x000171FF"/>
+            <option Value="0x172" Display="0x000172FF"/>
+            <option Value="0x173" Display="0x000173FF"/>
+            <option Value="0x174" Display="0x000174FF"/>
+            <option Value="0x175" Display="0x000175FF"/>
+            <option Value="0x176" Display="0x000176FF"/>
+            <option Value="0x177" Display="0x000177FF"/>
+            <option Value="0x178" Display="0x000178FF"/>
+            <option Value="0x179" Display="0x000179FF"/>
+            <option Value="0x17A" Display="0x00017AFF"/>
+            <option Value="0x17B" Display="0x00017BFF"/>
+            <option Value="0x17C" Display="0x00017CFF"/>
+            <option Value="0x17D" Display="0x00017DFF"/>
+            <option Value="0x17E" Display="0x00017EFF"/>
+            <option Value="0x17F" Display="0x00017FFF"/>
+            <option Value="0x180" Display="0x000180FF"/>
+            <option Value="0x181" Display="0x000181FF"/>
+            <option Value="0x182" Display="0x000182FF"/>
+            <option Value="0x183" Display="0x000183FF"/>
+            <option Value="0x184" Display="0x000184FF"/>
+            <option Value="0x185" Display="0x000185FF"/>
+            <option Value="0x186" Display="0x000186FF"/>
+            <option Value="0x187" Display="0x000187FF"/>
+            <option Value="0x188" Display="0x000188FF"/>
+            <option Value="0x189" Display="0x000189FF"/>
+            <option Value="0x18A" Display="0x00018AFF"/>
+            <option Value="0x18B" Display="0x00018BFF"/>
+            <option Value="0x18C" Display="0x00018CFF"/>
+            <option Value="0x18D" Display="0x00018DFF"/>
+            <option Value="0x18E" Display="0x00018EFF"/>
+            <option Value="0x18F" Display="0x00018FFF"/>
+            <option Value="0x190" Display="0x000190FF"/>
+            <option Value="0x191" Display="0x000191FF"/>
+            <option Value="0x192" Display="0x000192FF"/>
+            <option Value="0x193" Display="0x000193FF"/>
+            <option Value="0x194" Display="0x000194FF"/>
+            <option Value="0x195" Display="0x000195FF"/>
+            <option Value="0x196" Display="0x000196FF"/>
+            <option Value="0x197" Display="0x000197FF"/>
+            <option Value="0x198" Display="0x000198FF"/>
+            <option Value="0x199" Display="0x000199FF"/>
+            <option Value="0x19A" Display="0x00019AFF"/>
+            <option Value="0x19B" Display="0x00019BFF"/>
+            <option Value="0x19C" Display="0x00019CFF"/>
+            <option Value="0x19D" Display="0x00019DFF"/>
+            <option Value="0x19E" Display="0x00019EFF"/>
+            <option Value="0x19F" Display="0x00019FFF"/>
+            <option Value="0x1A0" Display="0x0001A0FF"/>
+            <option Value="0x1A1" Display="0x0001A1FF"/>
+            <option Value="0x1A2" Display="0x0001A2FF"/>
+            <option Value="0x1A3" Display="0x0001A3FF"/>
+            <option Value="0x1A4" Display="0x0001A4FF"/>
+            <option Value="0x1A5" Display="0x0001A5FF"/>
+            <option Value="0x1A6" Display="0x0001A6FF"/>
+            <option Value="0x1A7" Display="0x0001A7FF"/>
+            <option Value="0x1A8" Display="0x0001A8FF"/>
+            <option Value="0x1A9" Display="0x0001A9FF"/>
+            <option Value="0x1AA" Display="0x0001AAFF"/>
+            <option Value="0x1AB" Display="0x0001ABFF"/>
+            <option Value="0x1AC" Display="0x0001ACFF"/>
+            <option Value="0x1AD" Display="0x0001ADFF"/>
+            <option Value="0x1AE" Display="0x0001AEFF"/>
+            <option Value="0x1AF" Display="0x0001AFFF"/>
+            <option Value="0x1B0" Display="0x0001B0FF"/>
+            <option Value="0x1B1" Display="0x0001B1FF"/>
+            <option Value="0x1B2" Display="0x0001B2FF"/>
+            <option Value="0x1B3" Display="0x0001B3FF"/>
+            <option Value="0x1B4" Display="0x0001B4FF"/>
+            <option Value="0x1B5" Display="0x0001B5FF"/>
+            <option Value="0x1B6" Display="0x0001B6FF"/>
+            <option Value="0x1B7" Display="0x0001B7FF"/>
+            <option Value="0x1B8" Display="0x0001B8FF"/>
+            <option Value="0x1B9" Display="0x0001B9FF"/>
+            <option Value="0x1BA" Display="0x0001BAFF"/>
+            <option Value="0x1BB" Display="0x0001BBFF"/>
+            <option Value="0x1BC" Display="0x0001BCFF"/>
+            <option Value="0x1BD" Display="0x0001BDFF"/>
+            <option Value="0x1BE" Display="0x0001BEFF"/>
+            <option Value="0x1BF" Display="0x0001BFFF"/>
+            <option Value="0x1C0" Display="0x0001C0FF"/>
+            <option Value="0x1C1" Display="0x0001C1FF"/>
+            <option Value="0x1C2" Display="0x0001C2FF"/>
+            <option Value="0x1C3" Display="0x0001C3FF"/>
+            <option Value="0x1C4" Display="0x0001C4FF"/>
+            <option Value="0x1C5" Display="0x0001C5FF"/>
+            <option Value="0x1C6" Display="0x0001C6FF"/>
+            <option Value="0x1C7" Display="0x0001C7FF"/>
+            <option Value="0x1C8" Display="0x0001C8FF"/>
+            <option Value="0x1C9" Display="0x0001C9FF"/>
+            <option Value="0x1CA" Display="0x0001CAFF"/>
+            <option Value="0x1CB" Display="0x0001CBFF"/>
+            <option Value="0x1CC" Display="0x0001CCFF"/>
+            <option Value="0x1CD" Display="0x0001CDFF"/>
+            <option Value="0x1CE" Display="0x0001CEFF"/>
+            <option Value="0x1CF" Display="0x0001CFFF"/>
+            <option Value="0x1D0" Display="0x0001D0FF"/>
+            <option Value="0x1D1" Display="0x0001D1FF"/>
+            <option Value="0x1D2" Display="0x0001D2FF"/>
+            <option Value="0x1D3" Display="0x0001D3FF"/>
+            <option Value="0x1D4" Display="0x0001D4FF"/>
+            <option Value="0x1D5" Display="0x0001D5FF"/>
+            <option Value="0x1D6" Display="0x0001D6FF"/>
+            <option Value="0x1D7" Display="0x0001D7FF"/>
+            <option Value="0x1D8" Display="0x0001D8FF"/>
+            <option Value="0x1D9" Display="0x0001D9FF"/>
+            <option Value="0x1DA" Display="0x0001DAFF"/>
+            <option Value="0x1DB" Display="0x0001DBFF"/>
+            <option Value="0x1DC" Display="0x0001DCFF"/>
+            <option Value="0x1DD" Display="0x0001DDFF"/>
+            <option Value="0x1DE" Display="0x0001DEFF"/>
+            <option Value="0x1DF" Display="0x0001DFFF"/>
+            <option Value="0x1E0" Display="0x0001E0FF"/>
+            <option Value="0x1E1" Display="0x0001E1FF"/>
+            <option Value="0x1E2" Display="0x0001E2FF"/>
+            <option Value="0x1E3" Display="0x0001E3FF"/>
+            <option Value="0x1E4" Display="0x0001E4FF"/>
+            <option Value="0x1E5" Display="0x0001E5FF"/>
+            <option Value="0x1E6" Display="0x0001E6FF"/>
+            <option Value="0x1E7" Display="0x0001E7FF"/>
+            <option Value="0x1E8" Display="0x0001E8FF"/>
+            <option Value="0x1E9" Display="0x0001E9FF"/>
+            <option Value="0x1EA" Display="0x0001EAFF"/>
+            <option Value="0x1EB" Display="0x0001EBFF"/>
+            <option Value="0x1EC" Display="0x0001ECFF"/>
+            <option Value="0x1ED" Display="0x0001EDFF"/>
+            <option Value="0x1EE" Display="0x0001EEFF"/>
+            <option Value="0x1EF" Display="0x0001EFFF"/>
+            <option Value="0x1F0" Display="0x0001F0FF"/>
+            <option Value="0x1F1" Display="0x0001F1FF"/>
+            <option Value="0x1F2" Display="0x0001F2FF"/>
+            <option Value="0x1F3" Display="0x0001F3FF"/>
+            <option Value="0x1F4" Display="0x0001F4FF"/>
+            <option Value="0x1F5" Display="0x0001F5FF"/>
+            <option Value="0x1F6" Display="0x0001F6FF"/>
+            <option Value="0x1F7" Display="0x0001F7FF"/>
+            <option Value="0x1F8" Display="0x0001F8FF"/>
+            <option Value="0x1F9" Display="0x0001F9FF"/>
+            <option Value="0x1FA" Display="0x0001FAFF"/>
+            <option Value="0x1FB" Display="0x0001FBFF"/>
+            <option Value="0x1FC" Display="0x0001FCFF"/>
+            <option Value="0x1FD" Display="0x0001FDFF"/>
+            <option Value="0x1FE" Display="0x0001FEFF"/>
+            <option Value="0x1FF" Display="0x0001FFFF"/>
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>WRPR1</name>
+      <description>Bank1 Write Protection</description>
+      <addressOffset>0x34</addressOffset>
+      <resetValue>0x0000FFFF</resetValue>
+      <fields>
+        <field>
+          <name>WRP0</name>
+          <description>Write protection for 0x00000000 ~ 0x00001FFF</description>
+          <bitRange>[0:0]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP1</name>
+          <description>Write protection for 0x00002000 ~ 0x00003FFF</description>
+          <bitRange>[1:1]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP2</name>
+          <description>Write protection for 0x00004000 ~ 0x00005FFF</description>
+          <bitRange>[2:2]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP3</name>
+          <description>Write protection for 0x00006000 ~ 0x00007FFF</description>
+          <bitRange>[3:3]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP4</name>
+          <description>Write protection for 0x00008000 ~ 0x00009FFF</description>
+          <bitRange>[4:4]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP5</name>
+          <description>Write protection for 0x0000A000 ~ 0x0000BFFF</description>
+          <bitRange>[5:5]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP6</name>
+          <description>Write protection for 0x0000C000 ~ 0x0000DFFF</description>
+          <bitRange>[6:6]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP7</name>
+          <description>Write protection for 0x0000E000 ~ 0x0000FFFF</description>
+          <bitRange>[7:7]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP8</name>
+          <description>Write protection for 0x00010000 ~ 0x00011FFF</description>
+          <bitRange>[8:8]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP9</name>
+          <description>Write protection for 0x00012000 ~ 0x00013FFF</description>
+          <bitRange>[9:9]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP10</name>
+          <description>Write protection for 0x00014000 ~ 0x00015FFF</description>
+          <bitRange>[10:10]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP11</name>
+          <description>Write protection for 0x00016000 ~ 0x00017FFF</description>
+          <bitRange>[11:11]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP12</name>
+          <description>Write protection for 0x00018000 ~ 0x00019FFF</description>
+          <bitRange>[12:12]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP13</name>
+          <description>Write protection for 0x0001A000 ~ 0x0001BFFF</description>
+          <bitRange>[13:13]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP14</name>
+          <description>Write protection for 0x0001C000 ~ 0x0001DFFF</description>
+          <bitRange>[14:14]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>WRP15</name>
+          <description>Write protection for 0x0001E000 ~ 0x0001FFFF</description>
+          <bitRange>[15:15]</bitRange>
+          <options>
+            <option Value="0" Display="write protection enable" />
+            <option Value="1" Display="write protection disable" Default="1" />
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>PCROPR1</name>
+      <description>Bank1 Private Code Read Out Protection</description>
+      <addressOffset>0x38</addressOffset>
+      <resetValue>0x0000FFFF</resetValue>
+      <fields>
+        <field>
+          <name>PCROP1SR</name>
+          <description>Bank1 private code read out protection start address</description>
+          <bitRange>[8:0]</bitRange>
+          <options>
+            <option Value="0x0" Display="0x00000000"/>
+            <option Value="0x1" Display="0x00000100"/>
+            <option Value="0x2" Display="0x00000200"/>
+            <option Value="0x3" Display="0x00000300"/>
+            <option Value="0x4" Display="0x00000400"/>
+            <option Value="0x5" Display="0x00000500"/>
+            <option Value="0x6" Display="0x00000600"/>
+            <option Value="0x7" Display="0x00000700"/>
+            <option Value="0x8" Display="0x00000800"/>
+            <option Value="0x9" Display="0x00000900"/>
+            <option Value="0xA" Display="0x00000A00"/>
+            <option Value="0xB" Display="0x00000B00"/>
+            <option Value="0xC" Display="0x00000C00"/>
+            <option Value="0xD" Display="0x00000D00"/>
+            <option Value="0xE" Display="0x00000E00"/>
+            <option Value="0xF" Display="0x00000F00"/>
+            <option Value="0x10" Display="0x00001000"/>
+            <option Value="0x11" Display="0x00001100"/>
+            <option Value="0x12" Display="0x00001200"/>
+            <option Value="0x13" Display="0x00001300"/>
+            <option Value="0x14" Display="0x00001400"/>
+            <option Value="0x15" Display="0x00001500"/>
+            <option Value="0x16" Display="0x00001600"/>
+            <option Value="0x17" Display="0x00001700"/>
+            <option Value="0x18" Display="0x00001800"/>
+            <option Value="0x19" Display="0x00001900"/>
+            <option Value="0x1A" Display="0x00001A00"/>
+            <option Value="0x1B" Display="0x00001B00"/>
+            <option Value="0x1C" Display="0x00001C00"/>
+            <option Value="0x1D" Display="0x00001D00"/>
+            <option Value="0x1E" Display="0x00001E00"/>
+            <option Value="0x1F" Display="0x00001F00"/>
+            <option Value="0x20" Display="0x00002000"/>
+            <option Value="0x21" Display="0x00002100"/>
+            <option Value="0x22" Display="0x00002200"/>
+            <option Value="0x23" Display="0x00002300"/>
+            <option Value="0x24" Display="0x00002400"/>
+            <option Value="0x25" Display="0x00002500"/>
+            <option Value="0x26" Display="0x00002600"/>
+            <option Value="0x27" Display="0x00002700"/>
+            <option Value="0x28" Display="0x00002800"/>
+            <option Value="0x29" Display="0x00002900"/>
+            <option Value="0x2A" Display="0x00002A00"/>
+            <option Value="0x2B" Display="0x00002B00"/>
+            <option Value="0x2C" Display="0x00002C00"/>
+            <option Value="0x2D" Display="0x00002D00"/>
+            <option Value="0x2E" Display="0x00002E00"/>
+            <option Value="0x2F" Display="0x00002F00"/>
+            <option Value="0x30" Display="0x00003000"/>
+            <option Value="0x31" Display="0x00003100"/>
+            <option Value="0x32" Display="0x00003200"/>
+            <option Value="0x33" Display="0x00003300"/>
+            <option Value="0x34" Display="0x00003400"/>
+            <option Value="0x35" Display="0x00003500"/>
+            <option Value="0x36" Display="0x00003600"/>
+            <option Value="0x37" Display="0x00003700"/>
+            <option Value="0x38" Display="0x00003800"/>
+            <option Value="0x39" Display="0x00003900"/>
+            <option Value="0x3A" Display="0x00003A00"/>
+            <option Value="0x3B" Display="0x00003B00"/>
+            <option Value="0x3C" Display="0x00003C00"/>
+            <option Value="0x3D" Display="0x00003D00"/>
+            <option Value="0x3E" Display="0x00003E00"/>
+            <option Value="0x3F" Display="0x00003F00"/>
+            <option Value="0x40" Display="0x00004000"/>
+            <option Value="0x41" Display="0x00004100"/>
+            <option Value="0x42" Display="0x00004200"/>
+            <option Value="0x43" Display="0x00004300"/>
+            <option Value="0x44" Display="0x00004400"/>
+            <option Value="0x45" Display="0x00004500"/>
+            <option Value="0x46" Display="0x00004600"/>
+            <option Value="0x47" Display="0x00004700"/>
+            <option Value="0x48" Display="0x00004800"/>
+            <option Value="0x49" Display="0x00004900"/>
+            <option Value="0x4A" Display="0x00004A00"/>
+            <option Value="0x4B" Display="0x00004B00"/>
+            <option Value="0x4C" Display="0x00004C00"/>
+            <option Value="0x4D" Display="0x00004D00"/>
+            <option Value="0x4E" Display="0x00004E00"/>
+            <option Value="0x4F" Display="0x00004F00"/>
+            <option Value="0x50" Display="0x00005000"/>
+            <option Value="0x51" Display="0x00005100"/>
+            <option Value="0x52" Display="0x00005200"/>
+            <option Value="0x53" Display="0x00005300"/>
+            <option Value="0x54" Display="0x00005400"/>
+            <option Value="0x55" Display="0x00005500"/>
+            <option Value="0x56" Display="0x00005600"/>
+            <option Value="0x57" Display="0x00005700"/>
+            <option Value="0x58" Display="0x00005800"/>
+            <option Value="0x59" Display="0x00005900"/>
+            <option Value="0x5A" Display="0x00005A00"/>
+            <option Value="0x5B" Display="0x00005B00"/>
+            <option Value="0x5C" Display="0x00005C00"/>
+            <option Value="0x5D" Display="0x00005D00"/>
+            <option Value="0x5E" Display="0x00005E00"/>
+            <option Value="0x5F" Display="0x00005F00"/>
+            <option Value="0x60" Display="0x00006000"/>
+            <option Value="0x61" Display="0x00006100"/>
+            <option Value="0x62" Display="0x00006200"/>
+            <option Value="0x63" Display="0x00006300"/>
+            <option Value="0x64" Display="0x00006400"/>
+            <option Value="0x65" Display="0x00006500"/>
+            <option Value="0x66" Display="0x00006600"/>
+            <option Value="0x67" Display="0x00006700"/>
+            <option Value="0x68" Display="0x00006800"/>
+            <option Value="0x69" Display="0x00006900"/>
+            <option Value="0x6A" Display="0x00006A00"/>
+            <option Value="0x6B" Display="0x00006B00"/>
+            <option Value="0x6C" Display="0x00006C00"/>
+            <option Value="0x6D" Display="0x00006D00"/>
+            <option Value="0x6E" Display="0x00006E00"/>
+            <option Value="0x6F" Display="0x00006F00"/>
+            <option Value="0x70" Display="0x00007000"/>
+            <option Value="0x71" Display="0x00007100"/>
+            <option Value="0x72" Display="0x00007200"/>
+            <option Value="0x73" Display="0x00007300"/>
+            <option Value="0x74" Display="0x00007400"/>
+            <option Value="0x75" Display="0x00007500"/>
+            <option Value="0x76" Display="0x00007600"/>
+            <option Value="0x77" Display="0x00007700"/>
+            <option Value="0x78" Display="0x00007800"/>
+            <option Value="0x79" Display="0x00007900"/>
+            <option Value="0x7A" Display="0x00007A00"/>
+            <option Value="0x7B" Display="0x00007B00"/>
+            <option Value="0x7C" Display="0x00007C00"/>
+            <option Value="0x7D" Display="0x00007D00"/>
+            <option Value="0x7E" Display="0x00007E00"/>
+            <option Value="0x7F" Display="0x00007F00"/>
+            <option Value="0x80" Display="0x00008000"/>
+            <option Value="0x81" Display="0x00008100"/>
+            <option Value="0x82" Display="0x00008200"/>
+            <option Value="0x83" Display="0x00008300"/>
+            <option Value="0x84" Display="0x00008400"/>
+            <option Value="0x85" Display="0x00008500"/>
+            <option Value="0x86" Display="0x00008600"/>
+            <option Value="0x87" Display="0x00008700"/>
+            <option Value="0x88" Display="0x00008800"/>
+            <option Value="0x89" Display="0x00008900"/>
+            <option Value="0x8A" Display="0x00008A00"/>
+            <option Value="0x8B" Display="0x00008B00"/>
+            <option Value="0x8C" Display="0x00008C00"/>
+            <option Value="0x8D" Display="0x00008D00"/>
+            <option Value="0x8E" Display="0x00008E00"/>
+            <option Value="0x8F" Display="0x00008F00"/>
+            <option Value="0x90" Display="0x00009000"/>
+            <option Value="0x91" Display="0x00009100"/>
+            <option Value="0x92" Display="0x00009200"/>
+            <option Value="0x93" Display="0x00009300"/>
+            <option Value="0x94" Display="0x00009400"/>
+            <option Value="0x95" Display="0x00009500"/>
+            <option Value="0x96" Display="0x00009600"/>
+            <option Value="0x97" Display="0x00009700"/>
+            <option Value="0x98" Display="0x00009800"/>
+            <option Value="0x99" Display="0x00009900"/>
+            <option Value="0x9A" Display="0x00009A00"/>
+            <option Value="0x9B" Display="0x00009B00"/>
+            <option Value="0x9C" Display="0x00009C00"/>
+            <option Value="0x9D" Display="0x00009D00"/>
+            <option Value="0x9E" Display="0x00009E00"/>
+            <option Value="0x9F" Display="0x00009F00"/>
+            <option Value="0xA0" Display="0x0000A000"/>
+            <option Value="0xA1" Display="0x0000A100"/>
+            <option Value="0xA2" Display="0x0000A200"/>
+            <option Value="0xA3" Display="0x0000A300"/>
+            <option Value="0xA4" Display="0x0000A400"/>
+            <option Value="0xA5" Display="0x0000A500"/>
+            <option Value="0xA6" Display="0x0000A600"/>
+            <option Value="0xA7" Display="0x0000A700"/>
+            <option Value="0xA8" Display="0x0000A800"/>
+            <option Value="0xA9" Display="0x0000A900"/>
+            <option Value="0xAA" Display="0x0000AA00"/>
+            <option Value="0xAB" Display="0x0000AB00"/>
+            <option Value="0xAC" Display="0x0000AC00"/>
+            <option Value="0xAD" Display="0x0000AD00"/>
+            <option Value="0xAE" Display="0x0000AE00"/>
+            <option Value="0xAF" Display="0x0000AF00"/>
+            <option Value="0xB0" Display="0x0000B000"/>
+            <option Value="0xB1" Display="0x0000B100"/>
+            <option Value="0xB2" Display="0x0000B200"/>
+            <option Value="0xB3" Display="0x0000B300"/>
+            <option Value="0xB4" Display="0x0000B400"/>
+            <option Value="0xB5" Display="0x0000B500"/>
+            <option Value="0xB6" Display="0x0000B600"/>
+            <option Value="0xB7" Display="0x0000B700"/>
+            <option Value="0xB8" Display="0x0000B800"/>
+            <option Value="0xB9" Display="0x0000B900"/>
+            <option Value="0xBA" Display="0x0000BA00"/>
+            <option Value="0xBB" Display="0x0000BB00"/>
+            <option Value="0xBC" Display="0x0000BC00"/>
+            <option Value="0xBD" Display="0x0000BD00"/>
+            <option Value="0xBE" Display="0x0000BE00"/>
+            <option Value="0xBF" Display="0x0000BF00"/>
+            <option Value="0xC0" Display="0x0000C000"/>
+            <option Value="0xC1" Display="0x0000C100"/>
+            <option Value="0xC2" Display="0x0000C200"/>
+            <option Value="0xC3" Display="0x0000C300"/>
+            <option Value="0xC4" Display="0x0000C400"/>
+            <option Value="0xC5" Display="0x0000C500"/>
+            <option Value="0xC6" Display="0x0000C600"/>
+            <option Value="0xC7" Display="0x0000C700"/>
+            <option Value="0xC8" Display="0x0000C800"/>
+            <option Value="0xC9" Display="0x0000C900"/>
+            <option Value="0xCA" Display="0x0000CA00"/>
+            <option Value="0xCB" Display="0x0000CB00"/>
+            <option Value="0xCC" Display="0x0000CC00"/>
+            <option Value="0xCD" Display="0x0000CD00"/>
+            <option Value="0xCE" Display="0x0000CE00"/>
+            <option Value="0xCF" Display="0x0000CF00"/>
+            <option Value="0xD0" Display="0x0000D000"/>
+            <option Value="0xD1" Display="0x0000D100"/>
+            <option Value="0xD2" Display="0x0000D200"/>
+            <option Value="0xD3" Display="0x0000D300"/>
+            <option Value="0xD4" Display="0x0000D400"/>
+            <option Value="0xD5" Display="0x0000D500"/>
+            <option Value="0xD6" Display="0x0000D600"/>
+            <option Value="0xD7" Display="0x0000D700"/>
+            <option Value="0xD8" Display="0x0000D800"/>
+            <option Value="0xD9" Display="0x0000D900"/>
+            <option Value="0xDA" Display="0x0000DA00"/>
+            <option Value="0xDB" Display="0x0000DB00"/>
+            <option Value="0xDC" Display="0x0000DC00"/>
+            <option Value="0xDD" Display="0x0000DD00"/>
+            <option Value="0xDE" Display="0x0000DE00"/>
+            <option Value="0xDF" Display="0x0000DF00"/>
+            <option Value="0xE0" Display="0x0000E000"/>
+            <option Value="0xE1" Display="0x0000E100"/>
+            <option Value="0xE2" Display="0x0000E200"/>
+            <option Value="0xE3" Display="0x0000E300"/>
+            <option Value="0xE4" Display="0x0000E400"/>
+            <option Value="0xE5" Display="0x0000E500"/>
+            <option Value="0xE6" Display="0x0000E600"/>
+            <option Value="0xE7" Display="0x0000E700"/>
+            <option Value="0xE8" Display="0x0000E800"/>
+            <option Value="0xE9" Display="0x0000E900"/>
+            <option Value="0xEA" Display="0x0000EA00"/>
+            <option Value="0xEB" Display="0x0000EB00"/>
+            <option Value="0xEC" Display="0x0000EC00"/>
+            <option Value="0xED" Display="0x0000ED00"/>
+            <option Value="0xEE" Display="0x0000EE00"/>
+            <option Value="0xEF" Display="0x0000EF00"/>
+            <option Value="0xF0" Display="0x0000F000"/>
+            <option Value="0xF1" Display="0x0000F100"/>
+            <option Value="0xF2" Display="0x0000F200"/>
+            <option Value="0xF3" Display="0x0000F300"/>
+            <option Value="0xF4" Display="0x0000F400"/>
+            <option Value="0xF5" Display="0x0000F500"/>
+            <option Value="0xF6" Display="0x0000F600"/>
+            <option Value="0xF7" Display="0x0000F700"/>
+            <option Value="0xF8" Display="0x0000F800"/>
+            <option Value="0xF9" Display="0x0000F900"/>
+            <option Value="0xFA" Display="0x0000FA00"/>
+            <option Value="0xFB" Display="0x0000FB00"/>
+            <option Value="0xFC" Display="0x0000FC00"/>
+            <option Value="0xFD" Display="0x0000FD00"/>
+            <option Value="0xFE" Display="0x0000FE00"/>
+            <option Value="0xFF" Display="0x0000FF00"/>
+            <option Value="0x100" Display="0x00010000"/>
+            <option Value="0x101" Display="0x00010100"/>
+            <option Value="0x102" Display="0x00010200"/>
+            <option Value="0x103" Display="0x00010300"/>
+            <option Value="0x104" Display="0x00010400"/>
+            <option Value="0x105" Display="0x00010500"/>
+            <option Value="0x106" Display="0x00010600"/>
+            <option Value="0x107" Display="0x00010700"/>
+            <option Value="0x108" Display="0x00010800"/>
+            <option Value="0x109" Display="0x00010900"/>
+            <option Value="0x10A" Display="0x00010A00"/>
+            <option Value="0x10B" Display="0x00010B00"/>
+            <option Value="0x10C" Display="0x00010C00"/>
+            <option Value="0x10D" Display="0x00010D00"/>
+            <option Value="0x10E" Display="0x00010E00"/>
+            <option Value="0x10F" Display="0x00010F00"/>
+            <option Value="0x110" Display="0x00011000"/>
+            <option Value="0x111" Display="0x00011100"/>
+            <option Value="0x112" Display="0x00011200"/>
+            <option Value="0x113" Display="0x00011300"/>
+            <option Value="0x114" Display="0x00011400"/>
+            <option Value="0x115" Display="0x00011500"/>
+            <option Value="0x116" Display="0x00011600"/>
+            <option Value="0x117" Display="0x00011700"/>
+            <option Value="0x118" Display="0x00011800"/>
+            <option Value="0x119" Display="0x00011900"/>
+            <option Value="0x11A" Display="0x00011A00"/>
+            <option Value="0x11B" Display="0x00011B00"/>
+            <option Value="0x11C" Display="0x00011C00"/>
+            <option Value="0x11D" Display="0x00011D00"/>
+            <option Value="0x11E" Display="0x00011E00"/>
+            <option Value="0x11F" Display="0x00011F00"/>
+            <option Value="0x120" Display="0x00012000"/>
+            <option Value="0x121" Display="0x00012100"/>
+            <option Value="0x122" Display="0x00012200"/>
+            <option Value="0x123" Display="0x00012300"/>
+            <option Value="0x124" Display="0x00012400"/>
+            <option Value="0x125" Display="0x00012500"/>
+            <option Value="0x126" Display="0x00012600"/>
+            <option Value="0x127" Display="0x00012700"/>
+            <option Value="0x128" Display="0x00012800"/>
+            <option Value="0x129" Display="0x00012900"/>
+            <option Value="0x12A" Display="0x00012A00"/>
+            <option Value="0x12B" Display="0x00012B00"/>
+            <option Value="0x12C" Display="0x00012C00"/>
+            <option Value="0x12D" Display="0x00012D00"/>
+            <option Value="0x12E" Display="0x00012E00"/>
+            <option Value="0x12F" Display="0x00012F00"/>
+            <option Value="0x130" Display="0x00013000"/>
+            <option Value="0x131" Display="0x00013100"/>
+            <option Value="0x132" Display="0x00013200"/>
+            <option Value="0x133" Display="0x00013300"/>
+            <option Value="0x134" Display="0x00013400"/>
+            <option Value="0x135" Display="0x00013500"/>
+            <option Value="0x136" Display="0x00013600"/>
+            <option Value="0x137" Display="0x00013700"/>
+            <option Value="0x138" Display="0x00013800"/>
+            <option Value="0x139" Display="0x00013900"/>
+            <option Value="0x13A" Display="0x00013A00"/>
+            <option Value="0x13B" Display="0x00013B00"/>
+            <option Value="0x13C" Display="0x00013C00"/>
+            <option Value="0x13D" Display="0x00013D00"/>
+            <option Value="0x13E" Display="0x00013E00"/>
+            <option Value="0x13F" Display="0x00013F00"/>
+            <option Value="0x140" Display="0x00014000"/>
+            <option Value="0x141" Display="0x00014100"/>
+            <option Value="0x142" Display="0x00014200"/>
+            <option Value="0x143" Display="0x00014300"/>
+            <option Value="0x144" Display="0x00014400"/>
+            <option Value="0x145" Display="0x00014500"/>
+            <option Value="0x146" Display="0x00014600"/>
+            <option Value="0x147" Display="0x00014700"/>
+            <option Value="0x148" Display="0x00014800"/>
+            <option Value="0x149" Display="0x00014900"/>
+            <option Value="0x14A" Display="0x00014A00"/>
+            <option Value="0x14B" Display="0x00014B00"/>
+            <option Value="0x14C" Display="0x00014C00"/>
+            <option Value="0x14D" Display="0x00014D00"/>
+            <option Value="0x14E" Display="0x00014E00"/>
+            <option Value="0x14F" Display="0x00014F00"/>
+            <option Value="0x150" Display="0x00015000"/>
+            <option Value="0x151" Display="0x00015100"/>
+            <option Value="0x152" Display="0x00015200"/>
+            <option Value="0x153" Display="0x00015300"/>
+            <option Value="0x154" Display="0x00015400"/>
+            <option Value="0x155" Display="0x00015500"/>
+            <option Value="0x156" Display="0x00015600"/>
+            <option Value="0x157" Display="0x00015700"/>
+            <option Value="0x158" Display="0x00015800"/>
+            <option Value="0x159" Display="0x00015900"/>
+            <option Value="0x15A" Display="0x00015A00"/>
+            <option Value="0x15B" Display="0x00015B00"/>
+            <option Value="0x15C" Display="0x00015C00"/>
+            <option Value="0x15D" Display="0x00015D00"/>
+            <option Value="0x15E" Display="0x00015E00"/>
+            <option Value="0x15F" Display="0x00015F00"/>
+            <option Value="0x160" Display="0x00016000"/>
+            <option Value="0x161" Display="0x00016100"/>
+            <option Value="0x162" Display="0x00016200"/>
+            <option Value="0x163" Display="0x00016300"/>
+            <option Value="0x164" Display="0x00016400"/>
+            <option Value="0x165" Display="0x00016500"/>
+            <option Value="0x166" Display="0x00016600"/>
+            <option Value="0x167" Display="0x00016700"/>
+            <option Value="0x168" Display="0x00016800"/>
+            <option Value="0x169" Display="0x00016900"/>
+            <option Value="0x16A" Display="0x00016A00"/>
+            <option Value="0x16B" Display="0x00016B00"/>
+            <option Value="0x16C" Display="0x00016C00"/>
+            <option Value="0x16D" Display="0x00016D00"/>
+            <option Value="0x16E" Display="0x00016E00"/>
+            <option Value="0x16F" Display="0x00016F00"/>
+            <option Value="0x170" Display="0x00017000"/>
+            <option Value="0x171" Display="0x00017100"/>
+            <option Value="0x172" Display="0x00017200"/>
+            <option Value="0x173" Display="0x00017300"/>
+            <option Value="0x174" Display="0x00017400"/>
+            <option Value="0x175" Display="0x00017500"/>
+            <option Value="0x176" Display="0x00017600"/>
+            <option Value="0x177" Display="0x00017700"/>
+            <option Value="0x178" Display="0x00017800"/>
+            <option Value="0x179" Display="0x00017900"/>
+            <option Value="0x17A" Display="0x00017A00"/>
+            <option Value="0x17B" Display="0x00017B00"/>
+            <option Value="0x17C" Display="0x00017C00"/>
+            <option Value="0x17D" Display="0x00017D00"/>
+            <option Value="0x17E" Display="0x00017E00"/>
+            <option Value="0x17F" Display="0x00017F00"/>
+            <option Value="0x180" Display="0x00018000"/>
+            <option Value="0x181" Display="0x00018100"/>
+            <option Value="0x182" Display="0x00018200"/>
+            <option Value="0x183" Display="0x00018300"/>
+            <option Value="0x184" Display="0x00018400"/>
+            <option Value="0x185" Display="0x00018500"/>
+            <option Value="0x186" Display="0x00018600"/>
+            <option Value="0x187" Display="0x00018700"/>
+            <option Value="0x188" Display="0x00018800"/>
+            <option Value="0x189" Display="0x00018900"/>
+            <option Value="0x18A" Display="0x00018A00"/>
+            <option Value="0x18B" Display="0x00018B00"/>
+            <option Value="0x18C" Display="0x00018C00"/>
+            <option Value="0x18D" Display="0x00018D00"/>
+            <option Value="0x18E" Display="0x00018E00"/>
+            <option Value="0x18F" Display="0x00018F00"/>
+            <option Value="0x190" Display="0x00019000"/>
+            <option Value="0x191" Display="0x00019100"/>
+            <option Value="0x192" Display="0x00019200"/>
+            <option Value="0x193" Display="0x00019300"/>
+            <option Value="0x194" Display="0x00019400"/>
+            <option Value="0x195" Display="0x00019500"/>
+            <option Value="0x196" Display="0x00019600"/>
+            <option Value="0x197" Display="0x00019700"/>
+            <option Value="0x198" Display="0x00019800"/>
+            <option Value="0x199" Display="0x00019900"/>
+            <option Value="0x19A" Display="0x00019A00"/>
+            <option Value="0x19B" Display="0x00019B00"/>
+            <option Value="0x19C" Display="0x00019C00"/>
+            <option Value="0x19D" Display="0x00019D00"/>
+            <option Value="0x19E" Display="0x00019E00"/>
+            <option Value="0x19F" Display="0x00019F00"/>
+            <option Value="0x1A0" Display="0x0001A000"/>
+            <option Value="0x1A1" Display="0x0001A100"/>
+            <option Value="0x1A2" Display="0x0001A200"/>
+            <option Value="0x1A3" Display="0x0001A300"/>
+            <option Value="0x1A4" Display="0x0001A400"/>
+            <option Value="0x1A5" Display="0x0001A500"/>
+            <option Value="0x1A6" Display="0x0001A600"/>
+            <option Value="0x1A7" Display="0x0001A700"/>
+            <option Value="0x1A8" Display="0x0001A800"/>
+            <option Value="0x1A9" Display="0x0001A900"/>
+            <option Value="0x1AA" Display="0x0001AA00"/>
+            <option Value="0x1AB" Display="0x0001AB00"/>
+            <option Value="0x1AC" Display="0x0001AC00"/>
+            <option Value="0x1AD" Display="0x0001AD00"/>
+            <option Value="0x1AE" Display="0x0001AE00"/>
+            <option Value="0x1AF" Display="0x0001AF00"/>
+            <option Value="0x1B0" Display="0x0001B000"/>
+            <option Value="0x1B1" Display="0x0001B100"/>
+            <option Value="0x1B2" Display="0x0001B200"/>
+            <option Value="0x1B3" Display="0x0001B300"/>
+            <option Value="0x1B4" Display="0x0001B400"/>
+            <option Value="0x1B5" Display="0x0001B500"/>
+            <option Value="0x1B6" Display="0x0001B600"/>
+            <option Value="0x1B7" Display="0x0001B700"/>
+            <option Value="0x1B8" Display="0x0001B800"/>
+            <option Value="0x1B9" Display="0x0001B900"/>
+            <option Value="0x1BA" Display="0x0001BA00"/>
+            <option Value="0x1BB" Display="0x0001BB00"/>
+            <option Value="0x1BC" Display="0x0001BC00"/>
+            <option Value="0x1BD" Display="0x0001BD00"/>
+            <option Value="0x1BE" Display="0x0001BE00"/>
+            <option Value="0x1BF" Display="0x0001BF00"/>
+            <option Value="0x1C0" Display="0x0001C000"/>
+            <option Value="0x1C1" Display="0x0001C100"/>
+            <option Value="0x1C2" Display="0x0001C200"/>
+            <option Value="0x1C3" Display="0x0001C300"/>
+            <option Value="0x1C4" Display="0x0001C400"/>
+            <option Value="0x1C5" Display="0x0001C500"/>
+            <option Value="0x1C6" Display="0x0001C600"/>
+            <option Value="0x1C7" Display="0x0001C700"/>
+            <option Value="0x1C8" Display="0x0001C800"/>
+            <option Value="0x1C9" Display="0x0001C900"/>
+            <option Value="0x1CA" Display="0x0001CA00"/>
+            <option Value="0x1CB" Display="0x0001CB00"/>
+            <option Value="0x1CC" Display="0x0001CC00"/>
+            <option Value="0x1CD" Display="0x0001CD00"/>
+            <option Value="0x1CE" Display="0x0001CE00"/>
+            <option Value="0x1CF" Display="0x0001CF00"/>
+            <option Value="0x1D0" Display="0x0001D000"/>
+            <option Value="0x1D1" Display="0x0001D100"/>
+            <option Value="0x1D2" Display="0x0001D200"/>
+            <option Value="0x1D3" Display="0x0001D300"/>
+            <option Value="0x1D4" Display="0x0001D400"/>
+            <option Value="0x1D5" Display="0x0001D500"/>
+            <option Value="0x1D6" Display="0x0001D600"/>
+            <option Value="0x1D7" Display="0x0001D700"/>
+            <option Value="0x1D8" Display="0x0001D800"/>
+            <option Value="0x1D9" Display="0x0001D900"/>
+            <option Value="0x1DA" Display="0x0001DA00"/>
+            <option Value="0x1DB" Display="0x0001DB00"/>
+            <option Value="0x1DC" Display="0x0001DC00"/>
+            <option Value="0x1DD" Display="0x0001DD00"/>
+            <option Value="0x1DE" Display="0x0001DE00"/>
+            <option Value="0x1DF" Display="0x0001DF00"/>
+            <option Value="0x1E0" Display="0x0001E000"/>
+            <option Value="0x1E1" Display="0x0001E100"/>
+            <option Value="0x1E2" Display="0x0001E200"/>
+            <option Value="0x1E3" Display="0x0001E300"/>
+            <option Value="0x1E4" Display="0x0001E400"/>
+            <option Value="0x1E5" Display="0x0001E500"/>
+            <option Value="0x1E6" Display="0x0001E600"/>
+            <option Value="0x1E7" Display="0x0001E700"/>
+            <option Value="0x1E8" Display="0x0001E800"/>
+            <option Value="0x1E9" Display="0x0001E900"/>
+            <option Value="0x1EA" Display="0x0001EA00"/>
+            <option Value="0x1EB" Display="0x0001EB00"/>
+            <option Value="0x1EC" Display="0x0001EC00"/>
+            <option Value="0x1ED" Display="0x0001ED00"/>
+            <option Value="0x1EE" Display="0x0001EE00"/>
+            <option Value="0x1EF" Display="0x0001EF00"/>
+            <option Value="0x1F0" Display="0x0001F000"/>
+            <option Value="0x1F1" Display="0x0001F100"/>
+            <option Value="0x1F2" Display="0x0001F200"/>
+            <option Value="0x1F3" Display="0x0001F300"/>
+            <option Value="0x1F4" Display="0x0001F400"/>
+            <option Value="0x1F5" Display="0x0001F500"/>
+            <option Value="0x1F6" Display="0x0001F600"/>
+            <option Value="0x1F7" Display="0x0001F700"/>
+            <option Value="0x1F8" Display="0x0001F800"/>
+            <option Value="0x1F9" Display="0x0001F900"/>
+            <option Value="0x1FA" Display="0x0001FA00"/>
+            <option Value="0x1FB" Display="0x0001FB00"/>
+            <option Value="0x1FC" Display="0x0001FC00"/>
+            <option Value="0x1FD" Display="0x0001FD00"/>
+            <option Value="0x1FE" Display="0x0001FE00"/>
+            <option Value="0x1FF" Display="0x0001FF00" Default="1" />
+          </options>
+        </field>
+        <field>
+          <name>PCROP1ER</name>
+          <description>Bank1 private code read out protection end address</description>
+          <bitRange>[24:16]</bitRange>
+          <options>
+            <option Value="0x0" Display="0x000000FF"  Default="1" />
+            <option Value="0x1" Display="0x000001FF"/>
+            <option Value="0x2" Display="0x000002FF"/>
+            <option Value="0x3" Display="0x000003FF"/>
+            <option Value="0x4" Display="0x000004FF"/>
+            <option Value="0x5" Display="0x000005FF"/>
+            <option Value="0x6" Display="0x000006FF"/>
+            <option Value="0x7" Display="0x000007FF"/>
+            <option Value="0x8" Display="0x000008FF"/>
+            <option Value="0x9" Display="0x000009FF"/>
+            <option Value="0xA" Display="0x00000AFF"/>
+            <option Value="0xB" Display="0x00000BFF"/>
+            <option Value="0xC" Display="0x00000CFF"/>
+            <option Value="0xD" Display="0x00000DFF"/>
+            <option Value="0xE" Display="0x00000EFF"/>
+            <option Value="0xF" Display="0x00000FFF"/>
+            <option Value="0x10" Display="0x000010FF"/>
+            <option Value="0x11" Display="0x000011FF"/>
+            <option Value="0x12" Display="0x000012FF"/>
+            <option Value="0x13" Display="0x000013FF"/>
+            <option Value="0x14" Display="0x000014FF"/>
+            <option Value="0x15" Display="0x000015FF"/>
+            <option Value="0x16" Display="0x000016FF"/>
+            <option Value="0x17" Display="0x000017FF"/>
+            <option Value="0x18" Display="0x000018FF"/>
+            <option Value="0x19" Display="0x000019FF"/>
+            <option Value="0x1A" Display="0x00001AFF"/>
+            <option Value="0x1B" Display="0x00001BFF"/>
+            <option Value="0x1C" Display="0x00001CFF"/>
+            <option Value="0x1D" Display="0x00001DFF"/>
+            <option Value="0x1E" Display="0x00001EFF"/>
+            <option Value="0x1F" Display="0x00001FFF"/>
+            <option Value="0x20" Display="0x000020FF"/>
+            <option Value="0x21" Display="0x000021FF"/>
+            <option Value="0x22" Display="0x000022FF"/>
+            <option Value="0x23" Display="0x000023FF"/>
+            <option Value="0x24" Display="0x000024FF"/>
+            <option Value="0x25" Display="0x000025FF"/>
+            <option Value="0x26" Display="0x000026FF"/>
+            <option Value="0x27" Display="0x000027FF"/>
+            <option Value="0x28" Display="0x000028FF"/>
+            <option Value="0x29" Display="0x000029FF"/>
+            <option Value="0x2A" Display="0x00002AFF"/>
+            <option Value="0x2B" Display="0x00002BFF"/>
+            <option Value="0x2C" Display="0x00002CFF"/>
+            <option Value="0x2D" Display="0x00002DFF"/>
+            <option Value="0x2E" Display="0x00002EFF"/>
+            <option Value="0x2F" Display="0x00002FFF"/>
+            <option Value="0x30" Display="0x000030FF"/>
+            <option Value="0x31" Display="0x000031FF"/>
+            <option Value="0x32" Display="0x000032FF"/>
+            <option Value="0x33" Display="0x000033FF"/>
+            <option Value="0x34" Display="0x000034FF"/>
+            <option Value="0x35" Display="0x000035FF"/>
+            <option Value="0x36" Display="0x000036FF"/>
+            <option Value="0x37" Display="0x000037FF"/>
+            <option Value="0x38" Display="0x000038FF"/>
+            <option Value="0x39" Display="0x000039FF"/>
+            <option Value="0x3A" Display="0x00003AFF"/>
+            <option Value="0x3B" Display="0x00003BFF"/>
+            <option Value="0x3C" Display="0x00003CFF"/>
+            <option Value="0x3D" Display="0x00003DFF"/>
+            <option Value="0x3E" Display="0x00003EFF"/>
+            <option Value="0x3F" Display="0x00003FFF"/>
+            <option Value="0x40" Display="0x000040FF"/>
+            <option Value="0x41" Display="0x000041FF"/>
+            <option Value="0x42" Display="0x000042FF"/>
+            <option Value="0x43" Display="0x000043FF"/>
+            <option Value="0x44" Display="0x000044FF"/>
+            <option Value="0x45" Display="0x000045FF"/>
+            <option Value="0x46" Display="0x000046FF"/>
+            <option Value="0x47" Display="0x000047FF"/>
+            <option Value="0x48" Display="0x000048FF"/>
+            <option Value="0x49" Display="0x000049FF"/>
+            <option Value="0x4A" Display="0x00004AFF"/>
+            <option Value="0x4B" Display="0x00004BFF"/>
+            <option Value="0x4C" Display="0x00004CFF"/>
+            <option Value="0x4D" Display="0x00004DFF"/>
+            <option Value="0x4E" Display="0x00004EFF"/>
+            <option Value="0x4F" Display="0x00004FFF"/>
+            <option Value="0x50" Display="0x000050FF"/>
+            <option Value="0x51" Display="0x000051FF"/>
+            <option Value="0x52" Display="0x000052FF"/>
+            <option Value="0x53" Display="0x000053FF"/>
+            <option Value="0x54" Display="0x000054FF"/>
+            <option Value="0x55" Display="0x000055FF"/>
+            <option Value="0x56" Display="0x000056FF"/>
+            <option Value="0x57" Display="0x000057FF"/>
+            <option Value="0x58" Display="0x000058FF"/>
+            <option Value="0x59" Display="0x000059FF"/>
+            <option Value="0x5A" Display="0x00005AFF"/>
+            <option Value="0x5B" Display="0x00005BFF"/>
+            <option Value="0x5C" Display="0x00005CFF"/>
+            <option Value="0x5D" Display="0x00005DFF"/>
+            <option Value="0x5E" Display="0x00005EFF"/>
+            <option Value="0x5F" Display="0x00005FFF"/>
+            <option Value="0x60" Display="0x000060FF"/>
+            <option Value="0x61" Display="0x000061FF"/>
+            <option Value="0x62" Display="0x000062FF"/>
+            <option Value="0x63" Display="0x000063FF"/>
+            <option Value="0x64" Display="0x000064FF"/>
+            <option Value="0x65" Display="0x000065FF"/>
+            <option Value="0x66" Display="0x000066FF"/>
+            <option Value="0x67" Display="0x000067FF"/>
+            <option Value="0x68" Display="0x000068FF"/>
+            <option Value="0x69" Display="0x000069FF"/>
+            <option Value="0x6A" Display="0x00006AFF"/>
+            <option Value="0x6B" Display="0x00006BFF"/>
+            <option Value="0x6C" Display="0x00006CFF"/>
+            <option Value="0x6D" Display="0x00006DFF"/>
+            <option Value="0x6E" Display="0x00006EFF"/>
+            <option Value="0x6F" Display="0x00006FFF"/>
+            <option Value="0x70" Display="0x000070FF"/>
+            <option Value="0x71" Display="0x000071FF"/>
+            <option Value="0x72" Display="0x000072FF"/>
+            <option Value="0x73" Display="0x000073FF"/>
+            <option Value="0x74" Display="0x000074FF"/>
+            <option Value="0x75" Display="0x000075FF"/>
+            <option Value="0x76" Display="0x000076FF"/>
+            <option Value="0x77" Display="0x000077FF"/>
+            <option Value="0x78" Display="0x000078FF"/>
+            <option Value="0x79" Display="0x000079FF"/>
+            <option Value="0x7A" Display="0x00007AFF"/>
+            <option Value="0x7B" Display="0x00007BFF"/>
+            <option Value="0x7C" Display="0x00007CFF"/>
+            <option Value="0x7D" Display="0x00007DFF"/>
+            <option Value="0x7E" Display="0x00007EFF"/>
+            <option Value="0x7F" Display="0x00007FFF"/>
+            <option Value="0x80" Display="0x000080FF"/>
+            <option Value="0x81" Display="0x000081FF"/>
+            <option Value="0x82" Display="0x000082FF"/>
+            <option Value="0x83" Display="0x000083FF"/>
+            <option Value="0x84" Display="0x000084FF"/>
+            <option Value="0x85" Display="0x000085FF"/>
+            <option Value="0x86" Display="0x000086FF"/>
+            <option Value="0x87" Display="0x000087FF"/>
+            <option Value="0x88" Display="0x000088FF"/>
+            <option Value="0x89" Display="0x000089FF"/>
+            <option Value="0x8A" Display="0x00008AFF"/>
+            <option Value="0x8B" Display="0x00008BFF"/>
+            <option Value="0x8C" Display="0x00008CFF"/>
+            <option Value="0x8D" Display="0x00008DFF"/>
+            <option Value="0x8E" Display="0x00008EFF"/>
+            <option Value="0x8F" Display="0x00008FFF"/>
+            <option Value="0x90" Display="0x000090FF"/>
+            <option Value="0x91" Display="0x000091FF"/>
+            <option Value="0x92" Display="0x000092FF"/>
+            <option Value="0x93" Display="0x000093FF"/>
+            <option Value="0x94" Display="0x000094FF"/>
+            <option Value="0x95" Display="0x000095FF"/>
+            <option Value="0x96" Display="0x000096FF"/>
+            <option Value="0x97" Display="0x000097FF"/>
+            <option Value="0x98" Display="0x000098FF"/>
+            <option Value="0x99" Display="0x000099FF"/>
+            <option Value="0x9A" Display="0x00009AFF"/>
+            <option Value="0x9B" Display="0x00009BFF"/>
+            <option Value="0x9C" Display="0x00009CFF"/>
+            <option Value="0x9D" Display="0x00009DFF"/>
+            <option Value="0x9E" Display="0x00009EFF"/>
+            <option Value="0x9F" Display="0x00009FFF"/>
+            <option Value="0xA0" Display="0x0000A0FF"/>
+            <option Value="0xA1" Display="0x0000A1FF"/>
+            <option Value="0xA2" Display="0x0000A2FF"/>
+            <option Value="0xA3" Display="0x0000A3FF"/>
+            <option Value="0xA4" Display="0x0000A4FF"/>
+            <option Value="0xA5" Display="0x0000A5FF"/>
+            <option Value="0xA6" Display="0x0000A6FF"/>
+            <option Value="0xA7" Display="0x0000A7FF"/>
+            <option Value="0xA8" Display="0x0000A8FF"/>
+            <option Value="0xA9" Display="0x0000A9FF"/>
+            <option Value="0xAA" Display="0x0000AAFF"/>
+            <option Value="0xAB" Display="0x0000ABFF"/>
+            <option Value="0xAC" Display="0x0000ACFF"/>
+            <option Value="0xAD" Display="0x0000ADFF"/>
+            <option Value="0xAE" Display="0x0000AEFF"/>
+            <option Value="0xAF" Display="0x0000AFFF"/>
+            <option Value="0xB0" Display="0x0000B0FF"/>
+            <option Value="0xB1" Display="0x0000B1FF"/>
+            <option Value="0xB2" Display="0x0000B2FF"/>
+            <option Value="0xB3" Display="0x0000B3FF"/>
+            <option Value="0xB4" Display="0x0000B4FF"/>
+            <option Value="0xB5" Display="0x0000B5FF"/>
+            <option Value="0xB6" Display="0x0000B6FF"/>
+            <option Value="0xB7" Display="0x0000B7FF"/>
+            <option Value="0xB8" Display="0x0000B8FF"/>
+            <option Value="0xB9" Display="0x0000B9FF"/>
+            <option Value="0xBA" Display="0x0000BAFF"/>
+            <option Value="0xBB" Display="0x0000BBFF"/>
+            <option Value="0xBC" Display="0x0000BCFF"/>
+            <option Value="0xBD" Display="0x0000BDFF"/>
+            <option Value="0xBE" Display="0x0000BEFF"/>
+            <option Value="0xBF" Display="0x0000BFFF"/>
+            <option Value="0xC0" Display="0x0000C0FF"/>
+            <option Value="0xC1" Display="0x0000C1FF"/>
+            <option Value="0xC2" Display="0x0000C2FF"/>
+            <option Value="0xC3" Display="0x0000C3FF"/>
+            <option Value="0xC4" Display="0x0000C4FF"/>
+            <option Value="0xC5" Display="0x0000C5FF"/>
+            <option Value="0xC6" Display="0x0000C6FF"/>
+            <option Value="0xC7" Display="0x0000C7FF"/>
+            <option Value="0xC8" Display="0x0000C8FF"/>
+            <option Value="0xC9" Display="0x0000C9FF"/>
+            <option Value="0xCA" Display="0x0000CAFF"/>
+            <option Value="0xCB" Display="0x0000CBFF"/>
+            <option Value="0xCC" Display="0x0000CCFF"/>
+            <option Value="0xCD" Display="0x0000CDFF"/>
+            <option Value="0xCE" Display="0x0000CEFF"/>
+            <option Value="0xCF" Display="0x0000CFFF"/>
+            <option Value="0xD0" Display="0x0000D0FF"/>
+            <option Value="0xD1" Display="0x0000D1FF"/>
+            <option Value="0xD2" Display="0x0000D2FF"/>
+            <option Value="0xD3" Display="0x0000D3FF"/>
+            <option Value="0xD4" Display="0x0000D4FF"/>
+            <option Value="0xD5" Display="0x0000D5FF"/>
+            <option Value="0xD6" Display="0x0000D6FF"/>
+            <option Value="0xD7" Display="0x0000D7FF"/>
+            <option Value="0xD8" Display="0x0000D8FF"/>
+            <option Value="0xD9" Display="0x0000D9FF"/>
+            <option Value="0xDA" Display="0x0000DAFF"/>
+            <option Value="0xDB" Display="0x0000DBFF"/>
+            <option Value="0xDC" Display="0x0000DCFF"/>
+            <option Value="0xDD" Display="0x0000DDFF"/>
+            <option Value="0xDE" Display="0x0000DEFF"/>
+            <option Value="0xDF" Display="0x0000DFFF"/>
+            <option Value="0xE0" Display="0x0000E0FF"/>
+            <option Value="0xE1" Display="0x0000E1FF"/>
+            <option Value="0xE2" Display="0x0000E2FF"/>
+            <option Value="0xE3" Display="0x0000E3FF"/>
+            <option Value="0xE4" Display="0x0000E4FF"/>
+            <option Value="0xE5" Display="0x0000E5FF"/>
+            <option Value="0xE6" Display="0x0000E6FF"/>
+            <option Value="0xE7" Display="0x0000E7FF"/>
+            <option Value="0xE8" Display="0x0000E8FF"/>
+            <option Value="0xE9" Display="0x0000E9FF"/>
+            <option Value="0xEA" Display="0x0000EAFF"/>
+            <option Value="0xEB" Display="0x0000EBFF"/>
+            <option Value="0xEC" Display="0x0000ECFF"/>
+            <option Value="0xED" Display="0x0000EDFF"/>
+            <option Value="0xEE" Display="0x0000EEFF"/>
+            <option Value="0xEF" Display="0x0000EFFF"/>
+            <option Value="0xF0" Display="0x0000F0FF"/>
+            <option Value="0xF1" Display="0x0000F1FF"/>
+            <option Value="0xF2" Display="0x0000F2FF"/>
+            <option Value="0xF3" Display="0x0000F3FF"/>
+            <option Value="0xF4" Display="0x0000F4FF"/>
+            <option Value="0xF5" Display="0x0000F5FF"/>
+            <option Value="0xF6" Display="0x0000F6FF"/>
+            <option Value="0xF7" Display="0x0000F7FF"/>
+            <option Value="0xF8" Display="0x0000F8FF"/>
+            <option Value="0xF9" Display="0x0000F9FF"/>
+            <option Value="0xFA" Display="0x0000FAFF"/>
+            <option Value="0xFB" Display="0x0000FBFF"/>
+            <option Value="0xFC" Display="0x0000FCFF"/>
+            <option Value="0xFD" Display="0x0000FDFF"/>
+            <option Value="0xFE" Display="0x0000FEFF"/>
+            <option Value="0xFF" Display="0x0000FFFF"/>
+            <option Value="0x100" Display="0x000100FF"/>
+            <option Value="0x101" Display="0x000101FF"/>
+            <option Value="0x102" Display="0x000102FF"/>
+            <option Value="0x103" Display="0x000103FF"/>
+            <option Value="0x104" Display="0x000104FF"/>
+            <option Value="0x105" Display="0x000105FF"/>
+            <option Value="0x106" Display="0x000106FF"/>
+            <option Value="0x107" Display="0x000107FF"/>
+            <option Value="0x108" Display="0x000108FF"/>
+            <option Value="0x109" Display="0x000109FF"/>
+            <option Value="0x10A" Display="0x00010AFF"/>
+            <option Value="0x10B" Display="0x00010BFF"/>
+            <option Value="0x10C" Display="0x00010CFF"/>
+            <option Value="0x10D" Display="0x00010DFF"/>
+            <option Value="0x10E" Display="0x00010EFF"/>
+            <option Value="0x10F" Display="0x00010FFF"/>
+            <option Value="0x110" Display="0x000110FF"/>
+            <option Value="0x111" Display="0x000111FF"/>
+            <option Value="0x112" Display="0x000112FF"/>
+            <option Value="0x113" Display="0x000113FF"/>
+            <option Value="0x114" Display="0x000114FF"/>
+            <option Value="0x115" Display="0x000115FF"/>
+            <option Value="0x116" Display="0x000116FF"/>
+            <option Value="0x117" Display="0x000117FF"/>
+            <option Value="0x118" Display="0x000118FF"/>
+            <option Value="0x119" Display="0x000119FF"/>
+            <option Value="0x11A" Display="0x00011AFF"/>
+            <option Value="0x11B" Display="0x00011BFF"/>
+            <option Value="0x11C" Display="0x00011CFF"/>
+            <option Value="0x11D" Display="0x00011DFF"/>
+            <option Value="0x11E" Display="0x00011EFF"/>
+            <option Value="0x11F" Display="0x00011FFF"/>
+            <option Value="0x120" Display="0x000120FF"/>
+            <option Value="0x121" Display="0x000121FF"/>
+            <option Value="0x122" Display="0x000122FF"/>
+            <option Value="0x123" Display="0x000123FF"/>
+            <option Value="0x124" Display="0x000124FF"/>
+            <option Value="0x125" Display="0x000125FF"/>
+            <option Value="0x126" Display="0x000126FF"/>
+            <option Value="0x127" Display="0x000127FF"/>
+            <option Value="0x128" Display="0x000128FF"/>
+            <option Value="0x129" Display="0x000129FF"/>
+            <option Value="0x12A" Display="0x00012AFF"/>
+            <option Value="0x12B" Display="0x00012BFF"/>
+            <option Value="0x12C" Display="0x00012CFF"/>
+            <option Value="0x12D" Display="0x00012DFF"/>
+            <option Value="0x12E" Display="0x00012EFF"/>
+            <option Value="0x12F" Display="0x00012FFF"/>
+            <option Value="0x130" Display="0x000130FF"/>
+            <option Value="0x131" Display="0x000131FF"/>
+            <option Value="0x132" Display="0x000132FF"/>
+            <option Value="0x133" Display="0x000133FF"/>
+            <option Value="0x134" Display="0x000134FF"/>
+            <option Value="0x135" Display="0x000135FF"/>
+            <option Value="0x136" Display="0x000136FF"/>
+            <option Value="0x137" Display="0x000137FF"/>
+            <option Value="0x138" Display="0x000138FF"/>
+            <option Value="0x139" Display="0x000139FF"/>
+            <option Value="0x13A" Display="0x00013AFF"/>
+            <option Value="0x13B" Display="0x00013BFF"/>
+            <option Value="0x13C" Display="0x00013CFF"/>
+            <option Value="0x13D" Display="0x00013DFF"/>
+            <option Value="0x13E" Display="0x00013EFF"/>
+            <option Value="0x13F" Display="0x00013FFF"/>
+            <option Value="0x140" Display="0x000140FF"/>
+            <option Value="0x141" Display="0x000141FF"/>
+            <option Value="0x142" Display="0x000142FF"/>
+            <option Value="0x143" Display="0x000143FF"/>
+            <option Value="0x144" Display="0x000144FF"/>
+            <option Value="0x145" Display="0x000145FF"/>
+            <option Value="0x146" Display="0x000146FF"/>
+            <option Value="0x147" Display="0x000147FF"/>
+            <option Value="0x148" Display="0x000148FF"/>
+            <option Value="0x149" Display="0x000149FF"/>
+            <option Value="0x14A" Display="0x00014AFF"/>
+            <option Value="0x14B" Display="0x00014BFF"/>
+            <option Value="0x14C" Display="0x00014CFF"/>
+            <option Value="0x14D" Display="0x00014DFF"/>
+            <option Value="0x14E" Display="0x00014EFF"/>
+            <option Value="0x14F" Display="0x00014FFF"/>
+            <option Value="0x150" Display="0x000150FF"/>
+            <option Value="0x151" Display="0x000151FF"/>
+            <option Value="0x152" Display="0x000152FF"/>
+            <option Value="0x153" Display="0x000153FF"/>
+            <option Value="0x154" Display="0x000154FF"/>
+            <option Value="0x155" Display="0x000155FF"/>
+            <option Value="0x156" Display="0x000156FF"/>
+            <option Value="0x157" Display="0x000157FF"/>
+            <option Value="0x158" Display="0x000158FF"/>
+            <option Value="0x159" Display="0x000159FF"/>
+            <option Value="0x15A" Display="0x00015AFF"/>
+            <option Value="0x15B" Display="0x00015BFF"/>
+            <option Value="0x15C" Display="0x00015CFF"/>
+            <option Value="0x15D" Display="0x00015DFF"/>
+            <option Value="0x15E" Display="0x00015EFF"/>
+            <option Value="0x15F" Display="0x00015FFF"/>
+            <option Value="0x160" Display="0x000160FF"/>
+            <option Value="0x161" Display="0x000161FF"/>
+            <option Value="0x162" Display="0x000162FF"/>
+            <option Value="0x163" Display="0x000163FF"/>
+            <option Value="0x164" Display="0x000164FF"/>
+            <option Value="0x165" Display="0x000165FF"/>
+            <option Value="0x166" Display="0x000166FF"/>
+            <option Value="0x167" Display="0x000167FF"/>
+            <option Value="0x168" Display="0x000168FF"/>
+            <option Value="0x169" Display="0x000169FF"/>
+            <option Value="0x16A" Display="0x00016AFF"/>
+            <option Value="0x16B" Display="0x00016BFF"/>
+            <option Value="0x16C" Display="0x00016CFF"/>
+            <option Value="0x16D" Display="0x00016DFF"/>
+            <option Value="0x16E" Display="0x00016EFF"/>
+            <option Value="0x16F" Display="0x00016FFF"/>
+            <option Value="0x170" Display="0x000170FF"/>
+            <option Value="0x171" Display="0x000171FF"/>
+            <option Value="0x172" Display="0x000172FF"/>
+            <option Value="0x173" Display="0x000173FF"/>
+            <option Value="0x174" Display="0x000174FF"/>
+            <option Value="0x175" Display="0x000175FF"/>
+            <option Value="0x176" Display="0x000176FF"/>
+            <option Value="0x177" Display="0x000177FF"/>
+            <option Value="0x178" Display="0x000178FF"/>
+            <option Value="0x179" Display="0x000179FF"/>
+            <option Value="0x17A" Display="0x00017AFF"/>
+            <option Value="0x17B" Display="0x00017BFF"/>
+            <option Value="0x17C" Display="0x00017CFF"/>
+            <option Value="0x17D" Display="0x00017DFF"/>
+            <option Value="0x17E" Display="0x00017EFF"/>
+            <option Value="0x17F" Display="0x00017FFF"/>
+            <option Value="0x180" Display="0x000180FF"/>
+            <option Value="0x181" Display="0x000181FF"/>
+            <option Value="0x182" Display="0x000182FF"/>
+            <option Value="0x183" Display="0x000183FF"/>
+            <option Value="0x184" Display="0x000184FF"/>
+            <option Value="0x185" Display="0x000185FF"/>
+            <option Value="0x186" Display="0x000186FF"/>
+            <option Value="0x187" Display="0x000187FF"/>
+            <option Value="0x188" Display="0x000188FF"/>
+            <option Value="0x189" Display="0x000189FF"/>
+            <option Value="0x18A" Display="0x00018AFF"/>
+            <option Value="0x18B" Display="0x00018BFF"/>
+            <option Value="0x18C" Display="0x00018CFF"/>
+            <option Value="0x18D" Display="0x00018DFF"/>
+            <option Value="0x18E" Display="0x00018EFF"/>
+            <option Value="0x18F" Display="0x00018FFF"/>
+            <option Value="0x190" Display="0x000190FF"/>
+            <option Value="0x191" Display="0x000191FF"/>
+            <option Value="0x192" Display="0x000192FF"/>
+            <option Value="0x193" Display="0x000193FF"/>
+            <option Value="0x194" Display="0x000194FF"/>
+            <option Value="0x195" Display="0x000195FF"/>
+            <option Value="0x196" Display="0x000196FF"/>
+            <option Value="0x197" Display="0x000197FF"/>
+            <option Value="0x198" Display="0x000198FF"/>
+            <option Value="0x199" Display="0x000199FF"/>
+            <option Value="0x19A" Display="0x00019AFF"/>
+            <option Value="0x19B" Display="0x00019BFF"/>
+            <option Value="0x19C" Display="0x00019CFF"/>
+            <option Value="0x19D" Display="0x00019DFF"/>
+            <option Value="0x19E" Display="0x00019EFF"/>
+            <option Value="0x19F" Display="0x00019FFF"/>
+            <option Value="0x1A0" Display="0x0001A0FF"/>
+            <option Value="0x1A1" Display="0x0001A1FF"/>
+            <option Value="0x1A2" Display="0x0001A2FF"/>
+            <option Value="0x1A3" Display="0x0001A3FF"/>
+            <option Value="0x1A4" Display="0x0001A4FF"/>
+            <option Value="0x1A5" Display="0x0001A5FF"/>
+            <option Value="0x1A6" Display="0x0001A6FF"/>
+            <option Value="0x1A7" Display="0x0001A7FF"/>
+            <option Value="0x1A8" Display="0x0001A8FF"/>
+            <option Value="0x1A9" Display="0x0001A9FF"/>
+            <option Value="0x1AA" Display="0x0001AAFF"/>
+            <option Value="0x1AB" Display="0x0001ABFF"/>
+            <option Value="0x1AC" Display="0x0001ACFF"/>
+            <option Value="0x1AD" Display="0x0001ADFF"/>
+            <option Value="0x1AE" Display="0x0001AEFF"/>
+            <option Value="0x1AF" Display="0x0001AFFF"/>
+            <option Value="0x1B0" Display="0x0001B0FF"/>
+            <option Value="0x1B1" Display="0x0001B1FF"/>
+            <option Value="0x1B2" Display="0x0001B2FF"/>
+            <option Value="0x1B3" Display="0x0001B3FF"/>
+            <option Value="0x1B4" Display="0x0001B4FF"/>
+            <option Value="0x1B5" Display="0x0001B5FF"/>
+            <option Value="0x1B6" Display="0x0001B6FF"/>
+            <option Value="0x1B7" Display="0x0001B7FF"/>
+            <option Value="0x1B8" Display="0x0001B8FF"/>
+            <option Value="0x1B9" Display="0x0001B9FF"/>
+            <option Value="0x1BA" Display="0x0001BAFF"/>
+            <option Value="0x1BB" Display="0x0001BBFF"/>
+            <option Value="0x1BC" Display="0x0001BCFF"/>
+            <option Value="0x1BD" Display="0x0001BDFF"/>
+            <option Value="0x1BE" Display="0x0001BEFF"/>
+            <option Value="0x1BF" Display="0x0001BFFF"/>
+            <option Value="0x1C0" Display="0x0001C0FF"/>
+            <option Value="0x1C1" Display="0x0001C1FF"/>
+            <option Value="0x1C2" Display="0x0001C2FF"/>
+            <option Value="0x1C3" Display="0x0001C3FF"/>
+            <option Value="0x1C4" Display="0x0001C4FF"/>
+            <option Value="0x1C5" Display="0x0001C5FF"/>
+            <option Value="0x1C6" Display="0x0001C6FF"/>
+            <option Value="0x1C7" Display="0x0001C7FF"/>
+            <option Value="0x1C8" Display="0x0001C8FF"/>
+            <option Value="0x1C9" Display="0x0001C9FF"/>
+            <option Value="0x1CA" Display="0x0001CAFF"/>
+            <option Value="0x1CB" Display="0x0001CBFF"/>
+            <option Value="0x1CC" Display="0x0001CCFF"/>
+            <option Value="0x1CD" Display="0x0001CDFF"/>
+            <option Value="0x1CE" Display="0x0001CEFF"/>
+            <option Value="0x1CF" Display="0x0001CFFF"/>
+            <option Value="0x1D0" Display="0x0001D0FF"/>
+            <option Value="0x1D1" Display="0x0001D1FF"/>
+            <option Value="0x1D2" Display="0x0001D2FF"/>
+            <option Value="0x1D3" Display="0x0001D3FF"/>
+            <option Value="0x1D4" Display="0x0001D4FF"/>
+            <option Value="0x1D5" Display="0x0001D5FF"/>
+            <option Value="0x1D6" Display="0x0001D6FF"/>
+            <option Value="0x1D7" Display="0x0001D7FF"/>
+            <option Value="0x1D8" Display="0x0001D8FF"/>
+            <option Value="0x1D9" Display="0x0001D9FF"/>
+            <option Value="0x1DA" Display="0x0001DAFF"/>
+            <option Value="0x1DB" Display="0x0001DBFF"/>
+            <option Value="0x1DC" Display="0x0001DCFF"/>
+            <option Value="0x1DD" Display="0x0001DDFF"/>
+            <option Value="0x1DE" Display="0x0001DEFF"/>
+            <option Value="0x1DF" Display="0x0001DFFF"/>
+            <option Value="0x1E0" Display="0x0001E0FF"/>
+            <option Value="0x1E1" Display="0x0001E1FF"/>
+            <option Value="0x1E2" Display="0x0001E2FF"/>
+            <option Value="0x1E3" Display="0x0001E3FF"/>
+            <option Value="0x1E4" Display="0x0001E4FF"/>
+            <option Value="0x1E5" Display="0x0001E5FF"/>
+            <option Value="0x1E6" Display="0x0001E6FF"/>
+            <option Value="0x1E7" Display="0x0001E7FF"/>
+            <option Value="0x1E8" Display="0x0001E8FF"/>
+            <option Value="0x1E9" Display="0x0001E9FF"/>
+            <option Value="0x1EA" Display="0x0001EAFF"/>
+            <option Value="0x1EB" Display="0x0001EBFF"/>
+            <option Value="0x1EC" Display="0x0001ECFF"/>
+            <option Value="0x1ED" Display="0x0001EDFF"/>
+            <option Value="0x1EE" Display="0x0001EEFF"/>
+            <option Value="0x1EF" Display="0x0001EFFF"/>
+            <option Value="0x1F0" Display="0x0001F0FF"/>
+            <option Value="0x1F1" Display="0x0001F1FF"/>
+            <option Value="0x1F2" Display="0x0001F2FF"/>
+            <option Value="0x1F3" Display="0x0001F3FF"/>
+            <option Value="0x1F4" Display="0x0001F4FF"/>
+            <option Value="0x1F5" Display="0x0001F5FF"/>
+            <option Value="0x1F6" Display="0x0001F6FF"/>
+            <option Value="0x1F7" Display="0x0001F7FF"/>
+            <option Value="0x1F8" Display="0x0001F8FF"/>
+            <option Value="0x1F9" Display="0x0001F9FF"/>
+            <option Value="0x1FA" Display="0x0001FAFF"/>
+            <option Value="0x1FB" Display="0x0001FBFF"/>
+            <option Value="0x1FC" Display="0x0001FCFF"/>
+            <option Value="0x1FD" Display="0x0001FDFF"/>
+            <option Value="0x1FE" Display="0x0001FEFF"/>
+            <option Value="0x1FF" Display="0x0001FFFF"/>
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>SECR1</name>
+      <description>Bank1 Secure Memory Region Pages </description>
+      <addressOffset>0x3C</addressOffset>
+      <resetValue>0xFFFF0000</resetValue>
+      <fields>
+        <field>
+          <name>SEC_SIZE1</name>
+          <description>Bank1 Secure Memory Region Pages</description>
+          <bitRange>[24:16]</bitRange>
+          <options>
+            <option Value="0x0" Display="0x000000FF"  Default="1" />
+            <option Value="0x1" Display="0x000001FF"/>
+            <option Value="0x2" Display="0x000002FF"/>
+            <option Value="0x3" Display="0x000003FF"/>
+            <option Value="0x4" Display="0x000004FF"/>
+            <option Value="0x5" Display="0x000005FF"/>
+            <option Value="0x6" Display="0x000006FF"/>
+            <option Value="0x7" Display="0x000007FF"/>
+            <option Value="0x8" Display="0x000008FF"/>
+            <option Value="0x9" Display="0x000009FF"/>
+            <option Value="0xA" Display="0x00000AFF"/>
+            <option Value="0xB" Display="0x00000BFF"/>
+            <option Value="0xC" Display="0x00000CFF"/>
+            <option Value="0xD" Display="0x00000DFF"/>
+            <option Value="0xE" Display="0x00000EFF"/>
+            <option Value="0xF" Display="0x00000FFF"/>
+            <option Value="0x10" Display="0x000010FF"/>
+            <option Value="0x11" Display="0x000011FF"/>
+            <option Value="0x12" Display="0x000012FF"/>
+            <option Value="0x13" Display="0x000013FF"/>
+            <option Value="0x14" Display="0x000014FF"/>
+            <option Value="0x15" Display="0x000015FF"/>
+            <option Value="0x16" Display="0x000016FF"/>
+            <option Value="0x17" Display="0x000017FF"/>
+            <option Value="0x18" Display="0x000018FF"/>
+            <option Value="0x19" Display="0x000019FF"/>
+            <option Value="0x1A" Display="0x00001AFF"/>
+            <option Value="0x1B" Display="0x00001BFF"/>
+            <option Value="0x1C" Display="0x00001CFF"/>
+            <option Value="0x1D" Display="0x00001DFF"/>
+            <option Value="0x1E" Display="0x00001EFF"/>
+            <option Value="0x1F" Display="0x00001FFF"/>
+            <option Value="0x20" Display="0x000020FF"/>
+            <option Value="0x21" Display="0x000021FF"/>
+            <option Value="0x22" Display="0x000022FF"/>
+            <option Value="0x23" Display="0x000023FF"/>
+            <option Value="0x24" Display="0x000024FF"/>
+            <option Value="0x25" Display="0x000025FF"/>
+            <option Value="0x26" Display="0x000026FF"/>
+            <option Value="0x27" Display="0x000027FF"/>
+            <option Value="0x28" Display="0x000028FF"/>
+            <option Value="0x29" Display="0x000029FF"/>
+            <option Value="0x2A" Display="0x00002AFF"/>
+            <option Value="0x2B" Display="0x00002BFF"/>
+            <option Value="0x2C" Display="0x00002CFF"/>
+            <option Value="0x2D" Display="0x00002DFF"/>
+            <option Value="0x2E" Display="0x00002EFF"/>
+            <option Value="0x2F" Display="0x00002FFF"/>
+            <option Value="0x30" Display="0x000030FF"/>
+            <option Value="0x31" Display="0x000031FF"/>
+            <option Value="0x32" Display="0x000032FF"/>
+            <option Value="0x33" Display="0x000033FF"/>
+            <option Value="0x34" Display="0x000034FF"/>
+            <option Value="0x35" Display="0x000035FF"/>
+            <option Value="0x36" Display="0x000036FF"/>
+            <option Value="0x37" Display="0x000037FF"/>
+            <option Value="0x38" Display="0x000038FF"/>
+            <option Value="0x39" Display="0x000039FF"/>
+            <option Value="0x3A" Display="0x00003AFF"/>
+            <option Value="0x3B" Display="0x00003BFF"/>
+            <option Value="0x3C" Display="0x00003CFF"/>
+            <option Value="0x3D" Display="0x00003DFF"/>
+            <option Value="0x3E" Display="0x00003EFF"/>
+            <option Value="0x3F" Display="0x00003FFF"/>
+            <option Value="0x40" Display="0x000040FF"/>
+            <option Value="0x41" Display="0x000041FF"/>
+            <option Value="0x42" Display="0x000042FF"/>
+            <option Value="0x43" Display="0x000043FF"/>
+            <option Value="0x44" Display="0x000044FF"/>
+            <option Value="0x45" Display="0x000045FF"/>
+            <option Value="0x46" Display="0x000046FF"/>
+            <option Value="0x47" Display="0x000047FF"/>
+            <option Value="0x48" Display="0x000048FF"/>
+            <option Value="0x49" Display="0x000049FF"/>
+            <option Value="0x4A" Display="0x00004AFF"/>
+            <option Value="0x4B" Display="0x00004BFF"/>
+            <option Value="0x4C" Display="0x00004CFF"/>
+            <option Value="0x4D" Display="0x00004DFF"/>
+            <option Value="0x4E" Display="0x00004EFF"/>
+            <option Value="0x4F" Display="0x00004FFF"/>
+            <option Value="0x50" Display="0x000050FF"/>
+            <option Value="0x51" Display="0x000051FF"/>
+            <option Value="0x52" Display="0x000052FF"/>
+            <option Value="0x53" Display="0x000053FF"/>
+            <option Value="0x54" Display="0x000054FF"/>
+            <option Value="0x55" Display="0x000055FF"/>
+            <option Value="0x56" Display="0x000056FF"/>
+            <option Value="0x57" Display="0x000057FF"/>
+            <option Value="0x58" Display="0x000058FF"/>
+            <option Value="0x59" Display="0x000059FF"/>
+            <option Value="0x5A" Display="0x00005AFF"/>
+            <option Value="0x5B" Display="0x00005BFF"/>
+            <option Value="0x5C" Display="0x00005CFF"/>
+            <option Value="0x5D" Display="0x00005DFF"/>
+            <option Value="0x5E" Display="0x00005EFF"/>
+            <option Value="0x5F" Display="0x00005FFF"/>
+            <option Value="0x60" Display="0x000060FF"/>
+            <option Value="0x61" Display="0x000061FF"/>
+            <option Value="0x62" Display="0x000062FF"/>
+            <option Value="0x63" Display="0x000063FF"/>
+            <option Value="0x64" Display="0x000064FF"/>
+            <option Value="0x65" Display="0x000065FF"/>
+            <option Value="0x66" Display="0x000066FF"/>
+            <option Value="0x67" Display="0x000067FF"/>
+            <option Value="0x68" Display="0x000068FF"/>
+            <option Value="0x69" Display="0x000069FF"/>
+            <option Value="0x6A" Display="0x00006AFF"/>
+            <option Value="0x6B" Display="0x00006BFF"/>
+            <option Value="0x6C" Display="0x00006CFF"/>
+            <option Value="0x6D" Display="0x00006DFF"/>
+            <option Value="0x6E" Display="0x00006EFF"/>
+            <option Value="0x6F" Display="0x00006FFF"/>
+            <option Value="0x70" Display="0x000070FF"/>
+            <option Value="0x71" Display="0x000071FF"/>
+            <option Value="0x72" Display="0x000072FF"/>
+            <option Value="0x73" Display="0x000073FF"/>
+            <option Value="0x74" Display="0x000074FF"/>
+            <option Value="0x75" Display="0x000075FF"/>
+            <option Value="0x76" Display="0x000076FF"/>
+            <option Value="0x77" Display="0x000077FF"/>
+            <option Value="0x78" Display="0x000078FF"/>
+            <option Value="0x79" Display="0x000079FF"/>
+            <option Value="0x7A" Display="0x00007AFF"/>
+            <option Value="0x7B" Display="0x00007BFF"/>
+            <option Value="0x7C" Display="0x00007CFF"/>
+            <option Value="0x7D" Display="0x00007DFF"/>
+            <option Value="0x7E" Display="0x00007EFF"/>
+            <option Value="0x7F" Display="0x00007FFF"/>
+            <option Value="0x80" Display="0x000080FF"/>
+            <option Value="0x81" Display="0x000081FF"/>
+            <option Value="0x82" Display="0x000082FF"/>
+            <option Value="0x83" Display="0x000083FF"/>
+            <option Value="0x84" Display="0x000084FF"/>
+            <option Value="0x85" Display="0x000085FF"/>
+            <option Value="0x86" Display="0x000086FF"/>
+            <option Value="0x87" Display="0x000087FF"/>
+            <option Value="0x88" Display="0x000088FF"/>
+            <option Value="0x89" Display="0x000089FF"/>
+            <option Value="0x8A" Display="0x00008AFF"/>
+            <option Value="0x8B" Display="0x00008BFF"/>
+            <option Value="0x8C" Display="0x00008CFF"/>
+            <option Value="0x8D" Display="0x00008DFF"/>
+            <option Value="0x8E" Display="0x00008EFF"/>
+            <option Value="0x8F" Display="0x00008FFF"/>
+            <option Value="0x90" Display="0x000090FF"/>
+            <option Value="0x91" Display="0x000091FF"/>
+            <option Value="0x92" Display="0x000092FF"/>
+            <option Value="0x93" Display="0x000093FF"/>
+            <option Value="0x94" Display="0x000094FF"/>
+            <option Value="0x95" Display="0x000095FF"/>
+            <option Value="0x96" Display="0x000096FF"/>
+            <option Value="0x97" Display="0x000097FF"/>
+            <option Value="0x98" Display="0x000098FF"/>
+            <option Value="0x99" Display="0x000099FF"/>
+            <option Value="0x9A" Display="0x00009AFF"/>
+            <option Value="0x9B" Display="0x00009BFF"/>
+            <option Value="0x9C" Display="0x00009CFF"/>
+            <option Value="0x9D" Display="0x00009DFF"/>
+            <option Value="0x9E" Display="0x00009EFF"/>
+            <option Value="0x9F" Display="0x00009FFF"/>
+            <option Value="0xA0" Display="0x0000A0FF"/>
+            <option Value="0xA1" Display="0x0000A1FF"/>
+            <option Value="0xA2" Display="0x0000A2FF"/>
+            <option Value="0xA3" Display="0x0000A3FF"/>
+            <option Value="0xA4" Display="0x0000A4FF"/>
+            <option Value="0xA5" Display="0x0000A5FF"/>
+            <option Value="0xA6" Display="0x0000A6FF"/>
+            <option Value="0xA7" Display="0x0000A7FF"/>
+            <option Value="0xA8" Display="0x0000A8FF"/>
+            <option Value="0xA9" Display="0x0000A9FF"/>
+            <option Value="0xAA" Display="0x0000AAFF"/>
+            <option Value="0xAB" Display="0x0000ABFF"/>
+            <option Value="0xAC" Display="0x0000ACFF"/>
+            <option Value="0xAD" Display="0x0000ADFF"/>
+            <option Value="0xAE" Display="0x0000AEFF"/>
+            <option Value="0xAF" Display="0x0000AFFF"/>
+            <option Value="0xB0" Display="0x0000B0FF"/>
+            <option Value="0xB1" Display="0x0000B1FF"/>
+            <option Value="0xB2" Display="0x0000B2FF"/>
+            <option Value="0xB3" Display="0x0000B3FF"/>
+            <option Value="0xB4" Display="0x0000B4FF"/>
+            <option Value="0xB5" Display="0x0000B5FF"/>
+            <option Value="0xB6" Display="0x0000B6FF"/>
+            <option Value="0xB7" Display="0x0000B7FF"/>
+            <option Value="0xB8" Display="0x0000B8FF"/>
+            <option Value="0xB9" Display="0x0000B9FF"/>
+            <option Value="0xBA" Display="0x0000BAFF"/>
+            <option Value="0xBB" Display="0x0000BBFF"/>
+            <option Value="0xBC" Display="0x0000BCFF"/>
+            <option Value="0xBD" Display="0x0000BDFF"/>
+            <option Value="0xBE" Display="0x0000BEFF"/>
+            <option Value="0xBF" Display="0x0000BFFF"/>
+            <option Value="0xC0" Display="0x0000C0FF"/>
+            <option Value="0xC1" Display="0x0000C1FF"/>
+            <option Value="0xC2" Display="0x0000C2FF"/>
+            <option Value="0xC3" Display="0x0000C3FF"/>
+            <option Value="0xC4" Display="0x0000C4FF"/>
+            <option Value="0xC5" Display="0x0000C5FF"/>
+            <option Value="0xC6" Display="0x0000C6FF"/>
+            <option Value="0xC7" Display="0x0000C7FF"/>
+            <option Value="0xC8" Display="0x0000C8FF"/>
+            <option Value="0xC9" Display="0x0000C9FF"/>
+            <option Value="0xCA" Display="0x0000CAFF"/>
+            <option Value="0xCB" Display="0x0000CBFF"/>
+            <option Value="0xCC" Display="0x0000CCFF"/>
+            <option Value="0xCD" Display="0x0000CDFF"/>
+            <option Value="0xCE" Display="0x0000CEFF"/>
+            <option Value="0xCF" Display="0x0000CFFF"/>
+            <option Value="0xD0" Display="0x0000D0FF"/>
+            <option Value="0xD1" Display="0x0000D1FF"/>
+            <option Value="0xD2" Display="0x0000D2FF"/>
+            <option Value="0xD3" Display="0x0000D3FF"/>
+            <option Value="0xD4" Display="0x0000D4FF"/>
+            <option Value="0xD5" Display="0x0000D5FF"/>
+            <option Value="0xD6" Display="0x0000D6FF"/>
+            <option Value="0xD7" Display="0x0000D7FF"/>
+            <option Value="0xD8" Display="0x0000D8FF"/>
+            <option Value="0xD9" Display="0x0000D9FF"/>
+            <option Value="0xDA" Display="0x0000DAFF"/>
+            <option Value="0xDB" Display="0x0000DBFF"/>
+            <option Value="0xDC" Display="0x0000DCFF"/>
+            <option Value="0xDD" Display="0x0000DDFF"/>
+            <option Value="0xDE" Display="0x0000DEFF"/>
+            <option Value="0xDF" Display="0x0000DFFF"/>
+            <option Value="0xE0" Display="0x0000E0FF"/>
+            <option Value="0xE1" Display="0x0000E1FF"/>
+            <option Value="0xE2" Display="0x0000E2FF"/>
+            <option Value="0xE3" Display="0x0000E3FF"/>
+            <option Value="0xE4" Display="0x0000E4FF"/>
+            <option Value="0xE5" Display="0x0000E5FF"/>
+            <option Value="0xE6" Display="0x0000E6FF"/>
+            <option Value="0xE7" Display="0x0000E7FF"/>
+            <option Value="0xE8" Display="0x0000E8FF"/>
+            <option Value="0xE9" Display="0x0000E9FF"/>
+            <option Value="0xEA" Display="0x0000EAFF"/>
+            <option Value="0xEB" Display="0x0000EBFF"/>
+            <option Value="0xEC" Display="0x0000ECFF"/>
+            <option Value="0xED" Display="0x0000EDFF"/>
+            <option Value="0xEE" Display="0x0000EEFF"/>
+            <option Value="0xEF" Display="0x0000EFFF"/>
+            <option Value="0xF0" Display="0x0000F0FF"/>
+            <option Value="0xF1" Display="0x0000F1FF"/>
+            <option Value="0xF2" Display="0x0000F2FF"/>
+            <option Value="0xF3" Display="0x0000F3FF"/>
+            <option Value="0xF4" Display="0x0000F4FF"/>
+            <option Value="0xF5" Display="0x0000F5FF"/>
+            <option Value="0xF6" Display="0x0000F6FF"/>
+            <option Value="0xF7" Display="0x0000F7FF"/>
+            <option Value="0xF8" Display="0x0000F8FF"/>
+            <option Value="0xF9" Display="0x0000F9FF"/>
+            <option Value="0xFA" Display="0x0000FAFF"/>
+            <option Value="0xFB" Display="0x0000FBFF"/>
+            <option Value="0xFC" Display="0x0000FCFF"/>
+            <option Value="0xFD" Display="0x0000FDFF"/>
+            <option Value="0xFE" Display="0x0000FEFF"/>
+            <option Value="0xFF" Display="0x0000FFFF"/>
+            <option Value="0x100" Display="0x000100FF"/>
+            <option Value="0x101" Display="0x000101FF"/>
+            <option Value="0x102" Display="0x000102FF"/>
+            <option Value="0x103" Display="0x000103FF"/>
+            <option Value="0x104" Display="0x000104FF"/>
+            <option Value="0x105" Display="0x000105FF"/>
+            <option Value="0x106" Display="0x000106FF"/>
+            <option Value="0x107" Display="0x000107FF"/>
+            <option Value="0x108" Display="0x000108FF"/>
+            <option Value="0x109" Display="0x000109FF"/>
+            <option Value="0x10A" Display="0x00010AFF"/>
+            <option Value="0x10B" Display="0x00010BFF"/>
+            <option Value="0x10C" Display="0x00010CFF"/>
+            <option Value="0x10D" Display="0x00010DFF"/>
+            <option Value="0x10E" Display="0x00010EFF"/>
+            <option Value="0x10F" Display="0x00010FFF"/>
+            <option Value="0x110" Display="0x000110FF"/>
+            <option Value="0x111" Display="0x000111FF"/>
+            <option Value="0x112" Display="0x000112FF"/>
+            <option Value="0x113" Display="0x000113FF"/>
+            <option Value="0x114" Display="0x000114FF"/>
+            <option Value="0x115" Display="0x000115FF"/>
+            <option Value="0x116" Display="0x000116FF"/>
+            <option Value="0x117" Display="0x000117FF"/>
+            <option Value="0x118" Display="0x000118FF"/>
+            <option Value="0x119" Display="0x000119FF"/>
+            <option Value="0x11A" Display="0x00011AFF"/>
+            <option Value="0x11B" Display="0x00011BFF"/>
+            <option Value="0x11C" Display="0x00011CFF"/>
+            <option Value="0x11D" Display="0x00011DFF"/>
+            <option Value="0x11E" Display="0x00011EFF"/>
+            <option Value="0x11F" Display="0x00011FFF"/>
+            <option Value="0x120" Display="0x000120FF"/>
+            <option Value="0x121" Display="0x000121FF"/>
+            <option Value="0x122" Display="0x000122FF"/>
+            <option Value="0x123" Display="0x000123FF"/>
+            <option Value="0x124" Display="0x000124FF"/>
+            <option Value="0x125" Display="0x000125FF"/>
+            <option Value="0x126" Display="0x000126FF"/>
+            <option Value="0x127" Display="0x000127FF"/>
+            <option Value="0x128" Display="0x000128FF"/>
+            <option Value="0x129" Display="0x000129FF"/>
+            <option Value="0x12A" Display="0x00012AFF"/>
+            <option Value="0x12B" Display="0x00012BFF"/>
+            <option Value="0x12C" Display="0x00012CFF"/>
+            <option Value="0x12D" Display="0x00012DFF"/>
+            <option Value="0x12E" Display="0x00012EFF"/>
+            <option Value="0x12F" Display="0x00012FFF"/>
+            <option Value="0x130" Display="0x000130FF"/>
+            <option Value="0x131" Display="0x000131FF"/>
+            <option Value="0x132" Display="0x000132FF"/>
+            <option Value="0x133" Display="0x000133FF"/>
+            <option Value="0x134" Display="0x000134FF"/>
+            <option Value="0x135" Display="0x000135FF"/>
+            <option Value="0x136" Display="0x000136FF"/>
+            <option Value="0x137" Display="0x000137FF"/>
+            <option Value="0x138" Display="0x000138FF"/>
+            <option Value="0x139" Display="0x000139FF"/>
+            <option Value="0x13A" Display="0x00013AFF"/>
+            <option Value="0x13B" Display="0x00013BFF"/>
+            <option Value="0x13C" Display="0x00013CFF"/>
+            <option Value="0x13D" Display="0x00013DFF"/>
+            <option Value="0x13E" Display="0x00013EFF"/>
+            <option Value="0x13F" Display="0x00013FFF"/>
+            <option Value="0x140" Display="0x000140FF"/>
+            <option Value="0x141" Display="0x000141FF"/>
+            <option Value="0x142" Display="0x000142FF"/>
+            <option Value="0x143" Display="0x000143FF"/>
+            <option Value="0x144" Display="0x000144FF"/>
+            <option Value="0x145" Display="0x000145FF"/>
+            <option Value="0x146" Display="0x000146FF"/>
+            <option Value="0x147" Display="0x000147FF"/>
+            <option Value="0x148" Display="0x000148FF"/>
+            <option Value="0x149" Display="0x000149FF"/>
+            <option Value="0x14A" Display="0x00014AFF"/>
+            <option Value="0x14B" Display="0x00014BFF"/>
+            <option Value="0x14C" Display="0x00014CFF"/>
+            <option Value="0x14D" Display="0x00014DFF"/>
+            <option Value="0x14E" Display="0x00014EFF"/>
+            <option Value="0x14F" Display="0x00014FFF"/>
+            <option Value="0x150" Display="0x000150FF"/>
+            <option Value="0x151" Display="0x000151FF"/>
+            <option Value="0x152" Display="0x000152FF"/>
+            <option Value="0x153" Display="0x000153FF"/>
+            <option Value="0x154" Display="0x000154FF"/>
+            <option Value="0x155" Display="0x000155FF"/>
+            <option Value="0x156" Display="0x000156FF"/>
+            <option Value="0x157" Display="0x000157FF"/>
+            <option Value="0x158" Display="0x000158FF"/>
+            <option Value="0x159" Display="0x000159FF"/>
+            <option Value="0x15A" Display="0x00015AFF"/>
+            <option Value="0x15B" Display="0x00015BFF"/>
+            <option Value="0x15C" Display="0x00015CFF"/>
+            <option Value="0x15D" Display="0x00015DFF"/>
+            <option Value="0x15E" Display="0x00015EFF"/>
+            <option Value="0x15F" Display="0x00015FFF"/>
+            <option Value="0x160" Display="0x000160FF"/>
+            <option Value="0x161" Display="0x000161FF"/>
+            <option Value="0x162" Display="0x000162FF"/>
+            <option Value="0x163" Display="0x000163FF"/>
+            <option Value="0x164" Display="0x000164FF"/>
+            <option Value="0x165" Display="0x000165FF"/>
+            <option Value="0x166" Display="0x000166FF"/>
+            <option Value="0x167" Display="0x000167FF"/>
+            <option Value="0x168" Display="0x000168FF"/>
+            <option Value="0x169" Display="0x000169FF"/>
+            <option Value="0x16A" Display="0x00016AFF"/>
+            <option Value="0x16B" Display="0x00016BFF"/>
+            <option Value="0x16C" Display="0x00016CFF"/>
+            <option Value="0x16D" Display="0x00016DFF"/>
+            <option Value="0x16E" Display="0x00016EFF"/>
+            <option Value="0x16F" Display="0x00016FFF"/>
+            <option Value="0x170" Display="0x000170FF"/>
+            <option Value="0x171" Display="0x000171FF"/>
+            <option Value="0x172" Display="0x000172FF"/>
+            <option Value="0x173" Display="0x000173FF"/>
+            <option Value="0x174" Display="0x000174FF"/>
+            <option Value="0x175" Display="0x000175FF"/>
+            <option Value="0x176" Display="0x000176FF"/>
+            <option Value="0x177" Display="0x000177FF"/>
+            <option Value="0x178" Display="0x000178FF"/>
+            <option Value="0x179" Display="0x000179FF"/>
+            <option Value="0x17A" Display="0x00017AFF"/>
+            <option Value="0x17B" Display="0x00017BFF"/>
+            <option Value="0x17C" Display="0x00017CFF"/>
+            <option Value="0x17D" Display="0x00017DFF"/>
+            <option Value="0x17E" Display="0x00017EFF"/>
+            <option Value="0x17F" Display="0x00017FFF"/>
+            <option Value="0x180" Display="0x000180FF"/>
+            <option Value="0x181" Display="0x000181FF"/>
+            <option Value="0x182" Display="0x000182FF"/>
+            <option Value="0x183" Display="0x000183FF"/>
+            <option Value="0x184" Display="0x000184FF"/>
+            <option Value="0x185" Display="0x000185FF"/>
+            <option Value="0x186" Display="0x000186FF"/>
+            <option Value="0x187" Display="0x000187FF"/>
+            <option Value="0x188" Display="0x000188FF"/>
+            <option Value="0x189" Display="0x000189FF"/>
+            <option Value="0x18A" Display="0x00018AFF"/>
+            <option Value="0x18B" Display="0x00018BFF"/>
+            <option Value="0x18C" Display="0x00018CFF"/>
+            <option Value="0x18D" Display="0x00018DFF"/>
+            <option Value="0x18E" Display="0x00018EFF"/>
+            <option Value="0x18F" Display="0x00018FFF"/>
+            <option Value="0x190" Display="0x000190FF"/>
+            <option Value="0x191" Display="0x000191FF"/>
+            <option Value="0x192" Display="0x000192FF"/>
+            <option Value="0x193" Display="0x000193FF"/>
+            <option Value="0x194" Display="0x000194FF"/>
+            <option Value="0x195" Display="0x000195FF"/>
+            <option Value="0x196" Display="0x000196FF"/>
+            <option Value="0x197" Display="0x000197FF"/>
+            <option Value="0x198" Display="0x000198FF"/>
+            <option Value="0x199" Display="0x000199FF"/>
+            <option Value="0x19A" Display="0x00019AFF"/>
+            <option Value="0x19B" Display="0x00019BFF"/>
+            <option Value="0x19C" Display="0x00019CFF"/>
+            <option Value="0x19D" Display="0x00019DFF"/>
+            <option Value="0x19E" Display="0x00019EFF"/>
+            <option Value="0x19F" Display="0x00019FFF"/>
+            <option Value="0x1A0" Display="0x0001A0FF"/>
+            <option Value="0x1A1" Display="0x0001A1FF"/>
+            <option Value="0x1A2" Display="0x0001A2FF"/>
+            <option Value="0x1A3" Display="0x0001A3FF"/>
+            <option Value="0x1A4" Display="0x0001A4FF"/>
+            <option Value="0x1A5" Display="0x0001A5FF"/>
+            <option Value="0x1A6" Display="0x0001A6FF"/>
+            <option Value="0x1A7" Display="0x0001A7FF"/>
+            <option Value="0x1A8" Display="0x0001A8FF"/>
+            <option Value="0x1A9" Display="0x0001A9FF"/>
+            <option Value="0x1AA" Display="0x0001AAFF"/>
+            <option Value="0x1AB" Display="0x0001ABFF"/>
+            <option Value="0x1AC" Display="0x0001ACFF"/>
+            <option Value="0x1AD" Display="0x0001ADFF"/>
+            <option Value="0x1AE" Display="0x0001AEFF"/>
+            <option Value="0x1AF" Display="0x0001AFFF"/>
+            <option Value="0x1B0" Display="0x0001B0FF"/>
+            <option Value="0x1B1" Display="0x0001B1FF"/>
+            <option Value="0x1B2" Display="0x0001B2FF"/>
+            <option Value="0x1B3" Display="0x0001B3FF"/>
+            <option Value="0x1B4" Display="0x0001B4FF"/>
+            <option Value="0x1B5" Display="0x0001B5FF"/>
+            <option Value="0x1B6" Display="0x0001B6FF"/>
+            <option Value="0x1B7" Display="0x0001B7FF"/>
+            <option Value="0x1B8" Display="0x0001B8FF"/>
+            <option Value="0x1B9" Display="0x0001B9FF"/>
+            <option Value="0x1BA" Display="0x0001BAFF"/>
+            <option Value="0x1BB" Display="0x0001BBFF"/>
+            <option Value="0x1BC" Display="0x0001BCFF"/>
+            <option Value="0x1BD" Display="0x0001BDFF"/>
+            <option Value="0x1BE" Display="0x0001BEFF"/>
+            <option Value="0x1BF" Display="0x0001BFFF"/>
+            <option Value="0x1C0" Display="0x0001C0FF"/>
+            <option Value="0x1C1" Display="0x0001C1FF"/>
+            <option Value="0x1C2" Display="0x0001C2FF"/>
+            <option Value="0x1C3" Display="0x0001C3FF"/>
+            <option Value="0x1C4" Display="0x0001C4FF"/>
+            <option Value="0x1C5" Display="0x0001C5FF"/>
+            <option Value="0x1C6" Display="0x0001C6FF"/>
+            <option Value="0x1C7" Display="0x0001C7FF"/>
+            <option Value="0x1C8" Display="0x0001C8FF"/>
+            <option Value="0x1C9" Display="0x0001C9FF"/>
+            <option Value="0x1CA" Display="0x0001CAFF"/>
+            <option Value="0x1CB" Display="0x0001CBFF"/>
+            <option Value="0x1CC" Display="0x0001CCFF"/>
+            <option Value="0x1CD" Display="0x0001CDFF"/>
+            <option Value="0x1CE" Display="0x0001CEFF"/>
+            <option Value="0x1CF" Display="0x0001CFFF"/>
+            <option Value="0x1D0" Display="0x0001D0FF"/>
+            <option Value="0x1D1" Display="0x0001D1FF"/>
+            <option Value="0x1D2" Display="0x0001D2FF"/>
+            <option Value="0x1D3" Display="0x0001D3FF"/>
+            <option Value="0x1D4" Display="0x0001D4FF"/>
+            <option Value="0x1D5" Display="0x0001D5FF"/>
+            <option Value="0x1D6" Display="0x0001D6FF"/>
+            <option Value="0x1D7" Display="0x0001D7FF"/>
+            <option Value="0x1D8" Display="0x0001D8FF"/>
+            <option Value="0x1D9" Display="0x0001D9FF"/>
+            <option Value="0x1DA" Display="0x0001DAFF"/>
+            <option Value="0x1DB" Display="0x0001DBFF"/>
+            <option Value="0x1DC" Display="0x0001DCFF"/>
+            <option Value="0x1DD" Display="0x0001DDFF"/>
+            <option Value="0x1DE" Display="0x0001DEFF"/>
+            <option Value="0x1DF" Display="0x0001DFFF"/>
+            <option Value="0x1E0" Display="0x0001E0FF"/>
+            <option Value="0x1E1" Display="0x0001E1FF"/>
+            <option Value="0x1E2" Display="0x0001E2FF"/>
+            <option Value="0x1E3" Display="0x0001E3FF"/>
+            <option Value="0x1E4" Display="0x0001E4FF"/>
+            <option Value="0x1E5" Display="0x0001E5FF"/>
+            <option Value="0x1E6" Display="0x0001E6FF"/>
+            <option Value="0x1E7" Display="0x0001E7FF"/>
+            <option Value="0x1E8" Display="0x0001E8FF"/>
+            <option Value="0x1E9" Display="0x0001E9FF"/>
+            <option Value="0x1EA" Display="0x0001EAFF"/>
+            <option Value="0x1EB" Display="0x0001EBFF"/>
+            <option Value="0x1EC" Display="0x0001ECFF"/>
+            <option Value="0x1ED" Display="0x0001EDFF"/>
+            <option Value="0x1EE" Display="0x0001EEFF"/>
+            <option Value="0x1EF" Display="0x0001EFFF"/>
+            <option Value="0x1F0" Display="0x0001F0FF"/>
+            <option Value="0x1F1" Display="0x0001F1FF"/>
+            <option Value="0x1F2" Display="0x0001F2FF"/>
+            <option Value="0x1F3" Display="0x0001F3FF"/>
+            <option Value="0x1F4" Display="0x0001F4FF"/>
+            <option Value="0x1F5" Display="0x0001F5FF"/>
+            <option Value="0x1F6" Display="0x0001F6FF"/>
+            <option Value="0x1F7" Display="0x0001F7FF"/>
+            <option Value="0x1F8" Display="0x0001F8FF"/>
+            <option Value="0x1F9" Display="0x0001F9FF"/>
+            <option Value="0x1FA" Display="0x0001FAFF"/>
+            <option Value="0x1FB" Display="0x0001FBFF"/>
+            <option Value="0x1FC" Display="0x0001FCFF"/>
+            <option Value="0x1FD" Display="0x0001FDFF"/>
+            <option Value="0x1FE" Display="0x0001FEFF"/>
+            <option Value="0x1FF" Display="0x0001FFFF"/>
+          </options>
+        </field>
+      </fields>
+    </register>
+    <register>
+      <name>OPTRBFBR</name>
+      <description>User Option BFBR</description>
+      <addressOffset>0x60</addressOffset>
+      <resetValue>0xFFFF0000</resetValue>
+      <fields>
+        <field>
+          <name>BFB</name>
+          <description>Sart Bank Num Choose</description>
+          <bitRange>[0:0]</bitRange>
+          <options>
+            <option Value="0" Display="Bank0 Mapped 0x08000000" Default="1" />
+            <option Value="1" Display="Bank1 Mapped 0x08000000"/>
+          </options>
+        </field>
+      </fields>
+    </register>
+  </registers>
+</memoryMap>

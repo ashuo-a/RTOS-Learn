@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://blog.csdn.net/weixin_47040031/article/details/139309080" rel="canonical"/>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+  <meta content="webkit" name="renderer">
+   <meta content="webkit" name="force-rendering">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta content="always" name="referrer"/>
+    <meta content="no-siteapp" http-equiv="Cache-Control">
+     <link href="#" media="handheld" rel="alternate"/>
+     <meta content="pc" name="applicable-device"/>
+     <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"/>
+     <title>
+      FreeRTOS基础（二）：任务创建和删除的API函数（熟悉）_任务删除函数-CSDN博客
+     </title>
+     <meta content="任务删除函数" name="keywords"/>
+     <meta content='{"autorun":true,"install":true,"keyword":"FreeRTOS基础(二):任务创建和删除的API函数(熟悉)"}' name="csdn-baidu-search"/>
+     <meta content="文章浏览阅读2.6k次，点赞40次，收藏50次。注意：每个任务都有属于自己的任务控制块，类似身份证任务栈栈顶，在任务切换时的任务上下文保存、任务恢复息息相关三、静态创建任务函数。_任务删除函数" name="description"/>
+     <link href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-07249614e6.min.css" rel="stylesheet" type="text/css"/>
+     <link href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-sea/skin-sea-d3a08c2048.min.css" rel="stylesheet" type="text/css"/>
+     <meta content='{"type":"0","fixModel":"1"}' name="toolbar"/>
+     <link href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css" rel="stylesheet" type="text/css"/>
+     <style>
+      .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+     </style>
+    </meta>
+   </meta>
+  </meta>
+  <style type="text/css">
+   * { user-select: text; } pre{max-height: none!important; overflow-y: hidden;}
+  </style>
+ </head>
+ <body class="nodata" style="">
+  <link href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css" rel="stylesheet"/>
+  <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css" rel="stylesheet">
+   <link href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css" rel="stylesheet">
+    <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;">
+     <div class="container clearfix container-concision" id="mainBox">
+      <main>
+       <div class="blog-content-box">
+        <div class="article-header-box">
+         <div class="article-header">
+          <div class="article-title-box">
+           <h1 class="title-article" id="articleContentId">
+            FreeRTOS基础（二）：任务创建和删除的API函数（熟悉）
+           </h1>
+          </div>
+          <div class="article-info-box">
+           <div class="article-bar-top-box">
+            <div class="article-bar-top">
+             <img alt="" class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png"/>
+             <div class="bar-content">
+              <a class="article-vip-box" data-report-click='{"spm":"3001.10404"}' data-report-query="spm=3001.10404" data-report-view='{"spm":"3001.10404"}' href="https://mall.csdn.net/vip" target="_blank">
+               <img alt="" class="article-vip-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/identityVipNew.png"/>
+              </a>
+              <a class="follow-nickName" href="https://blog.csdn.net/weixin_47040031" rel="noopener" target="_blank" title="未来可期，静待花开~">
+               未来可期，静待花开~
+              </a>
+              <img alt="" class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCurrentTime2.png"/>
+              <span class="time">
+               于 2024-05-30 01:57:19 发布
+              </span>
+              <div class="read-count-box">
+               <img alt="" class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png"/>
+               <span class="read-count">
+                阅读量2.6k
+               </span>
+               <a class="un-collection" data-report-click='{"mod":"popu_823","spm":"1001.2101.3001.4232","ab":"new"}' id="blog_detail_zk_collection">
+                <img alt="" class="article-collect-img article-heard-img un-collect-status isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" style="display:inline-block"/>
+                <img alt="" class="article-collect-img article-heard-img collect-status isactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" style="display:none"/>
+                <span class="name">
+                 收藏
+                </span>
+                <span class="get-collection">
+                 50
+                </span>
+               </a>
+               <div class="read-count-box is-like" data-type="top">
+                <img alt="" class="article-read-img article-heard-img" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" style="display:none"/>
+                <img alt="" class="article-read-img article-heard-img" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" style="display:block"/>
+                <span class="read-count" id="blog-digg-num">
+                 点赞数
+                              40
+                </span>
+               </div>
+              </div>
+             </div>
+            </div>
+            <div class="operating">
+             <a class="href-article-edit slide-toggle">
+              CC 4.0 BY-SA版权
+             </a>
+            </div>
+           </div>
+           <div class="blog-tags-box">
+            <div class="tags-box artic-tag-box">
+             <span class="label">
+              分类专栏：
+             </span>
+             <a class="tag-link" href="https://blog.csdn.net/weixin_47040031/category_12685856.html" rel="noopener" target="_blank">
+              FreeRTOS
+             </a>
+             <span class="label">
+              文章标签：
+             </span>
+             <a class="tag-link" data-report-click='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"FreeRTOS","ab":"new","extra":"{\"searchword\":\"FreeRTOS\"}"}' data-report-query="spm=1001.2101.3001.4223" data-report-view='{"mod":"popu_626","spm":"1001.2101.3001.4223","strategy":"FreeRTOS","ab":"new","extra":"{\"searchword\":\"FreeRTOS\"}"}' href="https://so.csdn.net/so/search/s.do?q=FreeRTOS&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" rel="noopener" target="_blank">
+              FreeRTOS
+             </a>
+            </div>
+           </div>
+           <div class="slide-content-box">
+            <div class="article-copyright">
+             <div class="creativecommons">
+              版权声明：本文为博主原创文章，遵循
+              <a href="http://creativecommons.org/licenses/by-sa/4.0/" rel="noopener" target="_blank">
+               CC 4.0 BY-SA
+              </a>
+              版权协议，转载请附上原文出处链接和本声明。
+             </div>
+             <div class="article-source-link">
+              本文链接：
+              <a href="https://blog.csdn.net/weixin_47040031/article/details/139309080" target="_blank">
+               https://blog.csdn.net/weixin_47040031/article/details/139309080
+              </a>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="" id="blogHuaweiyunAdvert">
+        </div>
+        <article class="baidu_pl">
+         <div class="article_content clearfix" id="article_content">
+          <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css" rel="stylesheet"/>
+          <link href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-8d6d398833.css" rel="stylesheet"/>
+          <div class="htmledit_views atom-one-dark" id="content_views">
+           <p>
+            我们知道FreeRTOS划分为一个个的任务，然后由任务调度器实现调度执行，那么我们如何创建任务呢？这就是本篇博客需要讲解的问题。
+           </p>
+           <p id="main-toc">
+            <strong>
+             目录
+            </strong>
+           </p>
+           <p id="%E4%B8%80%E3%80%81%E4%BB%BB%E5%8A%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E5%88%A0%E9%99%A4%E7%9A%84API%E5%87%BD%E6%95%B0-toc" style="margin-left:0px;">
+            <a href="#%E4%B8%80%E3%80%81%E4%BB%BB%E5%8A%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E5%88%A0%E9%99%A4%E7%9A%84API%E5%87%BD%E6%95%B0">
+             一、任务创建和删除的API函数
+            </a>
+           </p>
+           <p id="%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0-toc" style="margin-left:0px;">
+            <a href="#%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0">
+             二、动态创建任务函数
+            </a>
+           </p>
+           <p id="2.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B-toc" style="margin-left:40px;">
+            <a href="#2.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B">
+             2.1 函数原型
+            </a>
+           </p>
+           <p id="2.2%C2%A0%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B-toc" style="margin-left:40px;">
+            <a href="#2.2%C2%A0%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B">
+             2.2 实现动态创建任务流程
+            </a>
+           </p>
+           <p id="2.3%C2%A0%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0-toc" style="margin-left:40px;">
+            <a href="#2.3%C2%A0%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0">
+             2.3 动态创建任务函数内部实现
+            </a>
+           </p>
+           <p id="2.4%C2%A0%E4%BB%BB%E5%8A%A1%E6%8E%A7%E5%88%B6%E5%9D%97%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98%E4%BB%8B%E7%BB%8D-toc" style="margin-left:40px;">
+            <a href="#2.4%C2%A0%E4%BB%BB%E5%8A%A1%E6%8E%A7%E5%88%B6%E5%9D%97%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98%E4%BB%8B%E7%BB%8D">
+             2.4 任务控制块结构体成员介绍
+            </a>
+           </p>
+           <p id="%E4%B8%89%E3%80%81%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0-toc" style="margin-left:0px;">
+            <a href="#%E4%B8%89%E3%80%81%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0">
+             三、静态创建任务函数
+            </a>
+           </p>
+           <p id="3.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B-toc" style="margin-left:40px;">
+            <a href="#3.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B">
+             3.1 函数原型
+            </a>
+           </p>
+           <p id="3.2%C2%A0%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B-toc" style="margin-left:40px;">
+            <a href="#3.2%C2%A0%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B">
+             3.2 实现静态创建任务流程
+            </a>
+           </p>
+           <p id="3.3%20%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0-toc" style="margin-left:40px;">
+            <a href="#3.3%20%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0">
+             3.3 静态创建任务函数内部实现
+            </a>
+           </p>
+           <p id="%E5%9B%9B%E3%80%81%E4%BB%BB%E5%8A%A1%E5%88%A0%E9%99%A4%E5%87%BD%E6%95%B0-toc" style="margin-left:0px;">
+            <a href="#%E5%9B%9B%E3%80%81%E4%BB%BB%E5%8A%A1%E5%88%A0%E9%99%A4%E5%87%BD%E6%95%B0">
+             四、任务删除函数
+            </a>
+           </p>
+           <p id="4.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B-toc" style="margin-left:40px;">
+            <a href="#4.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B">
+             4.1 函数原型
+            </a>
+           </p>
+           <p id="4.2%20%E5%88%A0%E9%99%A4%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B-toc" style="margin-left:40px;">
+            <a href="#4.2%20%E5%88%A0%E9%99%A4%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B">
+             4.2 删除任务流程
+            </a>
+           </p>
+           <p id="4.3%20%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B-toc" style="margin-left:40px;">
+            <a href="#4.3%20%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B">
+             4.3 内部实现过程
+            </a>
+           </p>
+           <hr id="hr-toc"/>
+           <p>
+           </p>
+           <h2 id="%E4%B8%80%E3%80%81%E4%BB%BB%E5%8A%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E5%88%A0%E9%99%A4%E7%9A%84API%E5%87%BD%E6%95%B0" style="background-color:transparent;">
+            一、
+            <strong>
+             任务创建和删除的API函数
+            </strong>
+           </h2>
+           <p>
+            任务的创建和删除本质就是调用FreeRTOS的API函数。
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/8a372638c50d91168c37b8a075ac5b33.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/910cc2252487a61bbc6129cf689e21ce.png"/>
+           </p>
+           <h2 id="%E4%BA%8C%E3%80%81%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0">
+            <strong>
+             二、
+            </strong>
+            动态创建任务函数
+           </h2>
+           <h3 id="2.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B" style="background-color:transparent;">
+            2.1 函数原型
+           </h3>
+           <h2 id="%E2%80%8B%E7%BC%96%E8%BE%91">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/a03aa70bb566836bb905b2719dc027de.png"/>
+           </h2>
+           <h2 style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/7fcce13555db9ff77516c63381808c9c.png"/>
+           </h2>
+           <p>
+            在编程时，对返回值进行参数检测，可以判断任务是否创建成功！
+           </p>
+           <h3 id="2.2%C2%A0%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B">
+            2.2 实现动态创建任务流程
+           </h3>
+           <h2 style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ee1ecc8bbfa7fc1086dda922f7b43e29.png"/>
+           </h2>
+           <h2 style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/7ad11506746b8ecf5daabf961d6bb560.png"/>
+           </h2>
+           <p>
+            此函数创建的任务会立刻进入就绪态，由任务调度器调度运行 。
+           </p>
+           <h3 id="2.3%C2%A0%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0">
+            2.3 动态创建任务函数内部实现
+           </h3>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/d53d8bf06df63c4f3537984995c7869f.png"/>
+           </p>
+           <h3 id="2.4%C2%A0%E4%BB%BB%E5%8A%A1%E6%8E%A7%E5%88%B6%E5%9D%97%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98%E4%BB%8B%E7%BB%8D">
+            2.4
+            <strong>
+             任务控制块结构体成员介绍
+            </strong>
+           </h3>
+           <p>
+            <strong>
+             <span style="color:#be191c;">
+              注意：每个任务都有属于自己的任务控制块，类似身份证
+             </span>
+            </strong>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/c3db05190d5ef6da82c01d47d645ad44.png"/>
+           </p>
+           <blockquote>
+            <p style="text-align:left;">
+             <strong>
+              <span style="color:#fe2c24;">
+               任务栈栈顶，在任务切换时的任务上下文保存、任务恢复息息相关
+              </span>
+             </strong>
+            </p>
+           </blockquote>
+           <h2 id="%E4%B8%89%E3%80%81%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0">
+            三、静态创建任务函数
+           </h2>
+           <h3 id="3.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B">
+            3.1 函数原型
+           </h3>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/036bc84e9dac879c2b0501d9c7226598.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/d10849819d9bd0d2352bd70d96cafa0d.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/f39f481654c44ad7700ce97bbf5f12e3.png"/>
+           </p>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/fe1214e04da073335a6c92ff512b19c4.png"/>
+           </p>
+           <h3 id="3.2%C2%A0%E5%AE%9E%E7%8E%B0%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B">
+            3.2 实现静态创建任务流程
+           </h3>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/c7da5fb78fdc30b3a494cd6bfe50c1fe.png"/>
+           </p>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/b5fec7c8584f42d7ca949886b7ff4107.png"/>
+           </p>
+           <p>
+            <span style="color:#002060;">
+             此函数创建的任务会立刻进入就绪态，由任务调度器调度运行
+            </span>
+           </p>
+           <h3 id="3.3%20%E9%9D%99%E6%80%81%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0">
+            3.3 静态创建任务函数内部实现
+           </h3>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ef1cc6f822dff6a6e88f4bd6842aa16c.png"/>
+           </p>
+           <h2 id="%E5%9B%9B%E3%80%81%E4%BB%BB%E5%8A%A1%E5%88%A0%E9%99%A4%E5%87%BD%E6%95%B0">
+            四、任务删除函数
+           </h2>
+           <h3 id="4.1%20%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B">
+            4.1 函数原型
+           </h3>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/ff0385a689af3f0f2d6bafc4854714df.png"/>
+           </p>
+           <blockquote>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               用于删除已被创建的任务，被删除的任务将从就绪态任务列表、阻塞态任务列表、挂起态任务列表和事件列表中移除！！！
+              </strong>
+             </span>
+            </p>
+            <p>
+             <span style="color:#be191c;">
+              <strong>
+               注意：
+              </strong>
+             </span>
+            </p>
+            <p style="text-align:left;">
+             <span style="color:#fe2c24;">
+              <strong>
+               1、当传入的参数为NULL，则代表删除任务自身（当前正在运行的任务）
+              </strong>
+             </span>
+            </p>
+            <p style="text-align:left;">
+             <span style="color:#fe2c24;">
+              <strong>
+               2、删除动态创建的任务时：如果传的是另一个任务的句柄时，则直接将此任务分配的内存释放，但是如果传的是NULL（删除自身），则并不会直接在自身任务中直接释放，因为自身的任务还在运行，需要使用内存，而是在空闲任务中会负责释放自身占用的内存！
+              </strong>
+             </span>
+            </p>
+            <p style="text-align:left;">
+             <span style="color:#fe2c24;">
+              <strong>
+               3、删除静态创建的任务时：由用户在任务删除前申请的内存， 则需要由用户在任务被删除前提前释放，否则将导致内存泄露！！
+              </strong>
+             </span>
+            </p>
+           </blockquote>
+           <h3 id="4.2%20%E5%88%A0%E9%99%A4%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B">
+            4.2 删除任务流程
+           </h3>
+           <p>
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/4923c3945aaad1536d1d11db26a48302.png"/>
+           </p>
+           <h3 id="4.3%20%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B" style="background-color:transparent;">
+            4.3 内部实现过程
+           </h3>
+           <p style="text-align:center;">
+            <img alt="" src="https://i-blog.csdnimg.cn/blog_migrate/4457107aa9195a91e8b2a33e771a2e1d.png"/>
+           </p>
+           <p>
+            <strong>
+             至此，任务创建和删除的API函数就已经介绍完毕，下一节博客以实战方式创建动态任务！
+            </strong>
+            初次学习，循序渐进，一步步掌握即可！以上就是全部内容！请务必掌握，创作不易，欢迎大家点赞加关注评论，您的支持是我前进最大的动力！下期再见！
+           </p>
+          </div>
+         </div>
+        </article>
+       </div>
+       <div class="directory-boxshadow-dialog" style="display:none;">
+        <div class="directory-boxshadow-dialog-box">
+        </div>
+        <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new">
+         <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png"/>
+         <div class="vip-limited-time-top">
+          确定要放弃本次机会？
+         </div>
+         <span class="vip-limited-time-text">
+          福利倒计时
+         </span>
+         <div class="limited-time-box-new">
+          <span class="time-hour">
+          </span>
+          <i>
+           :
+          </i>
+          <span class="time-minite">
+          </span>
+          <i>
+           :
+          </i>
+          <span class="time-second">
+          </span>
+         </div>
+         <div class="limited-time-vip-box">
+          <p>
+           <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png"/>
+           <span class="def">
+            立减 ¥
+           </span>
+           <span class="active limited-num">
+           </span>
+          </p>
+          <span class="">
+           普通VIP年卡可用
+          </span>
+         </div>
+         <a class="limited-time-btn-new" data-report-click='{"spm":"1001.2101.3001.9621"}' data-report-query="spm=1001.2101.3001.9621" href="https://mall.csdn.net/vip">
+          立即使用
+         </a>
+        </div>
+       </div>
+       <a id="commentBox" name="commentBox">
+       </a>
+      </main>
+     </div>
+     <div class="recommend-right1 align-items-stretch clearfix" data-type="recommend" id="rightAsideConcision">
+      <aside class="recommend-right_aside">
+       <div id="recommend-right-concision">
+        <div class="flex-column aside-box groupfile" id="groupfileConcision">
+         <div class="groupfile-div1">
+          <h3 class="aside-title">
+           目录
+          </h3>
+          <div class="align-items-stretch group_item">
+           <div class="pos-box">
+            <div class="scroll-box">
+             <div class="toc-box">
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </aside>
+     </div>
+    </div>
+    <div class="mask-dark">
+    </div>
+    <div class="skin-boxshadow">
+    </div>
+    <div class="directory-boxshadow">
+    </div>
+    <div style="display:none;">
+     <img onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);' src=""/>
+    </div>
+    <div class="keyword-dec-box" id="keywordDecBox">
+    </div>
+   </link>
+  </link>
+ </body>
+ <!-- 富文本柱状图  -->
+ <link href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css" rel="stylesheet">
+  <link href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css" rel="stylesheet"/>
+  <link href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css" rel="stylesheet"/>
+ </link>
+</html>

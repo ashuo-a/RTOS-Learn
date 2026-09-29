@@ -1,0 +1,209 @@
+<section class="ch" id="c7">
+  <div class="h2"><i>07</i><h2>上下文切换全过程</h2></div>
+
+  <p>下面这 3 段代码全部来自本工程的实际文件：<code>FreeRTOS\Source\portable\RVDS\ARM_CM0\port.c</code>。看懂它们，你就彻底懂了 RTOS 最核心的 200 行。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="任务栈上的 16 字完整帧">
+      <text class="f-t b" x="14" y="26">一个任务被切走时，它的栈上完整的样子（16 个字 = 64 字节）</text>
+      <rect class="f-bx st" x="60" y="42" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="59">R4</text>
+      <rect class="f-bx st" x="60" y="66" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="83">R5　R6　R7（软件压，stmia r0!,{r4-r7}）</text>
+      <rect class="f-bx st" x="60" y="90" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="107">R8　R9　R10　R11（软件压，先 mov 到 r4-r7 再 stmia）</text>
+      <rect class="f-bx st2" x="60" y="114" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="131">R0　← 新栈顶保存在 TCB-&gt;pxTopOfStack</text>
+      <rect class="f-bx st2" x="60" y="138" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="155">R1　R2　R3</text>
+      <rect class="f-bx st2" x="60" y="162" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="179">R12</text>
+      <rect class="f-bx st2" x="60" y="186" width="330" height="24" rx="4"/><text class="f-t s" x="72" y="203">LR　（被打断处的返回地址）</text>
+      <rect class="f-bx hi" x="60" y="210" width="330" height="24" rx="4"/><text class="f-t a" x="72" y="227">PC　← bx EXC_RETURN 后从这里继续执行</text>
+      <rect class="f-bx hi" x="60" y="234" width="330" height="24" rx="4"/><text class="f-t a" x="72" y="251">xPSR</text>
+      <text class="f-t m" x="60" y="278">低地址 ↑　　　　　　　　　　　　　　　　　　↓ 高地址（PSP 从下往上弹）</text>
+
+      <rect class="f-bx" x="416" y="42" width="430" height="106" rx="10"/>
+      <text class="f-t b" x="430" y="66">谁压的？</text>
+      <text class="f-t s" x="430" y="88">下面 8 个（R0–R3,R12,LR,PC,xPSR）：</text>
+      <text class="f-t a" x="430" y="108">硬件自动压 —— 一条指令都不用写</text>
+      <text class="f-t s" x="430" y="130">上面 8 个（R4–R11）：软件手写汇编压</text>
+      <rect class="f-bx" x="416" y="162" width="430" height="120" rx="10"/>
+      <text class="f-t b" x="430" y="186">为什么要 16 个字而不是 8 个</text>
+      <text class="f-t s" x="430" y="208">硬件只保护它认为"跨异常必须活着"的 8 个。</text>
+      <text class="f-t s" x="430" y="228">但任务被切走后，回来后要像什么都没发生一样</text>
+      <text class="f-t s" x="430" y="248">继续跑 —— 编译器可能把变量存在 R4–R11 里，</text>
+      <text class="f-t a" x="430" y="270">所以这 8 个必须由 RTOS 自己保存。</text>
+    </svg>
+    <figcaption><b>两个"栈顶"要分清：</b>TCB 里存的 <code>pxTopOfStack</code> 指向 <b>R0 槽</b>（软件压完 R4–R11 之后的位置）；而 PSP 在异常返回那一刻必须指向 <b>R0 槽</b>，硬件才知道从哪开始弹。<code>adds r0,#16</code> / <code>subs r0,#32</code> 这些魔数就是在两个位置之间来回挪。</figcaption>
+  </figure>
+
+  <h3>片段 ① <code>pxPortInitialiseStack()</code>：创建任务时"伪造"一个现场</h3>
+  <p><code>xTaskCreate()</code> 内部会调用它，作用是在新任务栈的顶部<strong>手工摆出一个"刚被中断打断"的帧</strong>：</p>
+
+<pre><code>StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
+                                     TaskFunction_t pxCode, void * pvParameters )
+{
+    pxTopOfStack--;
+    *pxTopOfStack = portINITIAL_XPSR;                 <span class="c">/* ① xPSR = 0x01000000（bit24 = Thumb 位，必须为 1）*/</span>
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) pxCode;           <span class="c">/* ② PC = 任务函数的入口地址 */</span>
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) prvTaskExitError; <span class="c">/* ③ LR = 万一任务函数 return 了去哪 */</span>
+    pxTopOfStack -= 5;                                <span class="c">/* ④ 跳过 R12, R3, R2, R1 四格 */</span>
+    *pxTopOfStack = ( StackType_t ) pvParameters;     <span class="c">/* ⑤ R0 = 任务参数（就是 xTaskCreate 的 pvParameters）*/</span>
+    pxTopOfStack -= 8;                                <span class="c">/* ⑥ 空出 R11…R4 八格（首次运行没有旧值）*/</span>
+    return pxTopOfStack;
+}</code></pre>
+
+  <div class="pt">
+    <h4><em>要点</em>这段代码是"面向硬件契约"写的</h4>
+    <p>它压栈的顺序和位置，必须<strong>一个字节都不差</strong>地对上 8 字硬件帧的布局（R0 在低地址、xPSR 在高地址），因为将来硬件会按这个格式去弹。<code>xTaskCreate</code> 第 3 个参数为什么是"字数"？因为这里减的是一个个 <code>StackType_t</code>（= uint32_t）。</p>
+  </div>
+
+  <h3>片段 ② <code>prvPortStartFirstTask()</code>：启动第一个任务</h3>
+  <p>调度器准备好之后，由它把 CPU"交给"第一个任务。<strong>注意：这里没有 <code>SVC</code> 指令。</strong>M3/M4 教程里讲的"SVC 启动第一个任务"在 CM0+ 上不成立——源码注释写明了原因：M0 没有 VTOR，无法重新定位初始栈值，所以改用"直接设置 PSP + bx"。</p>
+
+<pre><code>ldr r3, = pxCurrentTCB     <span class="c">; r3 = &amp;pxCurrentTCB</span>
+ldr r1, [ r3 ]
+ldr r0, [ r1 ]             <span class="c">; r0 = TCB-&gt;pxTopOfStack（指向 R4 槽）</span>
+adds r0, # 32              <span class="c">; ★跳过 R4–R11：8 个字 × 4 字节 = 32</span>
+msr psp, r0                <span class="c">; ★PSP 指向 R0 槽 = 硬件帧的起点</span>
+movs r0, # 2
+msr CONTROL, r0            <span class="c">; ★SPSEL = 1：线程模式从此改用 PSP</span>
+isb
+pop { r0 - r5 }            <span class="c">; 弹出 R0,R1,R2,R3,R12,LR</span>
+mov lr, r5                 <span class="c">; LR 里装的是 EXC_RETURN（异常返回暗号）</span>
+pop { r3 }                 <span class="c">; r3 = PC = 任务函数入口</span>
+pop { r2 }                 <span class="c">; 丢弃 xPSR</span>
+cpsie i                    <span class="c">; 开中断</span>
+bx r3                      <span class="c">; ★跳进任务函数，任务从此开始跑</span></code></pre>
+
+  <h3>片段 ③ <code>xPortPendSVHandler()</code>：运行时切换（全篇核心）</h3>
+  <p>每次要换任务时，内核只做一件事：往 ICSR 寄存器写一位，把 PendSV 挂起。等所有更高优先级的中断都干完了，PendSV 才被响应 —— 于是"切换"永远发生在最安全的时刻。</p>
+
+<pre><code>mrs r0, psp                <span class="c">; r0 = 当前任务的 PSP（指向硬件帧 R0 槽）</span>
+ldr r3, = pxCurrentTCB
+ldr r2, [ r3 ]             <span class="c">; r2 = pxCurrentTCB（即将被换下的任务）</span>
+
+subs r0, # 32              <span class="c">; ↓ 向下让出 32 字节给 R4–R11</span>
+str r0, [ r2 ]             <span class="c">; ★把新的栈顶存回 旧TCB-&gt;pxTopOfStack</span>
+stmia r0 !, { r4 - r7 }    <span class="c">; 压 R4–R7</span>
+mov r4, r8                 <span class="c">; CM0 的指令限制：高寄存器要先搬到低寄存器</span>
+mov r5, r9
+mov r6, r10
+mov r7, r11
+stmia r0 !, { r4 - r7 }    <span class="c">; 压 R8–R11 → 旧任务现场保存完毕（16 字）</span>
+
+push { r3, r14 }           <span class="c">; 保存 r3 和 LR(EXC_RETURN)，因为下面要调 C 函数</span>
+cpsid i                    <span class="c">; 关中断（CM0 上这是"全局关"，没有 BASEPRI）</span>
+bl vTaskSwitchContext      <span class="c">; ★★唯一的"决策"：挑下一个任务、更新 pxCurrentTCB</span>
+cpsie i
+pop { r2, r3 }             <span class="c">; r2 = 新TCB地址, r3 = EXC_RETURN</span>
+
+ldr r1, [ r2 ]
+ldr r0, [ r1 ]             <span class="c">; r0 = 新任务的栈顶（指向它的 R4 槽）</span>
+adds r0, # 16              <span class="c">; 跳过 R4–R7，定位到 R8 槽</span>
+ldmia r0 !, { r4 - r7 }    <span class="c">; 恢复 R8–R11</span>
+mov r8, r4
+mov r9, r5
+mov r10, r6
+mov r11, r7
+
+msr psp, r0                <span class="c">; ★★PSP = 新任务的硬件帧起点</span>
+subs r0, # 32              <span class="c">; 回退到 R4 槽</span>
+ldmia r0 !, { r4 - r7 }    <span class="c">; 恢复 R4–R7 → 新任务现场装载完毕</span>
+
+bx r3                      <span class="c">; ★★★用 EXC_RETURN 返回！</span>
+                           <span class="c">;     硬件从新 PSP 弹 8 字帧 → PC 变成新任务的下一条指令</span></code></pre>
+
+  <div class="call key">
+    <span class="tag">一句话总结整个机制</span>
+    <p>任务切换 = <b>保存旧任务的 16 个寄存器到它的栈 → 调用 C 函数决定下一个跑谁 → 从新任务的栈把 16 个寄存器装回来 → 用 <code>bx EXC_RETURN</code> 让硬件"以为"只是从一次中断里返回</b>。</p>
+    <p>硬件完全被骗过去了：它以为自己在退出一个普通异常，于是乖乖地从 <code>PSP</code> 弹出那 8 个字并继续执行 —— 而那个 <code>PC</code> 属于另一个任务。<strong>没有任何"特殊跳转"指令，一切建立在异常返回机制之上。</strong></p>
+  </div>
+</section>
+
+<section class="ch" id="c8">
+  <div class="h2"><i>08</i><h2>调度器启动的那一瞬间</h2></div>
+
+  <p>把前面所有知识串起来：<code>vTaskStartScheduler()</code> 被调用后的几百个时钟周期里，系统发生了什么。下面每一行都有源码出处，可以在本工程的 <code>tasks.c</code> / <code>port.c</code> 里核对。</p>
+
+  <table>
+    <tr><th>#</th><th>动作</th><th>代码位置</th><th>为什么必须这个顺序</th></tr>
+    <tr><td>1</td><td>创建空闲任务（若堆不够会直接返回）</td><td><code>tasks.c</code></td><td>必须保证系统任何时候都有任务可跑</td></tr>
+    <tr><td>2</td><td><code>portDISABLE_INTERRUPTS()</code> 关中断</td><td><code>tasks.c:2026</code></td><td>★下面三行必须"原子"完成，不能被打断</td></tr>
+    <tr><td>3</td><td><code>xNextTaskUnblockTime = portMAX_DELAY</code></td><td><code>tasks.c:2036</code></td><td>在此之前它的值是 <b>0</b>（初值），是危险状态</td></tr>
+    <tr><td>4</td><td><code>xSchedulerRunning = pdTRUE</code></td><td><code>tasks.c:2037</code></td><td>标记"已进入 RTOS 世界"</td></tr>
+    <tr><td>5</td><td><code>xPortStartScheduler()</code></td><td><code>port.c:220</code></td><td>真正把 CPU 交出去</td></tr>
+    <tr><td>6</td><td><code>SHPR3 |= PENDSV_PRI / SYSTICK_PRI</code></td><td><code>port.c:223 / 225</code></td><td>内核异常设为最低优先级 → 实测读回 <code>0xC0C00000</code></td></tr>
+    <tr><td>7</td><td><code>vPortSetupTimerInterrupt()</code></td><td><code>port.c:229 / 389</code></td><td>接管 SysTick：<code>LOAD = 8000000/1000-1 = 7999</code></td></tr>
+    <tr><td>8</td><td><code>uxCriticalNesting = 0</code></td><td><code>port.c:232</code></td><td>临界区嵌套计数归零，给第一个任务一个干净起点</td></tr>
+    <tr><td>9</td><td><code>prvPortStartFirstTask()</code></td><td><code>port.c:235</code></td><td>设置 PSP/CONTROL，<code>bx</code> 进第一个任务 —— <b>永不返回</b></td></tr>
+  </table>
+
+  <h3>事故复盘：为什么"停在初始化函数里"却进了 HardFault</h3>
+  <p>这是你在本工程真实踩到的坑，也是 HAL 库工程接 RTOS 最容易中的一枪。两条时序线放一起对比就清楚了：</p>
+
+  <figure>
+    <svg viewBox="0 0 860 356" role="img" aria-label="HardFault 时序对比">
+      <text class="f-t b" x="14" y="24">❌ 出错的时序：HAL 先打开了 SysTick，RTOS 却还没准备好</text>
+      <path class="f-ln" d="M20 78 L846 78"/>
+      <circle cx="60" cy="78" r="5" class="f-bx hi"/>
+      <text class="f-t s" x="42" y="62">① HAL_Init()</text>
+      <text class="f-t r" x="42" y="100">SysTick 使能 + TICKINT = 1</text>
+      <circle cx="300" cy="78" r="5" class="f-bx"/>
+      <text class="f-t s" x="252" y="62">② BSP_UART_Config() / printf</text>
+      <text class="f-t s" x="252" y="100">一行 printf @115200 ≈ 5~7 ms</text>
+      <circle cx="360" cy="78" r="7" class="f-bx dg"/>
+      <text class="f-t r" x="330" y="46">③ 1ms tick 到达！</text>
+      <path class="f-ln r" d="M360 78 L360 132"/>
+      <rect class="f-bx dg" x="196" y="132" width="330" height="76" rx="8"/>
+      <text class="f-t r" x="210" y="154">SysTick 中断 → xPortSysTickHandler</text>
+      <text class="f-t r" x="210" y="174">→ xTaskIncrementTick()</text>
+      <text class="f-t" x="210" y="194">xTickCount 0→1，1 ≥ xNextTaskUnblockTime(0) 成立</text>
+      <path class="f-ln r" d="M530 170 L590 170"/>
+      <rect class="f-bx dg" x="590" y="132" width="256" height="76" rx="8"/>
+      <text class="f-t r" x="604" y="156">listLIST_IS_EMPTY(pxDelayedTaskList)</text>
+      <text class="f-t r" x="604" y="178">pxDelayedTaskList == NULL</text>
+      <text class="f-t r" x="604" y="198">→ HardFault</text>
+      <circle cx="700" cy="78" r="5" class="f-bx"/>
+      <text class="f-t s" x="596" y="100">④ vTaskStartScheduler() 永远到不了</text>
+
+      <text class="f-t b" x="14" y="248">✅ 修复后：在启动前，SysTick 由 HAL 自己服务</text>
+      <path class="f-ln a" d="M20 288 L846 288"/>
+      <circle cx="60" cy="288" r="5" class="f-bx hi"/>
+      <text class="f-t s" x="42" y="272">HAL_Init()</text>
+      <circle cx="300" cy="288" r="5" class="f-bx"/>
+      <text class="f-t s" x="240" y="272">外设初始化 / printf</text>
+      <circle cx="360" cy="288" r="7" class="f-bx hi"/>
+      <text class="f-t a" x="330" y="256">tick 照样会来</text>
+      <path class="f-ln a" d="M360 288 L360 316"/>
+      <rect class="f-bx hi" x="196" y="312" width="330" height="40" rx="8"/>
+      <text class="f-t a" x="210" y="337">SysTick_Handler → 调度器没启动 → 只调 HAL_IncTick()</text>
+      <text class="f-t s" x="540" y="337">✓ 不碰任何 RTOS 结构</text>
+    </svg>
+    <figcaption><b>关键点：</b>故障发生时，调试器显示的"停在 <code>BSP_UART_Config()</code> 第 237 行"是被中断打断的位置，<b>不是出错的位置</b>。真正的错误在 SysTick 中断里。<b>单步调试一定会触发</b>，因为一步就超过 1ms。</figcaption>
+  </figure>
+
+  <h3>修复：让 SysTick 的归属"分阶段"</h3>
+  <p>思路不是"压缩初始化时间"（那是靠运气），而是<strong>让两种状态都有明确的处理者</strong>：</p>
+
+<pre><code><span class="c">/* Inc\FreeRTOSConfig.h —— 不做名字映射，让 port.c 保留原名 xPortSysTickHandler */</span>
+/* #define xPortSysTickHandler              SysTick_Handler */
+
+<span class="c">/* Src\py32c882_it.c */</span>
+extern void xPortSysTickHandler(void);
+
+void SysTick_Handler(void)
+{
+  if (xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED)
+  {
+    HAL_IncTick();            <span class="c">/* 裸机阶段：维持 HAL_GetTick / HAL_Delay / HAL 超时 */</span>
+  }
+  else
+  {
+    xPortSysTickHandler();    <span class="c">/* 已启动：交给 FreeRTOS 节拍 */</span>
+  }
+}</code></pre>
+
+  <div class="pt">
+    <h4><em>为什么这样绝对安全</em>不存在"中间态"</h4>
+    <p><code>vTaskStartScheduler()</code> 是<b>先关中断</b>（<code>tasks.c:2026</code>），再依次设 <code>xNextTaskUnblockTime</code>、<code>xSchedulerRunning</code>（2036/2037），最后才进 <code>xPortStartScheduler()</code>。<b>没有中断能观察到"已判定为运行中、但内部还没初始化好"的状态。</b></p>
+    <p>顺带的好处：调度器启动之前 <code>HAL_GetTick()</code> / <code>HAL_Delay()</code> 照常可用（真实产品的初始化代码常这么用），启动之后由 tick 钩子接着喂 —— 两边都是 1ms，无缝衔接。</p>
+  </div>
+</section>

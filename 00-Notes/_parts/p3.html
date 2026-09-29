@@ -1,0 +1,125 @@
+<section class="ch" id="c3">
+  <div class="h2"><i>03</i><h2>异常、向量表与优先级</h2></div>
+
+  <p>在 Cortex-M 的世界里，"中断"和"出错"是同一类东西，统称<strong>异常</strong>。它们共用一张向量表、共用一套优先级规则、共用一套进出流程。搞清楚这一套，任务切换就只是它的一个特例。</p>
+
+  <table>
+    <tr><th>异常号</th><th>名字</th><th>谁产生</th><th>在 FreeRTOS 里的角色</th></tr>
+    <tr><td>1</td><td>Reset</td><td>复位引脚/上电</td><td>上电入口</td></tr>
+    <tr><td>2</td><td>NMI</td><td>不可屏蔽中断</td><td>一般不用</td></tr>
+    <tr><td>3</td><td><b>HardFault</b></td><td>所有错误的最终归集处</td><td><b>你上次踩的那个</b>：取指/访问错误、除零(CM0+ 无)、非法指令</td></tr>
+    <tr><td>11</td><td>SVCall</td><td><code>SVC</code> 指令</td><td>★M3/M4 用它启动第一个任务；<b>CM0+ 端口不用它</b></td></tr>
+    <tr><td>14</td><td><b>PendSV</b></td><td>软件写 ICSR 置位</td><td>★<b>真正的任务切换在这里执行</b></td></tr>
+    <tr><td>15</td><td>SysTick</td><td>SysTick 计数器到 0</td><td>★RTOS 的心跳（1ms）</td></tr>
+    <tr><td>16 – 47</td><td>IRQ0 – IRQ31</td><td>外设（UART/TIM/EXTI…）</td><td>你的业务中断</td></tr>
+  </table>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="SHPR3 位域与优先级阶梯">
+      <text class="f-t b" x="14" y="28">SHPR3 @ 0xE000_ED20 —— 内核异常的优先级住在这里</text>
+      <!-- 32 位格子 -->
+      <g>
+        <rect class="f-bx" x="14" y="42" width="80" height="44" rx="6"/><rect class="f-bx" x="94" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx" x="174" y="42" width="80" height="44" rx="6"/><rect class="f-bx" x="254" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx hi" x="334" y="42" width="80" height="44" rx="6"/><rect class="f-bx hi" x="414" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx hi" x="494" y="42" width="80" height="44" rx="6"/><rect class="f-bx hi" x="574" y="42" width="80" height="44" rx="6"/>
+        <rect class="f-bx" x="654" y="42" width="192" height="44" rx="6"/>
+      </g>
+      <text class="f-t m" x="42" y="70">保留</text>
+      <text class="f-t m" x="436" y="70">PendSV</text>
+      <text class="f-t m" x="700" y="70">SysTick</text>
+      <text class="f-t s" x="374" y="34">[23:16]</text>
+      <text class="f-t s" x="694" y="34">[31:24]</text>
+      <path class="f-ln" d="M334 90 L414 90"/><path class="f-ln" d="M494 90 L574 90"/><path class="f-ln" d="M654 90 L846 90"/>
+      <text class="f-t s" x="316" y="106">↑ 这 8 位是一个整体（一个优先级字段）</text>
+
+      <!-- 写入 vs 读回 -->
+      <rect class="f-bx" x="14" y="126" width="392" height="150" rx="10"/>
+      <text class="f-t b" x="30" y="150">port.c 里写的是</text>
+      <text class="f-t" x="30" y="172">portNVIC_PENDSV_PRI  = 255 &lt;&lt; 16</text>
+      <text class="f-t" x="30" y="190">portNVIC_SYSTICK_PRI = 255 &lt;&lt; 24</text>
+      <text class="f-t s" x="30" y="214">255 = 0b1111_1111（8 位全 1）</text>
+      <rect class="f-bx hi" x="30" y="226" width="356" height="36" rx="6"/>
+      <text class="f-t a" x="42" y="249">但 CM0+ 只实现了高 2 位 → 实际落下 0b1100_0000</text>
+
+      <rect class="f-bx" x="430" y="126" width="416" height="150" rx="10"/>
+      <text class="f-t b" x="446" y="150">所以在调试器里读回</text>
+      <text class="f-t a" x="446" y="176">SHPR3 = 0xC0C00000</text>
+      <text class="f-t s" x="446" y="200">PendSV  = 0xC0 → 优先级 3（最低）</text>
+      <text class="f-t s" x="446" y="222">SysTick = 0xC0 → 优先级 3（最低）</text>
+      <text class="f-t s" x="446" y="250">★ 两个字节能同时看到，就是它俩都设成了最低</text>
+      <!-- 优先级阶梯 -->
+      <text class="f-t b" x="446" y="272">优先级只有 4 级：0(高) 1 2 3(低)</text>
+      <rect class="f-bx" x="654" y="258" width="46" height="18" rx="4"/><text class="f-t s" x="708" y="272">← 内核异常固定待在这</text>
+    </svg>
+    <figcaption><b>0xC0 是编造不出来的数字：</b>它是"写 8 位、只落地 2 位"的必然结果。看到 <code>SHPR3 = 0xC0C00000</code>，就能断定 PendSV 和 SysTick 都被设成了硬件最低优先级 3 —— 这是验证调度器已接管的两行证据之一。</figcaption>
+  </figure>
+
+  <div class="pt">
+    <h4><em>知识点 3.1</em>为什么内核异常必须是"最低优先级"</h4>
+    <p>PendSV 和 SysTick 是 RTOS 的<strong>后台工作</strong>：一个负责切换任务、一个负责数时间。它们必须<strong>让所有外设中断先跑完</strong>，否则会出现灾难性后果：</p>
+    <ul>
+      <li>如果切换能打断一个正在处理数据的 UART 中断，切回来时外设状态已经变了；</li>
+      <li>如果 SysTick 能打断高优先级外设中断，节拍处理会与业务的临界区互相踩。</li>
+    </ul>
+    <p>所以内核把这两个异常设成 <span class="kv">优先级 3</span>（最低），业务中断用 <span class="kv">0 ~ 2</span>。这条规则在 CM0+ 上就是全部——它没有 BASEPRI 可以做"部分屏蔽"。</p>
+  </div>
+
+  <div class="call warn">
+    <span class="tag">实战对照</span>
+    <p>本工程实测：<code>SysTick-&gt;LOAD = 7999</code>（节拍对）、<code>SHPR3 = 0xC0C00000</code>（优先级对）。如果你哪天改完时钟发现 <code>LOAD = 7999</code> 却 <code>SHPR3 = 0</code>，说明<a href="#c8">内核还没接管</a>。</p>
+  </div>
+</section>
+
+<section class="ch" id="c4">
+  <div class="h2"><i>04</i><h2>SysTick：时间从哪来</h2></div>
+
+  <p>任务能"延时 250ms 后自己醒来"，是因为有一个硬件在替它数时间。这个硬件就是内核自带的 <strong>SysTick 定时器</strong>——它不是 PY32 芯片加的外设，而是 <strong>Cortex-M 内核的一部分</strong>（所有 M 核都有）。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 286" role="img" aria-label="SysTick 结构与 1ms 节拍">
+      <rect class="f-bx" x="14" y="14" width="300" height="126" rx="10"/>
+      <text class="f-t b" x="30" y="38">SysTick 三个寄存器</text>
+      <rect class="f-bx st" x="30" y="50" width="268" height="24" rx="5"/><text class="f-t s" x="42" y="67">CTRL  @0xE000_E010</text>
+      <rect class="f-bx st" x="30" y="78" width="268" height="24" rx="5"/><text class="f-t s" x="42" y="95">LOAD  @0xE000_E014 ← 重载值</text>
+      <rect class="f-bx st" x="30" y="106" width="268" height="24" rx="5"/><text class="f-t s" x="42" y="123">VAL   @0xE000_E018 ← 当前计数值</text>
+
+      <rect class="f-bx hi" x="334" y="14" width="248" height="126" rx="10"/>
+      <text class="f-t b" x="348" y="38">CTRL 的 4 个关键位</text>
+      <text class="f-t s" x="348" y="60">bit0 ENABLE　　= 1 开计数器</text>
+      <text class="f-t s" x="348" y="80">bit1 TICKINT　 = 1 到 0 时产生异常</text>
+      <text class="f-t s" x="348" y="100">bit2 CLKSOURCE= 1 用内核时钟</text>
+      <text class="f-t s" x="348" y="120">bit16 COUNTFLAG（读一下自动清）</text>
+
+      <rect class="f-bx hi" x="602" y="14" width="244" height="126" rx="10"/>
+      <text class="f-t b" x="616" y="38">本工程的算术</text>
+      <text class="f-t a" x="616" y="64">LOAD = 8 000 000 / 1000 − 1</text>
+      <text class="f-t a" x="616" y="86">= 7999</text>
+      <text class="f-t s" x="616" y="108">8000 个内核周期 = 1 ms</text>
+      <text class="f-t s" x="616" y="128">这就是 RTOS 的"心跳"</text>
+
+      <!-- 时间轴 -->
+      <text class="f-t b" x="14" y="172">计数器怎么跑（VAL 从 7999 递减到 0）</text>
+      <path class="f-ln" d="M20 250 L846 250"/>
+      <path class="f-ln a" d="M20 226 L60 226 L100 234 L140 242 L180 250"/>
+      <path class="f-ln a" d="M180 226 L220 226 L260 234 L300 242 L340 250"/>
+      <path class="f-ln a" d="M340 226 L380 226 L420 234 L460 242 L500 250"/>
+      <path class="f-ln a" d="M500 226 L540 226 L580 234 L620 242 L660 250"/>
+      <path class="f-ln a" d="M660 226 L700 226 L740 234 L780 242 L820 250"/>
+      <text class="f-t s" x="24" y="216">7999</text>
+      <circle class="f-ln a" cx="180" cy="250" r="4" fill="currentColor"/>
+      <circle class="f-ln a" cx="340" cy="250" r="4" fill="currentColor"/>
+      <circle class="f-ln a" cx="500" cy="250" r="4" fill="currentColor"/>
+      <circle class="f-ln a" cx="660" cy="250" r="4" fill="currentColor"/>
+      <text class="f-t a" x="150" y="274">到 0 → 异常 + 自动重载</text>
+      <text class="f-t m" x="470" y="274">每 1 ms 一次，永不停歇</text>
+      <text class="f-t s" x="20" y="200" style="font-size:10px">VAL 每 125 ns 减 1</text>
+    </svg>
+    <figcaption><b>一句话：</b>SysTick 就是一个"24 位递减计数器 + 到 0 时敲一下门"。<code>LOAD = 7999</code> 意味着敲门的间隔正好是 1ms。<b>谁拥有 SysTick，谁就掌握了整个系统的时间基准</b>——这正是 HAL 库和 FreeRTOS 会争抢它的原因。</figcaption>
+  </figure>
+
+  <div class="call warn">
+    <span class="tag">这就是你上次 HardFault 的战场</span>
+    <p><code>HAL_Init()</code> 会把 SysTick 打开并允许中断（为了给 <code>HAL_Delay</code> / <code>HAL_GetTick</code> 供时基）。但此时 FreeRTOS 的调度器还没启动，它的内部数据结构是空的。这期间任何一个 tick 进来，就会走进一张还没初始化好的表里。<b>第 8 章会把整个事故完整复盘。</b></p>
+  </div>
+</section>
